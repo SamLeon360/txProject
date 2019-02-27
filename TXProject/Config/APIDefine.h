@@ -109,4 +109,5 @@
 #define SH_APPLE_FRIENDS @"moments/get_apply_friends_list"
 #define SH_HANDLE_FRIENDS @"moments/handle_friends"
 #define SH_CHECK_PAY_SERVICE @"pioneer_park/trackTheOrder"
+#define SH_CHECK_PAY_ZONGHE @"pioneer_park/trackTheOrderSynthesis"
 #endif /* APIDefine_h */

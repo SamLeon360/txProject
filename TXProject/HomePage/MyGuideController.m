@@ -21,7 +21,6 @@
     UIImageView *imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"guide_one"]];
     imageV.frame = CGRectMake(0, 0, ScreenW, 4500*320/ScreenW*kScale);
     ///使用指导
-
     [self.scrollview addSubview:imageV];
     
 }

@@ -35,7 +35,7 @@
 
 @implementation AddServiceFormController
 - (IBAction)clickToUpload:(id)sender {
-    NSString *urlString = [self.typeString isEqualToString:@"创业宝典"]?SH_CHECK_PAY_SERVICE:SH_CHECK_PAY_SERVICE;
+    NSString *urlString = [self.typeString isEqualToString:@"创业宝典"]?SH_CHECK_PAY_SERVICE:SH_CHECK_PAY_ZONGHE;
     [HTTPREQUEST_SINGLE postWithURLString:urlString parameters:@{@"service_type":[NSString stringWithFormat:@"%ld",(long)self.typeIndex]} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 0) {
             if ([responseDic[@"data"] integerValue] == 0) {
