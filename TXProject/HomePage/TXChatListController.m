@@ -7,10 +7,11 @@
 //
 
 #import "TXChatListController.h"
-
-@interface TXChatListController ()<RCIMConnectionStatusDelegate,RCIMUserInfoDataSource,RCIMReceiveMessageDelegate>
+#import "UITabBarItem+DKSBadge.h"
+#import "UITabBar+DKSTabBar.h"
+@interface TXChatListController ()<RCIMConnectionStatusDelegate,RCIMUserInfoDataSource>
 @end
-@implementation TXChatListController
+@implementation  TXChatListController
 
 -(void)viewDidLoad{
     [super viewDidLoad]; self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
@@ -31,17 +32,26 @@
 //    [self refreshConversationTableViewIfNeeded];
     [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
     [[RCIM sharedRCIM] setUserInfoDataSource:self];
+//    [RCIM sharedRCIM].receiveMessageDelegate = self;
 //    [RCIM sharedRCIM].currentUserInfo = [[RCUserInfo alloc] initWithUserId:USER_SINGLE.member_id name:USER_SINGLE. portrait:@"用户头像的url"];
     // 设置消息体内是否携带用户信息
     [RCIM sharedRCIM].enableMessageAttachUserInfo = YES;
-    
+  
 
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    int totalUnreadCount = [[RCIMClient sharedRCIMClient] getTotalUnreadCount];
+    if (totalUnreadCount > 0) {
+        
+    }else{
+        [self.tabBarController.tabBar hideBadgeIndex:1];
+    }
+    
 }
 -(void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
     [self.conversationListTableView reloadData];
+   
 }
 -(void)getUserInfoWithUserId:(NSString *)userId completion:(void (^)(RCUserInfo *))completion{
     if ([userId isEqualToString:@"当前登录用户的融云id"]) {

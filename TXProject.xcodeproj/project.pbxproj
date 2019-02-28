@@ -123,6 +123,9 @@
 		223F85EC2225322A0018AF98 /* FriendNotifyCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 223F85E9222531FC0018AF98 /* FriendNotifyCell.h */; };
 		223F85EF222535CF0018AF98 /* FriendNotifyListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223F85EE222535CF0018AF98 /* FriendNotifyListController.m */; };
 		223F85F222267D610018AF98 /* MyGuideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223F85F122267D610018AF98 /* MyGuideController.m */; };
+		223F85FA2227C4870018AF98 /* UITabBarItem+DKSBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 223F85F72227C4870018AF98 /* UITabBarItem+DKSBadge.m */; };
+		223F85FB2227C4870018AF98 /* UITabBar+DKSTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 223F85F82227C4870018AF98 /* UITabBar+DKSTabBar.m */; };
+		223F85FC2227C4870018AF98 /* UIView+DKSBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 223F85F92227C4870018AF98 /* UIView+DKSBadge.m */; };
 		224A497B21F6C1CC00995D33 /* EntrepernurialAllListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 224A497A21F6C1CC00995D33 /* EntrepernurialAllListController.m */; };
 		224A497E21F6C50700995D33 /* EntreListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 224A497D21F6C50700995D33 /* EntreListCell.m */; };
 		2270597D21E6D39E003F671F /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2270597C21E6D39E003F671F /* AssetsLibrary.framework */; };
@@ -459,6 +462,12 @@
 		223F85EE222535CF0018AF98 /* FriendNotifyListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendNotifyListController.m; sourceTree = "<group>"; };
 		223F85F022267D610018AF98 /* MyGuideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyGuideController.h; sourceTree = "<group>"; };
 		223F85F122267D610018AF98 /* MyGuideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyGuideController.m; sourceTree = "<group>"; };
+		223F85F42227C4870018AF98 /* UITabBarItem+DKSBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBarItem+DKSBadge.h"; sourceTree = "<group>"; };
+		223F85F52227C4870018AF98 /* UITabBar+DKSTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBar+DKSTabBar.h"; sourceTree = "<group>"; };
+		223F85F62227C4870018AF98 /* UIView+DKSBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+DKSBadge.h"; sourceTree = "<group>"; };
+		223F85F72227C4870018AF98 /* UITabBarItem+DKSBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBarItem+DKSBadge.m"; sourceTree = "<group>"; };
+		223F85F82227C4870018AF98 /* UITabBar+DKSTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+DKSTabBar.m"; sourceTree = "<group>"; };
+		223F85F92227C4870018AF98 /* UIView+DKSBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+DKSBadge.m"; sourceTree = "<group>"; };
 		224A497921F6C1CC00995D33 /* EntrepernurialAllListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntrepernurialAllListController.h; sourceTree = "<group>"; };
 		224A497A21F6C1CC00995D33 /* EntrepernurialAllListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntrepernurialAllListController.m; sourceTree = "<group>"; };
 		224A497C21F6C50700995D33 /* EntreListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntreListCell.h; sourceTree = "<group>"; };
@@ -969,6 +978,7 @@
 		223C434E21D1FEB900AEE717 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				223F85F32227C4870018AF98 /* DKSBadge */,
 				223C43E621D221AA00AEE717 /* GVUserDefaults+Properties.h */,
 				223C43E721D221AA00AEE717 /* GVUserDefaults+Properties.m */,
 				223C434F21D1FED000AEE717 /* PreHeader.pch */,
@@ -1455,6 +1465,19 @@
 			path = categories;
 			sourceTree = "<group>";
 		};
+		223F85F32227C4870018AF98 /* DKSBadge */ = {
+			isa = PBXGroup;
+			children = (
+				223F85F42227C4870018AF98 /* UITabBarItem+DKSBadge.h */,
+				223F85F52227C4870018AF98 /* UITabBar+DKSTabBar.h */,
+				223F85F62227C4870018AF98 /* UIView+DKSBadge.h */,
+				223F85F72227C4870018AF98 /* UITabBarItem+DKSBadge.m */,
+				223F85F82227C4870018AF98 /* UITabBar+DKSTabBar.m */,
+				223F85F92227C4870018AF98 /* UIView+DKSBadge.m */,
+			);
+			path = DKSBadge;
+			sourceTree = "<group>";
+		};
 		227A5A7722150FFA00619842 /* NewsList */ = {
 			isa = PBXGroup;
 			children = (
@@ -1937,6 +1960,7 @@
 				222A5B9F21EC40EB004DDE8E /* commerceDetailSection.m in Sources */,
 				2213584021D377CC0002B071 /* HomeServerController.m in Sources */,
 				22F216B421F06609008E987B /* InvestmentDetailController.m in Sources */,
+				223F85FA2227C4870018AF98 /* UITabBarItem+DKSBadge.m in Sources */,
 				223F85EB222531FC0018AF98 /* FriendNotifyCell.m in Sources */,
 				22F216C021F57126008E987B /* EducationChanController.m in Sources */,
 				223F85CE2223E7AF0018AF98 /* MemberIntroduceCell.m in Sources */,
@@ -1992,9 +2016,11 @@
 				223C43A821D2003000AEE717 /* UIImageView+CustomImageView.m in Sources */,
 				223C885821D1D2C40070DAFF /* UIImage+Rotate.m in Sources */,
 				22A9AA9E21DF3A3C001DC411 /* GroundCell.m in Sources */,
+				223F85FC2227C4870018AF98 /* UIView+DKSBadge.m in Sources */,
 				222C4891221FD7BC001E1588 /* WXApiRequestHandler.m in Sources */,
 				22D234DE21E4970500DA6459 /* YKEditTreePhotoCollectionViewCell.m in Sources */,
 				22D234D621E496B400DA6459 /* SHEditCommidityPhotoView.m in Sources */,
+				223F85FB2227C4870018AF98 /* UITabBar+DKSTabBar.m in Sources */,
 				22F216BA21F06BFE008E987B /* ComprehensiveServerController.m in Sources */,
 				222A5BB321EC7F35004DDE8E /* MemberListCell.m in Sources */,
 				2213581E21D315320002B071 /* HomePageController.m in Sources */,

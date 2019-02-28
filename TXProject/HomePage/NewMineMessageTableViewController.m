@@ -42,8 +42,8 @@
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
     self.navigationItem.title = @"个人中心";
-    [self getFriendNumber];
-    [self  getMineMessage];
+    [self getDataNetWork];
+    NOTIFY_ADD(getDataNetWork, @"getDataNetWork");
     [self.commerceCell bk_whenTapped:^{
         if (self.commerceArray.count > 0) {
             MineCommerceController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MineCommerceController"];
@@ -80,8 +80,20 @@
     }];
     
 }
-
-
+-(void)getDataNetWork{
+    [self getFriendNumber];
+    [self getSystemInfoCount];
+    [self  getMineMessage];
+}
+-(void)getSystemInfoCount{
+    [HTTPREQUEST_SINGLE shitPostWithURLString:SH_GET_INFO_NUMBER parameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == 3) {
+            self.msgLabel.text = [NSString stringWithFormat:@"%@",responseDic[@"data"][@"info_all"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+}
 -(void)getFriendNumber{
     [HTTPREQUEST_SINGLE shitPostWithURLString:SH_FRIEND_NUMBER parameters:nil withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         

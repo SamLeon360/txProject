@@ -78,6 +78,7 @@
             blockSelf.has_add = responseDic[@"add"][@"has_add"];
             blockSelf.introductionString = blockSelf.memberDetailDic[@"member_introduction"];
             blockSelf.dataKeyArray = @[@[@"",@"default_commerce_name",@"phone",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_political_status",@"member_graduation_school",@"military_experience",@"member_hobby",@"detail_address"]];
+            [blockSelf.tableView reloadData];
         }else{
             [AlertView showYMAlertView:blockSelf.view andtitle: [NSString stringWithFormat:@"%@",responseDic[@"message"]]];
         }
@@ -96,7 +97,7 @@
     }else if (indexPath.section == 1||indexPath.section == 3){
         return 45;
     }else if (indexPath.section == 2){
-        return [self getHeightLineWithString:self.introductionString withWidth:ScreenW-25 withFont:[UIFont systemFontOfSize:14]]+20;
+        return [self getHeightLineWithString:[self.introductionString isKindOfClass:[NSNull class]]?@"":self.introductionString withWidth:ScreenW-25 withFont:[UIFont systemFontOfSize:14]]+20;
     }else{
         return 100;
     }
@@ -158,7 +159,7 @@
             }];
             avatarCell.jobLabel.text = @"总经理";
             avatarCell.namelabe.text = self.memberDetailDic[@"member_name"];
-            avatarCell.companyName.text = self.memberDetailDic[@"enterprise_name"];
+            avatarCell.companyName.text = [self.memberDetailDic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"enterprise_name"];
             if (self.has_add) {
                 [avatarCell.addFriendBtn setBackgroundColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
                 [avatarCell.addFriendBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -212,7 +213,7 @@
         return cell;
     }else if(indexPath.section == 2){
         MemberIntroduceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MemberIntroduceCell"];
-        cell.introLabel.text = self.memberDetailDic[@"member_introduction"];
+        cell.introLabel.text = [self.memberDetailDic[@"member_introduction"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"member_introduction"];
         return cell;
     }else if (indexPath.section == 3){
         MemberOtherMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MemberOtherMessageCell"];
@@ -220,7 +221,7 @@
         NSArray *titleArray = self.dataTitleArray[indexPath.section];
         NSArray *keyArray = self.dataKeyArray[indexPath.section];
         cell.titleLabel.text  = titleArray[indexPath.row];
-        cell.contentLabel.text = self.memberDetailDic[keyArray[indexPath.row]];
+        cell.contentLabel.text = [self.memberDetailDic[keyArray[indexPath.row]] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[keyArray[indexPath.row]];
         return cell;
     }else{
         CompanyListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CompanyListCell"];

@@ -39,6 +39,8 @@
 
 #define SH_FRIEND_NUMBER @"moments/moment_count"
 
+#define SH_GET_INFO_NUMBER @"moments/system_count"
+
 #define SH_MINE_MESSAGE @"account/get_member_account"
 
 #define SH_COMMERCE_ARRAY @"chamber/get_user_chamber_info"
@@ -105,6 +107,8 @@
 #define SH_DELETE_FRIENDS @"moments/delete_friends"
 
 #define SH_FRIEND_LIST @"moments/get_friends_list"
+
+#define SH_UPLOAD_ENTREPRISE_LOGO @"enterprise/upload_enterprise_logo"
 
 #define SH_APPLE_FRIENDS @"moments/get_apply_friends_list"
 #define SH_HANDLE_FRIENDS @"moments/handle_friends"

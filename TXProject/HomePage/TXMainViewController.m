@@ -17,7 +17,8 @@
 #import "TXChatListController.h"
 #import "NewMineMessageTableViewController.h"
 #import "NewHomePageController.h"
-@interface TXMainViewController ()<UITabBarControllerDelegate>
+#import "UITabBar+DKSTabBar.h"
+@interface TXMainViewController ()<UITabBarControllerDelegate,RCIMReceiveMessageDelegate>
 
 @end
 
@@ -34,11 +35,13 @@
     } failure:^(NSError *error) {
         
     }];
+  
     [self setupSubviews];
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 20)];
     [view setBackgroundColor:[UIColor colorWithRGB:0x3e85fb]];
     [self.view addSubview:view];
-    
+    self.selectedIndex = 2;
+    self.selectedIndex = 0;
     
     self.delegate = self;
     self.navigationController.navigationBarHidden = YES;
@@ -46,11 +49,26 @@
     [UITabBar appearance].translucent = NO;
     self.tabBarItem.imageInsets=UIEdgeInsetsMake(6, 0, 0, 0);
     self.tabBar.opaque = YES;
+    [RCIM sharedRCIM].receiveMessageDelegate = self;
 }
 -(void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
 }
-
+-(void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
+     
+    int totalUnreadCount = [[RCIMClient sharedRCIMClient] getTotalUnreadCount];
+    if (totalUnreadCount > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+             [self.tabBar showBadgeIndex:1];
+        });
+    }else{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tabBar hideBadgeIndex:1];
+        });
+        
+    }
+    
+}
 - (void)setupSubviews
 {
     //主页
@@ -122,6 +140,9 @@
         [self.navigationController setNavigationBarHidden:NO];
     }else{
         [self.navigationController setNavigationBarHidden: YES];
+    }
+    if (tabSeledIndex == 4) {
+        NOTIFY_POST(@"getDataNetWork");
     }
 }
 -(void)gotoReLogin{

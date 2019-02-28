@@ -73,27 +73,36 @@
     
 }
 - (IBAction)clickToUpdate:(id)sender {
-    NSMutableDictionary *param =[[NSMutableDictionary alloc] initWithObjectsAndKeys:self.companyName.text,@"enterprise_name",self.companyCode.text,@"credit_code",self.companyBoss.text,@"legal_representative",self.registerMoney.text,@"registered_capital",self.companyDate.text,@"establish_day",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyType.text]+1],@"enterprise_type",[NSString stringWithFormat:@"%lu",(unsigned long)[self.workAreaArray indexOfObject:self.workArea.text]+1],@"domain",self.companyArea.text,@"area",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyZZ.text]+1],@"enterprise_qualifications",self.companySize.text,@"enterprise_scale",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork1.text]+1],@"business_scope",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork2.text]+1],@"business_scope1",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork3.text]+1],@"business_scope2",self.companyNumber.text,@"enterprise_staff_num",self.programerNumber.text,@"research_development_staff_num",self.otherCompany.text,@"research_development_institutions",self.companyHonor.text,@"enterprise_honor",self.chanjiaorongpingtai.text,@"production_education_cooperation",self.contactName.text,@"contacts",self.companyAddress.text,@"address",self.contactPhone.text,@"phone",self.contactEmail.text,@"email",self.contactEmail.text,@"official_website",self.companyIntro.text,@"enterprise_profile",self.mainJishu.text,@"mainstream_technology",self.shengchangongyi.text,@"production_process",self.zuzhijigou.text,@"organization",self.jingyinjieshao.text,@"enterprise_essence_intro",@"",@"product_show", nil];
+    if (self.companyIdDic != nil) {
+        NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.companyIdDic[@"enterprise_id"],@"enterprise_id", nil];
+        [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:SH_UPLOAD_ENTREPRISE_LOGO parameters:param withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+            NSString *imgName = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
+            NSString *fileName = [NSString stringWithFormat:@"%@_%@.jpg", @"enterprise", imgName];
+            [formData appendPartWithFileData:UIImageJPEGRepresentation(self.companyLogoImage.image, 0.6) name:@"enterprise_logo" fileName:fileName mimeType:@"image/jpeg"];
+        } progress:^(double progress) {
+            
+        } success:^(NSDictionary *responseDic) {
+           
+        } failure:^(NSError *error) {
+            
+        }];
+    }
+    NSMutableDictionary *param =[[NSMutableDictionary alloc] initWithObjectsAndKeys:self.companyName.text,@"enterprise_name",self.companyCode.text,@"credit_code",self.companyBoss.text,@"legal_representative",self.registerMoney.text,@"registered_capital",self.companyDate.text,@"establish_day",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyType.text]+1],@"enterprise_type",[NSString stringWithFormat:@"%lu",(unsigned long)[self.workAreaArray indexOfObject:self.workArea.text]+1],@"domain",self.companyArea.text,@"area",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyZZ.text]+1],@"enterprise_qualifications",self.companySize.text,@"enterprise_scale",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork1.text]+1],@"business_scope",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork2.text]+1],@"business_scope1",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork3.text]+1],@"business_scope2",self.companyNumber.text,@"enterprise_staff_num",self.programerNumber.text,@"research_development_staff_num",self.otherCompany.text,@"research_development_institutions",self.companyHonor.text,@"enterprise_honor",self.chanjiaorongpingtai.text,@"production_education_cooperation",self.contactName.text,@"contacts",self.companyAddress.text,@"address",self.contactPhone.text,@"phone",self.contactEmail.text,@"email",self.contactEmail.text,@"official_website",self.companyIntro.text,@"enterprise_profile",self.mainJishu.text,@"mainstream_technology",self.shengchangongyi.text,@"production_process",self.zuzhijigou.text,@"organization",self.jingyinjieshao.text,@"enterprise_essence_intro",@"",@"product_show",@"",@"enterprise_photo", nil];
     if (self.companyIdDic != nil) {
         [param setObject:self.companyIdDic[@"enterprise_id"] forKey:@"enterprise_id"];
     }
-    [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:SH_UPDATE_COMPANY parameters:param withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyyMMddHHmmss";
-        NSString *imgName = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
-        NSString *fileName = [NSString stringWithFormat:@"%@_%@.jpg", @"commerce", imgName];
-        [formData appendPartWithFileData:UIImageJPEGRepresentation(self.companyLogoImage.image, 0.6) name:@"enterprise_photo[]" fileName:fileName mimeType:@"image/jpeg"];
-    } progress:^(double progress) {
-        
-    } success:^(NSDictionary *responseDic) {
+    [HTTPREQUEST_SINGLE postWithURLString:SH_UPDATE_COMPANY parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"操作成功"];
         }else{
             [AlertView showYMAlertView:self.view andtitle:@"操作失败"];
         }
     } failure:^(NSError *error) {
-        [AlertView showYMAlertView:self.view andtitle:@"网络异常"];
+         [AlertView showYMAlertView:self.view andtitle:@"网络异常"];
     }];
+  
 }
 -(void)setupClickAction{
     self.areaPickerView.delegate = self;
@@ -185,6 +194,7 @@
     self.companyCode.text = [NSString stringWithFormat:@"%@",self.detailDic[@"credit_code"]];
     self.registerMoney.text = [NSString stringWithFormat:@"%@",self.detailDic[@"registered_capital"]];
     self.companyDate.text = [self.detailDic[@"establish_day"] isKindOfClass:[NSNull class]]?@"":self.detailDic[@"establish_day"];
+   
     self.companyArea.text = [self.detailDic[@"area"] isKindOfClass:[NSNull class]]?@"":self.detailDic[@"area"];
     self.companyAddress.text = [self.detailDic[@"address"] isKindOfClass:[NSNull class]]?@"":self.detailDic[@"address"];
     self.mainWork1.text = self.mainWorkArray[[self.detailDic[@"business_scope"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"business_scope"]integerValue]];
@@ -213,6 +223,7 @@
             [self.companyLogoImage setImage:[UIImage imageNamed:@"default_avatar"]];
         }
     }];
+     self.workArea.text = self.workAreaArray[[self.detailDic[@"domain"] integerValue]-1];
 }
 
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{

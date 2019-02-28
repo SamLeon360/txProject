@@ -361,7 +361,7 @@ static AFHTTPSessionManager *sessionManager;
     if (USER_SINGLE.token.length > 0 ) {
          [dic setObject:USER_SINGLE.token forKey:@"token"];
     }
-    if ([URLString isEqualToString:SH_GET_AREA]||[URLString isEqualToString:SH_GET_NEWS_DETAIL]||[URLString isEqualToString:SH_WEB_DETAIL]||[URLString isEqualToString:SH_COMPANY_LIST]||[URLString isEqualToString:SH_DETAIL_COMPANY]||[URLString isEqualToString:SH_COMPANY_DEFAULT]||[URLString isEqualToString:SH_PRICE_PAY]||[URLString isEqualToString:SH_CREAT_ORDER]||[URLString isEqualToString:SH_MOMENTS_DATA]||[URLString isEqualToString:SH_MEMBER_DETAIL]) {
+    if ([URLString isEqualToString:SH_GET_AREA]||[URLString isEqualToString:SH_GET_NEWS_DETAIL]||[URLString isEqualToString:SH_WEB_DETAIL]||[URLString isEqualToString:SH_COMPANY_LIST]||[URLString isEqualToString:SH_DETAIL_COMPANY]||[URLString isEqualToString:SH_COMPANY_DEFAULT]||[URLString isEqualToString:SH_PRICE_PAY]||[URLString isEqualToString:SH_CREAT_ORDER]||[URLString isEqualToString:SH_MOMENTS_DATA]||[URLString isEqualToString:SH_MEMBER_DETAIL]||[URLString isEqualToString:SH_HANDLE_FRIENDS]||[URLString isEqualToString:SH_UPDATE_COMPANY]) {
         [dic removeObjectForKey:@"token"];
     }
     
@@ -1072,6 +1072,9 @@ static AFHTTPSessionManager *sessionManager;
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:parameters];
 //    if ([USER_SINGLE isLogin]) {
     [dic setObject:USER_SINGLE.token forKey:@"token"];
+    if ([urlStr isEqualToString:SH_UPLOAD_ENTREPRISE_LOGO]) {
+        [dic removeObjectForKey:@"token"];
+    }
 //    }
 //    if ([urlStr isEqualToString:[NSString stringWithFormat:@"/api/v1/tree?%@",@"clear_mu_photo=1"]] || [urlStr isEqualToString:@"/api/v1/tree"]) {
 //        [dic removeObjectForKey:@"groupId"];

@@ -19,6 +19,7 @@
 #import "NewsListController.h"
 #import "MineCommerceController.h"
 #import "MyGuideController.h"
+
 @interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource,RCIMUserInfoDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) HomeSectionView *sectionView;
@@ -60,6 +61,7 @@
             
         }];
     }
+
 }
 -(void)getCommerceList{
     __block NewHomePageController *blockSelf = self;

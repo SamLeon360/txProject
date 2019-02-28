@@ -47,7 +47,9 @@
     FriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendListCell"];
     NSDictionary *dic = self.friendsList[indexPath.row];
     [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://app.tianxun168.com/uploads/mem_info/%@/%@.jpg",dic[@"friend_id"],dic[@"friend_id"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        
+        if (error) {
+            [cell.avatarImage setImage:[UIImage imageNamed:@"default_avatar"]];
+        }
     }];
     cell.name.text = dic[@"member_name"];
     cell.companyName.text = dic[@"default_enterprise_name"];
