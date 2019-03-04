@@ -92,6 +92,8 @@
     NSMutableDictionary *param =[[NSMutableDictionary alloc] initWithObjectsAndKeys:self.companyName.text,@"enterprise_name",self.companyCode.text,@"credit_code",self.companyBoss.text,@"legal_representative",self.registerMoney.text,@"registered_capital",self.companyDate.text,@"establish_day",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyType.text]+1],@"enterprise_type",[NSString stringWithFormat:@"%lu",(unsigned long)[self.workAreaArray indexOfObject:self.workArea.text]+1],@"domain",self.companyArea.text,@"area",[NSString stringWithFormat:@"%lu",(unsigned long)[self.typeArray indexOfObject:self.companyZZ.text]+1],@"enterprise_qualifications",self.companySize.text,@"enterprise_scale",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork1.text]+1],@"business_scope",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork2.text]+1],@"business_scope1",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainWorkArray indexOfObject:self.mainWork3.text]+1],@"business_scope2",self.companyNumber.text,@"enterprise_staff_num",self.programerNumber.text,@"research_development_staff_num",self.otherCompany.text,@"research_development_institutions",self.companyHonor.text,@"enterprise_honor",self.chanjiaorongpingtai.text,@"production_education_cooperation",self.contactName.text,@"contacts",self.companyAddress.text,@"address",self.contactPhone.text,@"phone",self.contactEmail.text,@"email",self.contactEmail.text,@"official_website",self.companyIntro.text,@"enterprise_profile",self.mainJishu.text,@"mainstream_technology",self.shengchangongyi.text,@"production_process",self.zuzhijigou.text,@"organization",self.jingyinjieshao.text,@"enterprise_essence_intro",@"",@"product_show",@"",@"enterprise_photo", nil];
     if (self.companyIdDic != nil) {
         [param setObject:self.companyIdDic[@"enterprise_id"] forKey:@"enterprise_id"];
+    }else{
+        [param setObject:@"" forKey:@"enterprise_logo"];
     }
     [HTTPREQUEST_SINGLE postWithURLString:SH_UPDATE_COMPANY parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
@@ -139,22 +141,26 @@
         //调用相册
         [ac showPreviewAnimated:YES];
     }];
+    
     [self.mainWork1 bk_whenTapped:^{
         self.selectIndex = 1;
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
         [blockSelf.areaPickerView reloadAllComponents];
+         self.mainWork1.text = self.mainWorkArray[0];
     }];
     [self.mainWork2 bk_whenTapped:^{
         self.selectIndex = 2;
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
         [blockSelf.areaPickerView reloadAllComponents];
+        self.mainWork2.text = self.mainWorkArray[0];
     }];
     [self.mainWork3 bk_whenTapped:^{
         self.selectIndex = 3;
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
+        self.mainWork3.text = self.mainWorkArray[0];
         [blockSelf.areaPickerView reloadAllComponents];
     }];
     [self.workArea bk_whenTapped:^{
@@ -162,18 +168,21 @@
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
         [blockSelf.areaPickerView reloadAllComponents];
+        self.workArea.text = self.workAreaArray[0];
     }];
     [self.companyType bk_whenTapped:^{
         self.selectIndex = 5;
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
         [blockSelf.areaPickerView reloadAllComponents];
+         self.companyType.text = self.typeArray[0];
     }];
     [self.companyZZ bk_whenTapped:^{
         self.selectIndex = 6;
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.pickSureBtn.hidden = NO;
         [blockSelf.areaPickerView reloadAllComponents];
+        self.companyZZ.text = self.typeArray[0];
     }];
 }
 -(void)editCompany{

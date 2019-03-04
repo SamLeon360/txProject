@@ -15,6 +15,7 @@
 #import "MemberDetailController.h"
 #import "FriendListController.h"
 #import "NotifyListController.h"
+#import "MyGuideController.h"
 @interface NewMineMessageTableViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *userHeaderIamge;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -43,7 +44,8 @@
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
     self.navigationItem.title = @"个人中心";
     [self getDataNetWork];
-    NOTIFY_ADD(getDataNetWork, @"getDataNetWork");
+    NOTIFY_ADD(getDataNetWork, @"getDataNetWork");//
+    NOTIFY_ADD(getNewMeMessage, @"getNewMeMessage");
     [self.commerceCell bk_whenTapped:^{
         if (self.commerceArray.count > 0) {
             MineCommerceController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MineCommerceController"];
@@ -54,6 +56,7 @@
     [self.accountCell bk_whenTapped:^{
         AccountMsgController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"AccountMsgController"];
         vc.userDic = blockSelf.userDic;
+        vc.title = @"账号信息";
         [blockSelf.navigationController pushViewController:vc animated:YES];
     }];
     [self.memberCell bk_whenTapped:^{
@@ -78,6 +81,11 @@
         NotifyListController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"NotifyListController"];
         [self.navigationController pushViewController:vc animated:YES];
     }];
+    [self.useCell bk_whenTapped:^{
+        MyGuideController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"MyGuideController"];
+        vc.title = @"使用指南";
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
     
 }
 -(void)getDataNetWork{
@@ -93,6 +101,22 @@
     } failure:^(NSError *error) {
         
     }];
+}
+-(void)getNewMeMessage{
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.member_id,@"member_id", nil];
+    [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_MINE_MESSAGE headerParameters:nil bodyParameters:params withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        NSDictionary *dic = responseDic;
+        if ([responseDic[@"code"] integerValue] == 0) {
+            self.userDic = dic[@"data"];
+            USER_SINGLE.member_name = self.userDic[@"member_name"];
+            
+        }else if([responseDic[@"code"] integerValue] == -1001){
+            [USER_SINGLE logout];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    
 }
 -(void)getFriendNumber{
     [HTTPREQUEST_SINGLE shitPostWithURLString:SH_FRIEND_NUMBER parameters:nil withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
@@ -124,6 +148,7 @@
                     [self.userHeaderIamge setImage:[UIImage imageNamed:@"default_avatar"]];
                 }
             }];
+
             [self getCommerceMessage];
 //            [self.myTableView reloadData];
         }else if([responseDic[@"code"] integerValue] == -1001){

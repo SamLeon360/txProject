@@ -81,6 +81,7 @@
     self.outPhoneTF.text = [self.editUserData[@"ext_phone"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"ext_phone"];
     self.emailTF.text = [self.editUserData[@"member_email"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_email"] ;
     self.addressTF.text = [self.editUserData[@"detail_address"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"detail_address"] ;
+    self.zhengfuTF.text = [self.editUserData[@"member_political_status"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_political_status"];
     self.commerceTF.text = USER_SINGLE.default_commerce_name;
 //    [self.commerceCell bk_whenTapped:^{
 //        NSLog(@"%@",[NSString stringWithFormat:@"https://app.tianxun168.com/h5/#/member/business_card/%@/%@/",self.userDic[@"member_name"],USER_SINGLE.default_commerce_id]);
@@ -141,7 +142,8 @@
         [SVProgressHUD showProgress:progress];
     } success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue]== -1002) {
-             NOTIFY_POST(@"getMineMessage");
+             NOTIFY_POST(@"getNewMeMessage");
+            
         }
         NSLog(@"%@",responseDic);
         [SVProgressHUD dismiss];
@@ -224,8 +226,8 @@
     [self.editUserData setObject:self.nameTF.text.length==0?@"":self.nameTF.text forKey:@"member_name"];
     
     [self.editUserData setObject:self.brithdayTF.text.length==0?@"":self.brithdayTF.text forKey:@"member_age"];
-    [self.editUserData setObject:self.jiguanTF.text.length==0?@"":self.jiguanTF.text forKey:@"member_birth_address"];
-    [self.editUserData setObject:self.zhengfuTF.text.length==0?@"":self.zhengfuTF.text forKey:@"member_native_place"];
+    [self.editUserData setObject:self.jiguanTF.text.length==0?@"":self.jiguanTF.text forKey:@"member_native_place"];
+    [self.editUserData setObject:self.zhengfuTF.text.length==0?@"":self.zhengfuTF.text forKey:@"member_political_status"];
     [self.editUserData setObject:self.schoolTF.text.length==0?@"":self.schoolTF.text forKey:@"member_graduation_school"];
     [self.editUserData setObject:self.congjunTF.text.length==0?@"":self.congjunTF.text forKey:@"military_experience"];
     [self.editUserData setObject:self.aihaoTF.text.length==0?@"":self.aihaoTF.text forKey:@"member_hobby"];
@@ -239,7 +241,7 @@
     [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_SAVE_USER_DATA headerParameters:headerDic bodyParameters:self.editUserData withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"更新成功"];
-            NOTIFY_POST(@"getMineMessage");
+            NOTIFY_POST(@"getNewMeMessage");
         }
     } failure:^(NSError *error) {
         

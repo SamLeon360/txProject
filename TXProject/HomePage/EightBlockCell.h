@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *chuangyeView;
 @property (weak, nonatomic) IBOutlet UIView *zongheView;
 @property (weak, nonatomic) IBOutlet UIView *xinzhengView;
+@property (weak, nonatomic) IBOutlet UIView *zhaoshangView;
 
 @end
 

@@ -29,6 +29,9 @@
     [self GetCompanyData];
     [self addRightBtn];
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [self GetCompanyData];
+}
 -(void)GetCompanyData{
     __block MineCompanyListController *blockSelf = self;
     [HTTPREQUEST_SINGLE postWithURLString:SH_COMPANY_LIST parameters:@{@"member_id":self.memberId} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {

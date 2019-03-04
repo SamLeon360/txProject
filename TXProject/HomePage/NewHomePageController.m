@@ -179,6 +179,9 @@
                 NewsListController *vc = [[UIStoryboard storyboardWithName:@"NewsList" bundle:nil] instantiateViewControllerWithIdentifier:@"NewsListController"];
                 [blockSelf.navigationController pushViewController:vc animated:YES];
             }];
+            [cell.zhaoshangView bk_whenTapped:^{
+                
+            }];
             return cell;
         }break;
         case 2:{

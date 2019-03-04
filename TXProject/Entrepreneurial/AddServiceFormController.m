@@ -89,12 +89,12 @@
             self.companyTF.text = [dic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":dic[@"enterprise_name"];
             self.companyIntrTF.text = [dic[@"enterprise_introduction"] isKindOfClass:[NSNull class]]?@"":dic[@"enterprise_introduction"];
             self.contactPhoneTF.text= [dic[@"telephone"] isKindOfClass:[NSNull class]]?@"":dic[@"telephone"];
-            if ([dic[@"enterprise_name"] isKindOfClass:[NSNull class]]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES];
-                });
-                return ;
-            }
+//            if ([dic[@"enterprise_name"] isKindOfClass:[NSNull class]]) {
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                });
+//                return ;
+//            }
         }
     } failure:^(NSError *error) {
         

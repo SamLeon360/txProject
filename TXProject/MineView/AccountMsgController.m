@@ -23,6 +23,7 @@
     __block AccountMsgController *blockSelf = self;
     [self.pwdView bk_whenTapped:^{
         ChangePwdController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"ChangePwdController"];
+        vc.title = @"修改密码";
         [blockSelf.navigationController pushViewController:vc animated:YES];
     }];
 }

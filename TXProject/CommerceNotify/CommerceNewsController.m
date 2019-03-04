@@ -26,14 +26,14 @@
     self.tableView.dataSource = self;
     self.title = @"社团新闻";
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 1)];
-    if (SHOW_WEB) {
-        UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(0, 0, 20, 20);
-        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_icon"] forState:UIControlStateNormal];
-        [editBtn addTarget:self action:@selector(clickToEdit) forControlEvents:UIControlEventTouchUpInside];
-        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:editBtn];
-        self.navigationItem.rightBarButtonItem = rightItem;
-    }
+    
+//        UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//        editBtn.frame = CGRectMake(0, 0, 20, 20);
+//        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_icon"] forState:UIControlStateNormal];
+//        [editBtn addTarget:self action:@selector(clickToEdit) forControlEvents:UIControlEventTouchUpInside];
+//        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:editBtn];
+//        self.navigationItem.rightBarButtonItem = rightItem;
+    
 
     
 }
@@ -42,9 +42,9 @@
     [self getNotifyData];
 }
 -(void)clickToEdit{
-    TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
-    vc.webUrl = [NSString stringWithFormat:@"%@add_update_news///1",WEB_HOST_URL];
-    [self.navigationController pushViewController:vc animated:YES];
+//    TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+//    vc.webUrl = [NSString stringWithFormat:@"%@add_update_news///1",WEB_HOST_URL];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)getNotifyData{
