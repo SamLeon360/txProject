@@ -33,7 +33,7 @@
     }else{
         self.titleHead.hidden = YES;
         self.timeLabel.hidden = YES;
-         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, -20, ScreenW, ScreenH+20)];
+         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 60, ScreenW, ScreenH-20)];
     }
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
@@ -55,7 +55,8 @@
             make.right.left.bottom.equalTo(0);
             make.top.equalTo(130);
         }else{
-        make.edges.equalTo(blockSelf.view);
+            make.right.left.bottom.equalTo(0);
+            make.top.equalTo(20);
         }
     }];
     if (self.webUrl != nil) {
@@ -97,7 +98,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated{
 //        self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x202c3d];
-    [self.navigationController setNavigationBarHidden:NO];
+//    [self.navigationController setNavigationBarHidden:NO];
 }
 
 -(void)linkToView{
@@ -385,6 +386,7 @@
             responseCallback([Common convertToJsonData:userdic]);
     }];
     [wkwebJsBrideg registerHandler:@"gobackView" handler:^(id data, WVJBResponseCallback responseCallback) {
+        [self.navigationController setNavigationBarHidden:NO];
         [self.navigationController popViewControllerAnimated:YES];
     }];
 }

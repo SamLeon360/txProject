@@ -7,8 +7,13 @@
 //
 
 #import "InvestmentDetailController.h"
-
+#import "InvestmentListController.h"
+#import "TXWebViewController.h"
 @interface InvestmentDetailController ()
+@property (weak, nonatomic) IBOutlet UIView *twoView;
+@property (weak, nonatomic) IBOutlet UIView *oneView;
+@property (weak, nonatomic) IBOutlet UILabel *oneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *twoLabel;
 
 @end
 
@@ -16,7 +21,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [self.oneLabel makeCorner:5];
+    [self.twoLabel makeCorner:5];
+    self.title = @"招商引资";
+    [self.oneView bk_whenTapped:^{
+        InvestmentListController * vc = [[UIStoryboard storyboardWithName:@"Investment" bundle:nil] instantiateViewControllerWithIdentifier:@"InvestmentListController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
+    [self.twoView bk_whenTapped:^{
+        TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+        vc.webUrl = @"https://app.tianxun168.com/h5/ios_app.html#/investment_guide_index/0///1";
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
+    
 }
 
 /*

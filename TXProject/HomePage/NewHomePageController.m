@@ -19,6 +19,7 @@
 #import "NewsListController.h"
 #import "MineCommerceController.h"
 #import "MyGuideController.h"
+#import "InvestmentDetailController.h"
 
 @interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource,RCIMUserInfoDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -144,7 +145,7 @@
         if (indexPath.row == 0) {
             return 177;
         }else if (indexPath.row == 1){
-            return 103;
+            return 206;
         }else{
             return 80;
         }
@@ -180,7 +181,8 @@
                 [blockSelf.navigationController pushViewController:vc animated:YES];
             }];
             [cell.zhaoshangView bk_whenTapped:^{
-                
+                InvestmentDetailController *vc = [[UIStoryboard storyboardWithName:@"Investment" bundle:nil] instantiateViewControllerWithIdentifier:@"InvestmentDetailController"];
+                [self.navigationController pushViewController:vc animated:YES];
             }];
             return cell;
         }break;

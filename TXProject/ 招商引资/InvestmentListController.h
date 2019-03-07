@@ -11,7 +11,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface InvestmentListController : UIViewController
-
+-(void)getinvestmentArrayByRefresh;
+@property (nonatomic) NSInteger nPage;
+@property (nonatomic) NSInteger selectTypeIndex;
 @end
 
 NS_ASSUME_NONNULL_END

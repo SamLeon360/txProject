@@ -173,6 +173,18 @@
 		227A5A7C221512AC00619842 /* NewsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227A5A7B221512AC00619842 /* NewsListController.m */; };
 		227A5A7F2215130E00619842 /* NewsListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227A5A7E2215130E00619842 /* NewsListCell.m */; };
 		227A5A8222153FC400619842 /* NewsDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227A5A8122153FC400619842 /* NewsDetailController.m */; };
+		228884A6222CD7A500C0BE36 /* InvestmentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 228884A5222CD7A500C0BE36 /* InvestmentView.xib */; };
+		228884A8222CD8B800C0BE36 /* ProjectTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 228884A7222CD8B800C0BE36 /* ProjectTypeCell.xib */; };
+		228884AB222CD90000C0BE36 /* ProjectTypeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884AA222CD90000C0BE36 /* ProjectTypeCell.m */; };
+		228884B2222CFDA600C0BE36 /* ProjectTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884B1222CFDA600C0BE36 /* ProjectTypeView.m */; };
+		228884B5222D036300C0BE36 /* ProjectSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884B4222D036200C0BE36 /* ProjectSelectView.m */; };
+		228884BB222E19DB00C0BE36 /* InvestmentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884BA222E19DB00C0BE36 /* InvestmentHeaderView.m */; };
+		228884C4222E1B8700C0BE36 /* InvestCheckMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884C3222E1B8700C0BE36 /* InvestCheckMoreCell.m */; };
+		228884CA222E1CF300C0BE36 /* InvestMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884C9222E1CF300C0BE36 /* InvestMsgCell.m */; };
+		228884D0222E1E4400C0BE36 /* InvestUserMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884CF222E1E4400C0BE36 /* InvestUserMsgCell.m */; };
+		228884D3222E1EFC00C0BE36 /* InvestmentDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884D2222E1EFC00C0BE36 /* InvestmentDetailTableViewController.m */; };
+		228884D6222E209C00C0BE36 /* InvestmentListDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884D5222E209C00C0BE36 /* InvestmentListDetailController.m */; };
+		228884D9222E592900C0BE36 /* InvestmentCheckMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 228884D8222E592900C0BE36 /* InvestmentCheckMoreCell.m */; };
 		229874C621D4CFDA00AC3D77 /* TXGroundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 229874C521D4CFDA00AC3D77 /* TXGroundController.m */; };
 		229D2F3A22166812005EC2F0 /* AddCommerceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D2F3922166812005EC2F0 /* AddCommerceController.m */; };
 		229D2F3D2216D72E005EC2F0 /* EntreDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D2F3C2216D72E005EC2F0 /* EntreDetailController.m */; };
@@ -540,6 +552,28 @@
 		227A5A7E2215130E00619842 /* NewsListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewsListCell.m; sourceTree = "<group>"; };
 		227A5A8022153FC400619842 /* NewsDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewsDetailController.h; sourceTree = "<group>"; };
 		227A5A8122153FC400619842 /* NewsDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewsDetailController.m; sourceTree = "<group>"; };
+		228884A5222CD7A500C0BE36 /* InvestmentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvestmentView.xib; sourceTree = "<group>"; };
+		228884A7222CD8B800C0BE36 /* ProjectTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTypeCell.xib; sourceTree = "<group>"; };
+		228884A9222CD90000C0BE36 /* ProjectTypeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectTypeCell.h; sourceTree = "<group>"; };
+		228884AA222CD90000C0BE36 /* ProjectTypeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProjectTypeCell.m; sourceTree = "<group>"; };
+		228884B0222CFDA600C0BE36 /* ProjectTypeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectTypeView.h; sourceTree = "<group>"; };
+		228884B1222CFDA600C0BE36 /* ProjectTypeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProjectTypeView.m; sourceTree = "<group>"; };
+		228884B3222D036200C0BE36 /* ProjectSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectSelectView.h; sourceTree = "<group>"; };
+		228884B4222D036200C0BE36 /* ProjectSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProjectSelectView.m; sourceTree = "<group>"; };
+		228884B9222E19DB00C0BE36 /* InvestmentHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestmentHeaderView.h; sourceTree = "<group>"; };
+		228884BA222E19DB00C0BE36 /* InvestmentHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestmentHeaderView.m; sourceTree = "<group>"; };
+		228884C2222E1B8700C0BE36 /* InvestCheckMoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestCheckMoreCell.h; sourceTree = "<group>"; };
+		228884C3222E1B8700C0BE36 /* InvestCheckMoreCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestCheckMoreCell.m; sourceTree = "<group>"; };
+		228884C8222E1CF300C0BE36 /* InvestMsgCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestMsgCell.h; sourceTree = "<group>"; };
+		228884C9222E1CF300C0BE36 /* InvestMsgCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestMsgCell.m; sourceTree = "<group>"; };
+		228884CE222E1E4400C0BE36 /* InvestUserMsgCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestUserMsgCell.h; sourceTree = "<group>"; };
+		228884CF222E1E4400C0BE36 /* InvestUserMsgCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestUserMsgCell.m; sourceTree = "<group>"; };
+		228884D1222E1EFC00C0BE36 /* InvestmentDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestmentDetailTableViewController.h; sourceTree = "<group>"; };
+		228884D2222E1EFC00C0BE36 /* InvestmentDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestmentDetailTableViewController.m; sourceTree = "<group>"; };
+		228884D4222E209C00C0BE36 /* InvestmentListDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestmentListDetailController.h; sourceTree = "<group>"; };
+		228884D5222E209C00C0BE36 /* InvestmentListDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestmentListDetailController.m; sourceTree = "<group>"; };
+		228884D7222E592900C0BE36 /* InvestmentCheckMoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvestmentCheckMoreCell.h; sourceTree = "<group>"; };
+		228884D8222E592900C0BE36 /* InvestmentCheckMoreCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvestmentCheckMoreCell.m; sourceTree = "<group>"; };
 		229874C421D4CFDA00AC3D77 /* TXGroundController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TXGroundController.h; sourceTree = "<group>"; };
 		229874C521D4CFDA00AC3D77 /* TXGroundController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TXGroundController.m; sourceTree = "<group>"; };
 		229D2F3822166812005EC2F0 /* AddCommerceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddCommerceController.h; sourceTree = "<group>"; };
@@ -1496,6 +1530,28 @@
 				223F860422291C9B0018AF98 /* InvestmentListController.m */,
 				223F860622291D2B0018AF98 /* InvestmentListCell.h */,
 				223F860722291D2B0018AF98 /* InvestmentListCell.m */,
+				228884A5222CD7A500C0BE36 /* InvestmentView.xib */,
+				228884A7222CD8B800C0BE36 /* ProjectTypeCell.xib */,
+				228884A9222CD90000C0BE36 /* ProjectTypeCell.h */,
+				228884AA222CD90000C0BE36 /* ProjectTypeCell.m */,
+				228884B0222CFDA600C0BE36 /* ProjectTypeView.h */,
+				228884B1222CFDA600C0BE36 /* ProjectTypeView.m */,
+				228884B3222D036200C0BE36 /* ProjectSelectView.h */,
+				228884B4222D036200C0BE36 /* ProjectSelectView.m */,
+				228884B9222E19DB00C0BE36 /* InvestmentHeaderView.h */,
+				228884BA222E19DB00C0BE36 /* InvestmentHeaderView.m */,
+				228884C2222E1B8700C0BE36 /* InvestCheckMoreCell.h */,
+				228884C3222E1B8700C0BE36 /* InvestCheckMoreCell.m */,
+				228884C8222E1CF300C0BE36 /* InvestMsgCell.h */,
+				228884C9222E1CF300C0BE36 /* InvestMsgCell.m */,
+				228884CE222E1E4400C0BE36 /* InvestUserMsgCell.h */,
+				228884CF222E1E4400C0BE36 /* InvestUserMsgCell.m */,
+				228884D1222E1EFC00C0BE36 /* InvestmentDetailTableViewController.h */,
+				228884D2222E1EFC00C0BE36 /* InvestmentDetailTableViewController.m */,
+				228884D4222E209C00C0BE36 /* InvestmentListDetailController.h */,
+				228884D5222E209C00C0BE36 /* InvestmentListDetailController.m */,
+				228884D7222E592900C0BE36 /* InvestmentCheckMoreCell.h */,
+				228884D8222E592900C0BE36 /* InvestmentCheckMoreCell.m */,
 			);
 			path = " 招商引资";
 			sourceTree = "<group>";
@@ -1779,6 +1835,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				228884A6222CD7A500C0BE36 /* InvestmentView.xib in Resources */,
 				2213581921D30C3D0002B071 /* HomePage.storyboard in Resources */,
 				22A9AA9221DDE162001DC411 /* MineHeader.xib in Resources */,
 				223F85B422238D890018AF98 /* MineHeaderSection.xib in Resources */,
@@ -1787,6 +1844,7 @@
 				22F216D421F635D4008E987B /* Jiaoshou.xib in Resources */,
 				22D234B921E4574400DA6459 /* MineView.storyboard in Resources */,
 				222A5B8621E88EDA004DDE8E /* Entrepreneurial.xib in Resources */,
+				228884A8222CD8B800C0BE36 /* ProjectTypeCell.xib in Resources */,
 				2213583821D355F20002B071 /* CommerceList.xib in Resources */,
 				222A5B8421E8857A004DDE8E /* Entrepreneurial.storyboard in Resources */,
 				229D2F7C221B9CEE005EC2F0 /* CompanyView.storyboard in Resources */,
@@ -1908,6 +1966,7 @@
 			files = (
 				223F860922291D620018AF98 /* InvestmentListCell.h in Sources */,
 				223F85EC2225322A0018AF98 /* FriendNotifyCell.h in Sources */,
+				228884C4222E1B8700C0BE36 /* InvestCheckMoreCell.m in Sources */,
 				223F85C12223919D0018AF98 /* MemberOtherMessageCell.m in Sources */,
 				229D2F76221AC102005EC2F0 /* NewMineMessageTableViewController.h in Sources */,
 				227A5A662212EE4900619842 /* SearchCommerceController.m in Sources */,
@@ -1918,12 +1977,14 @@
 				223F85EF222535CF0018AF98 /* FriendNotifyListController.m in Sources */,
 				223C43A421D2003000AEE717 /* UIView+Extension.m in Sources */,
 				2213582721D31B050002B071 /* HomePageModelCell.m in Sources */,
+				228884B5222D036300C0BE36 /* ProjectSelectView.m in Sources */,
 				22F216C621F57154008E987B /* TwoEducationCell.m in Sources */,
 				223F85E82225233B0018AF98 /* NotifyListCell.m in Sources */,
 				222A5BD421ED9028004DDE8E /* CommerceNewsController.m in Sources */,
 				222C4890221FD7BC001E1588 /* WXApiResponseHandler.m in Sources */,
 				2213583221D331D40002B071 /* TXWebViewController.m in Sources */,
 				22B67C2021EF1B7E00E5BA0C /* SameCityCommerceController.m in Sources */,
+				228884D3222E1EFC00C0BE36 /* InvestmentDetailTableViewController.m in Sources */,
 				22F216C321F57144008E987B /* OneEducationCell.m in Sources */,
 				223F85D72224F0120018AF98 /* MoreEntrepriseController.m in Sources */,
 				223C87AA21D1D2C30070DAFF /* WebViewJavascriptBridge_JS.m in Sources */,
@@ -1951,6 +2012,7 @@
 				227A5A532212CE9A00619842 /* TwoBlockCell.m in Sources */,
 				222A5BC621ED8492004DDE8E /* NotifyDetailController.m in Sources */,
 				2213583621D355DE0002B071 /* CommerceList.m in Sources */,
+				228884B2222CFDA600C0BE36 /* ProjectTypeView.m in Sources */,
 				223C43A521D2003000AEE717 /* UIView+Genie.m in Sources */,
 				222C4895221FE89F001E1588 /* UITabBar+XSDExt.m in Sources */,
 				2213582E21D31E6F0002B071 /* YKNavigationController.m in Sources */,
@@ -2000,9 +2062,11 @@
 				222A5B9921EC4045004DDE8E /* CommerceDetailCell.m in Sources */,
 				223C885721D1D2C40070DAFF /* UIImage+Gif.m in Sources */,
 				224A497E21F6C50700995D33 /* EntreListCell.m in Sources */,
+				228884D6222E209C00C0BE36 /* InvestmentListDetailController.m in Sources */,
 				223C43B321D2003000AEE717 /* NSString+Category.m in Sources */,
 				223C43C521D20A4200AEE717 /* RequestManager.m in Sources */,
 				223C85AC21D1C3B80070DAFF /* TXLoginController.m in Sources */,
+				228884AB222CD90000C0BE36 /* ProjectTypeCell.m in Sources */,
 				229D2F7A221B9CD9005EC2F0 /* MineCompanyListController.m in Sources */,
 				223C43F121D29A8300AEE717 /* TXRegesiterController.m in Sources */,
 				22F216BD21F0718D008E987B /* ServerHeader.m in Sources */,
@@ -2014,10 +2078,12 @@
 				227A5A472212C6F000619842 /* HomeCommerceCell.m in Sources */,
 				22D234CF21E4955D00DA6459 /* SHEditCommidityCameraController.m in Sources */,
 				223C43BD21D2015300AEE717 /* CatchCrash.m in Sources */,
+				228884CA222E1CF300C0BE36 /* InvestMsgCell.m in Sources */,
 				222A5BB021EC7F17004DDE8E /* MemberListController.m in Sources */,
 				227A5A8222153FC400619842 /* NewsDetailController.m in Sources */,
 				222A5B8B21E8983C004DDE8E /* HottopicCell.m in Sources */,
 				2213583D21D35C010002B071 /* CommerceCell.m in Sources */,
+				228884D0222E1E4400C0BE36 /* InvestUserMsgCell.m in Sources */,
 				222A5BE321EDC120004DDE8E /* MemberPostController.m in Sources */,
 				22D234D921E496D300DA6459 /* YKEditTreeCameraPhotoView.m in Sources */,
 				223C885621D1D2C40070DAFF /* UIImage+SubImage.m in Sources */,
@@ -2026,6 +2092,7 @@
 				223C43B421D2003000AEE717 /* UINavigationController+Category.m in Sources */,
 				229D2F3D2216D72E005EC2F0 /* EntreDetailController.m in Sources */,
 				227A5A7F2215130E00619842 /* NewsListCell.m in Sources */,
+				228884D9222E592900C0BE36 /* InvestmentCheckMoreCell.m in Sources */,
 				223C43E821D221AA00AEE717 /* GVUserDefaults+Properties.m in Sources */,
 				223C43A021D2003000AEE717 /* UIImage+Wechat.m in Sources */,
 				223C43C021D202FB00AEE717 /* TXLoginNavControllerViewController.m in Sources */,
@@ -2054,6 +2121,7 @@
 				229D2F462216D7E9005EC2F0 /* EntreMessageCell.m in Sources */,
 				2213585721D474570002B071 /* LoginBottomView.m in Sources */,
 				227059AA21E6D539003F671F /* TXChatListController.m in Sources */,
+				228884BB222E19DB00C0BE36 /* InvestmentHeaderView.m in Sources */,
 				222A5BBC21ED6F31004DDE8E /* NotifyCell.m in Sources */,
 				223C857421D1BA5B0070DAFF /* AppDelegate.m in Sources */,
 				2213582121D315520002B071 /* HomePageCollectionHeader.m in Sources */,

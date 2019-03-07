@@ -114,4 +114,14 @@
 #define SH_HANDLE_FRIENDS @"moments/handle_friends"
 #define SH_CHECK_PAY_SERVICE @"pioneer_park/trackTheOrder"
 #define SH_CHECK_PAY_ZONGHE @"pioneer_park/trackTheOrderSynthesis"
+
+#define SH_INVESTMENT_LIST @"merchants/merchants_list"
+#define SH_MOTION_LIST @"common/list_collect"
+#define SH_INVESTMEMT_DETAIL @"merchants/merchants_detail"
+#define SH_SHOW_MESSAGE @"merchants/merchants_show_message"
+
+#define SH_ADD_MESSAGE @"merchants/merchants_add_message"
+
+#define SH_ADD_COLLECTION @"common/add_collection"
+#define SH_DELETE_COLLECTION @"common/delete_collection"
 #endif /* APIDefine_h */
