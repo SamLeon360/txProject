@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *companyTypeCell;
 @property (weak, nonatomic) IBOutlet UILabel *companyAddressLabel;
 @property (weak, nonatomic) IBOutlet UIButton *selectDefualtBtn;
+@property (weak, nonatomic) IBOutlet UILabel *defaultLabel;
 
 @end
 

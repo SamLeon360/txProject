@@ -41,6 +41,7 @@
     
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     self.nPage = 1;
     [self getNotifyData];
 }
@@ -62,6 +63,7 @@
             }else{
                  [blockSelf.tableView.mj_footer endRefreshing];
                   [blockSelf.notifyArray addObjectsFromArray:responseDic[@"data"]];
+                 [blockSelf.tableView.mj_footer endRefreshing];
             }
           
         }else{

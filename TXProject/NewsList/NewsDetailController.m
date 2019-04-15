@@ -22,7 +22,9 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"新政新规详情";
+    if ( self.typeIndex == 0) {
+        self.title = @"新政新规详情";
+    }
      webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 90, ScreenW, ScreenH-90)];
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
@@ -32,15 +34,17 @@
     [wkwebJsBrideg setWebViewDelegate:self];
     [self getWebData];
 }
+
 -(void)getWebData{
+    
     __block NewsDetailController *blockSelf = self;
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"first",self.newsId,@"id",@"3",@"jump_flag", nil];
-    [HTTPREQUEST_SINGLE postWithURLString:SH_GET_NEWS_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+    [HTTPREQUEST_SINGLE postWithURLString:self.typeIndex==1?SH_ENTRE_LIST_DETAIL: SH_GET_NEWS_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 3) {
             NSArray *arr = responseDic[@"data"];
             NSDictionary *dic = arr.firstObject;
             blockSelf.titleLabel.text = dic[@"headlines"];
-            blockSelf.otherLabel.text = dic[@"headlines2"];
+            blockSelf.otherLabel.text = [dic[@"headlines2"] isKindOfClass:[NSNull class]]?@"":dic[@"headlines2"];
             [self->webView loadHTMLString:dic[@"news_text"] baseURL:nil];
         }
     } failure:^(NSError *error) {

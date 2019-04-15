@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UploadCommerceControllerController : UITableViewController
-
+@property (nonatomic) NSDictionary *editDic;
 @end
 
 NS_ASSUME_NONNULL_END

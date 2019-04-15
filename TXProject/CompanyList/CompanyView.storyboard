@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -66,6 +66,12 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="默认" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jJD-Ck-aGZ">
+                                                    <rect key="frame" x="285" y="42.5" width="25" height="14.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.59999999999999998" green="0.59607843137254901" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="kWf-gf-ESr" firstAttribute="leading" secondItem="Z9F-Ds-4Ri" secondAttribute="trailing" constant="15" id="63g-O4-IcB"/>
@@ -73,11 +79,13 @@
                                                 <constraint firstItem="7bR-ou-uMT" firstAttribute="centerY" secondItem="n1m-H8-1YL" secondAttribute="centerY" id="Bac-tA-Ntc"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="Dj1-If-eoK" secondAttribute="trailing" constant="60" id="Geu-f2-Mtn"/>
                                                 <constraint firstItem="e69-Z9-xsg" firstAttribute="centerY" secondItem="n1m-H8-1YL" secondAttribute="centerY" id="GnU-x7-utk"/>
+                                                <constraint firstItem="jJD-Ck-aGZ" firstAttribute="centerY" secondItem="7bR-ou-uMT" secondAttribute="centerY" id="IWv-gn-ZOG"/>
                                                 <constraint firstItem="e69-Z9-xsg" firstAttribute="leading" secondItem="Z9F-Ds-4Ri" secondAttribute="trailing" constant="15" id="UvV-25-zhD"/>
                                                 <constraint firstItem="e69-Z9-xsg" firstAttribute="centerY" secondItem="Z9F-Ds-4Ri" secondAttribute="centerY" id="bzq-nb-GiS"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="kWf-gf-ESr" secondAttribute="trailing" constant="60" id="ceM-nM-bX5"/>
                                                 <constraint firstItem="kWf-gf-ESr" firstAttribute="top" secondItem="Z9F-Ds-4Ri" secondAttribute="top" id="eBd-gV-0jB"/>
                                                 <constraint firstItem="Dj1-If-eoK" firstAttribute="leading" secondItem="Z9F-Ds-4Ri" secondAttribute="trailing" constant="15" id="gDn-ZY-eDx"/>
+                                                <constraint firstItem="7bR-ou-uMT" firstAttribute="leading" secondItem="jJD-Ck-aGZ" secondAttribute="trailing" constant="10" id="hNe-WO-0yf"/>
                                                 <constraint firstItem="Z9F-Ds-4Ri" firstAttribute="leading" secondItem="n1m-H8-1YL" secondAttribute="leading" constant="15" id="rKI-rz-Vi7"/>
                                                 <constraint firstItem="Z9F-Ds-4Ri" firstAttribute="centerY" secondItem="n1m-H8-1YL" secondAttribute="centerY" id="xw7-GP-8Ku"/>
                                                 <constraint firstItem="Dj1-If-eoK" firstAttribute="bottom" secondItem="Z9F-Ds-4Ri" secondAttribute="bottom" id="zZr-Jw-ttb"/>
@@ -88,6 +96,7 @@
                                             <outlet property="companyImage" destination="Z9F-Ds-4Ri" id="vdF-f8-MuE"/>
                                             <outlet property="companyNameLabel" destination="kWf-gf-ESr" id="5Ja-Z9-Yg9"/>
                                             <outlet property="companyTypeCell" destination="e69-Z9-xsg" id="Z3x-De-SY1"/>
+                                            <outlet property="defaultLabel" destination="jJD-Ck-aGZ" id="bBm-gK-vzA"/>
                                             <outlet property="selectDefualtBtn" destination="7bR-ou-uMT" id="pRd-9e-geR"/>
                                         </connections>
                                     </tableViewCell>
@@ -1383,7 +1392,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="avatar_bg" width="498.239990234375" height="268.55999755859375"/>
-        <image name="default_avatar" width="73.5" height="70.5"/>
+        <image name="avatar_bg" width="346" height="186.5"/>
+        <image name="default_avatar" width="49" height="47"/>
     </resources>
 </document>

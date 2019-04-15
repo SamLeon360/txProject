@@ -30,8 +30,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.nPage = 1;
-    self.titleDic = [self.serviceType isEqualToString:@"综合服务"]?@{@"银行信贷":@"1",@"健康保健":@"2",@"活动策划":@"3",@"境外游学":@"5",@"保险代理":@"6",@"高端定制":@"7",@"商务翻译":@"8",@"公司搬迁":@"10",@"摄影摄像":@"11",@"车辆维护保养":@"12",@"商务出行":@"13",@"票卷服务":@"14"}: @{@"工商注册":@"1",@"财税服务":@"5",@"知识产权":@"8",@"资质办理":@"10",@"法律服务":@"18",@"人力社保":@"21",@"场地服务":@"25",@"创业辅导":@"27",@"投融资":@"29",@"图文视频":@"33",@"视觉设计":@"36",@"市场传播":@"37",@"消防环保":@"38",@"物流快递":@"39",@"创业信息":@"41"};
-    self.typeArray = [self.serviceType isEqualToString:@"综合服务"]?@[@"银行信贷",@"健康保健",@"活动策划",@"境外游学",@"保险代理",@"高端定制",@"商务翻译",@"公司搬迁",@"摄影摄像",@"车辆维护保养",@"商务出行",@"票卷服务"]:@[@"连锁加盟",@"项目转让",@"资产转让",@"创业项目",@"创业培训",@"创业商学院",@"商业计划",@"写字楼租赁",@"厂房租赁",@"水电管道维修",@"装修装潢",@"网络安装维护",@"办公室设备维修",@"建筑维修",@"花卉盆景",@"办公室水族",@"办公设备",@"工商登记",@"行政许可申请",@"商标注册",@"版权登记",@"专利申请",@"产权诉讼",@"财税记账",@"法律服务",@"投资机构",@"投资人",@"技术顾问",@"营销顾问",@"管理顾问",@"融资顾问",@"展会服务",@"广告传媒",@"互联网建设推广",@"消防安监",@"环保环评",@"物流快递",@"技能培训",@"技术创新",@"会议活动"];
+    self.titleDic = [self.serviceType isEqualToString:@"综合服务"]?@{@"融资信贷":@"1",@"科技创新":@"2",@"健康体检":@"3",@"活动策划":@"4",@"高端定制":@"5",@"车辆保养":@"6",@"展会展览":@"7",@"住宿餐饮":@"8",@"涉外服务":@"9",@"项目申报":@"10",@"房地产":@"11",@"商务翻译":@"12",@"公司搬迁":@"13",@"摄影摄像":@"14",@"汽车租赁":@"15"}: @{@"工商注册":@"1",@"财税服务":@"5",@"知识产权":@"8",@"资质办理":@"10",@"法律服务":@"18",@"人力社保":@"21",@"场地服务":@"25",@"创业辅导":@"27",@"投融资":@"29",@"图文视频":@"33",@"视觉设计":@"36",@"市场传播":@"37",@"消防环保":@"38",@"物流快递":@"39",@"创业信息":@"41"};
+    self.typeArray = [self.serviceType isEqualToString:@"综合服务"]?@[@"融资信贷",@"科技创新",@"健康体检",@"活动策划",@"高端定制",@"车辆保养",@"展会展览",@"住宿餐饮",@"涉外服务",@"房地产",@"商务翻译",@"公司搬迁",@"摄影摄像",@"汽车租赁"]:@[@"工商注册",@"财税服务",@"知识产权",@"资质办理",@"法律服务",@"人力社保",@"场地服务",@"创业辅导",@"投融资",@"图文视频",@"视觉设计",@"市场传播",@"消防环保",@"物流快递",@"创业信息"];
     [self getDataArrayByRefresh];
     self.title = self.typeString;
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getDataArrayByMore)];
@@ -71,16 +71,20 @@
         if ([responseDic[@"code"] integerValue] == 1) {
             if (arr.count > 0) {
                 [blockSelf.dataArray addObjectsFromArray:responseDic[@"data"]];
+                 [blockSelf.tableView.mj_footer endRefreshing];
             }else{
                 blockSelf.nPage  -- ;
+                    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                
             }
             
         
         }else{
             blockSelf.nPage -- ;
+             [blockSelf.tableView.mj_footer endRefreshing];
         }
         [blockSelf.tableView reloadData];
-        [blockSelf.tableView.mj_footer endRefreshing];
+       
     } failure:^(NSError *error) {
          blockSelf.nPage  -- ;
         [blockSelf.tableView.mj_footer endRefreshing];
@@ -107,13 +111,15 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     EntreListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EntreListCell"];
     NSDictionary *dic = self.dataArray[indexPath.row];
-    NSArray *imageurlArr = [dic[@"service_img"] componentsSeparatedByString:@"|"];
-    [cell.cellView makeCorner:5];
-    [cell.cellImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,imageurlArr[0]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        if (error) {
-            [cell.cellImage setImage:[UIImage imageNamed:@"default_avatar"]];
-        }
-    }];
+    if (![dic[@"service_img"] isKindOfClass:[NSNull class]]) {
+        NSArray *imageurlArr = [dic[@"service_img"] componentsSeparatedByString:@"|"];
+        [cell.cellView makeCorner:5];
+        [cell.cellImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?imageslim",AVATAR_HOST_URL,imageurlArr[0]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            if (error) {
+                [cell.cellImage setImage:[UIImage imageNamed:@"default_avatar"]];
+            }
+        }];
+    }
     if ([self.serviceType isEqualToString:@"综合服务"]) {
         [self.titleDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             if ([ obj integerValue] == [dic[@"service_type"] integerValue]) {
@@ -122,7 +128,11 @@
         }];
         
     }else{
-         cell.oneTag.text = self.typeArray[[dic[@"service_type"] integerValue]-1];
+        [self.titleDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            if ([ obj integerValue] == [dic[@"service_type"] integerValue]) {
+                cell.oneTag.text = key;
+            }
+        }];
     }
     cell.twoTag.text = dic[@"member_name"];
     cell.titleCell.text = dic[@"service_title"];
@@ -141,7 +151,7 @@
         __block EntrepernurialAllListController *blockSelf = self;
         [_addDataBtn bk_whenTapped:^{
             AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
-            vc.typeString = blockSelf.serviceType;
+            vc.typeString = self.serviceType ;
             vc.typeIndex = [blockSelf.titleDic[blockSelf.title] integerValue];
             [self.navigationController pushViewController:vc animated:YES];
 //            TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];

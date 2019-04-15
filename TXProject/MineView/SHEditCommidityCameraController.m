@@ -82,17 +82,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+   
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+     [self.navigationController setNavigationBarHidden:YES animated:NO];
     self.unSaveImageArray = [NSMutableArray array];
     
     [self.unSaveImageArray addObjectsFromArray:self.imageArray];
@@ -355,6 +356,7 @@
 
 #pragma mark - 保存照片数组
 -(void)saveImageArray{
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     if (self.delegate && [self.delegate respondsToSelector:@selector(savePhotoWithArray:)]) {
      
         [self.delegate savePhotoWithArray:self.unSaveImageArray];

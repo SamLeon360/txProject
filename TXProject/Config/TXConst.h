@@ -14,11 +14,11 @@
 
 
 #define MaxPhotoNum 1
-
+#define NAVBAR_CHANGE_POINT 100
 #define ScreenW [UIScreen mainScreen].bounds.size.width
 #define ScreenH [UIScreen mainScreen].bounds.size.height
 #define FULL_SCREEN CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-#define kScale    [UIScreen mainScreen].bounds.size.width/375.0f  //屏幕宽度相对iPhone6屏幕宽度的比例
+#define kScale    [UIScreen mainScreen].bounds.size.width/414.0f  //屏幕宽度相对iPhone6屏幕宽度的比例
 #define KWidth_Scale    [UIScreen mainScreen].bounds.size.width/375.0f
 #define kScaleByView    [UIScreen mainScreen].bounds.size.width/320.0f
 
@@ -41,7 +41,7 @@ object:nil];
 // 移除通知
 #define NOTIFY_REMOVE(_notifyName) [[NSNotificationCenter defaultCenter] removeObserver:self name:_notifyName object:nil];
 
-
+///0---显示网页  1---隐藏
 #define SHOW_WEB [[[NSUserDefaults standardUserDefaults] objectForKey:@"ShowWeb"] integerValue]==0
 
 #define USER_SINGLE  [GVUserDefaults standardUserDefaults]

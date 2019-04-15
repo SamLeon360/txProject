@@ -385,6 +385,8 @@ double const ScalePhotoWidth = 1000;
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
+
+//    self.cancleBlock();
     [self hide];
 }
 

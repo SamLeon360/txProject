@@ -5,7 +5,7 @@
 //  Created by Sam on 2019/2/12.
 //  Copyright © 2019 sam. All rights reserved.
 //
-
+#import "LibraryController.h"
 #import "NewHomePageController.h"
 #import "HomeSectionView.h"
 #import "PosterCell.h"
@@ -20,12 +20,17 @@
 #import "MineCommerceController.h"
 #import "MyGuideController.h"
 #import "InvestmentDetailController.h"
-
+#import "SmallWXCell.h"
+#import "SmallWXController.h"
+#import "UpdateAlertView.h"
+#import "StudentJobController.h"
 @interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource,RCIMUserInfoDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) HomeSectionView *sectionView;
+@property (nonatomic) UpdateAlertView *updateAlertView;
 @property (nonatomic) NSArray *commerceArray;
 @property (nonatomic) NSArray *poseterArray;
+
 @end
 
 @implementation NewHomePageController
@@ -39,7 +44,7 @@
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
     [self getCommerceList];
     [self getCycleImageArray];
-    
+    [self getVersion];
     if (USER_SINGLE.token.length > 0) {
         NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.member_id,@"member_id",USER_SINGLE.token,@"token",USER_SINGLE.role_type,@"RoleType", nil];
         [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_GET_IM_TOKEN headerParameters:dic bodyParameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
@@ -62,7 +67,68 @@
             
         }];
     }
-
+    
+}
+-(void)getVersion{
+    [HTTPREQUEST_SINGLE getWithURLString:SH_GET_VERSION parameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
+        NSString *newest = responseDic[@"data"][@"ios_newest_versions"];
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        // app版本
+        NSString *app_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        if ([self compareVersion:app_Version to:newest] == -1 ) {
+            self.updateAlertView.NewVersionLabel.text = [NSString stringWithFormat:@"最新版本:%@",newest];
+            self.updateAlertView.currentVersionLabel.text = [NSString stringWithFormat:@"当前版本:%@",app_Version];
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"%@",error);
+    }];
+}
+- (NSInteger)compareVersion:(NSString *)v1 to:(NSString *)v2 {
+    // 都为空，相等，返回0
+    if (!v1 && !v2) {
+        return 0;
+    }
+    
+    // v1为空，v2不为空，返回-1
+    if (!v1 && v2) {
+        return -1;
+    }
+    
+    // v2为空，v1不为空，返回1
+    if (v1 && !v2) {
+        return 1;
+    }
+    
+    // 获取版本号字段
+    NSArray *v1Array = [v1 componentsSeparatedByString:@"."];
+    NSArray *v2Array = [v2 componentsSeparatedByString:@"."];
+    // 取字段最少的，进行循环比较
+    NSInteger smallCount = (v1Array.count > v2Array.count) ? v2Array.count : v1Array.count;
+    
+    for (int i = 0; i < smallCount; i++) {
+        NSInteger value1 = [[v1Array objectAtIndex:i] integerValue];
+        NSInteger value2 = [[v2Array objectAtIndex:i] integerValue];
+        if (value1 > value2) {
+            // v1版本字段大于v2版本字段，返回1
+            return 1;
+        } else if (value1 < value2) {
+            // v2版本字段大于v1版本字段，返回-1
+            return -1;
+        }
+        
+        // 版本相等，继续循环。
+    }
+    
+    // 版本可比较字段相等，则字段多的版本高于字段少的版本。
+    if (v1Array.count > v2Array.count) {
+        return 1;
+    } else if (v1Array.count < v2Array.count) {
+        return -1;
+    } else {
+        return 0;
+    }
+    
+    return 0;
 }
 -(void)getCommerceList{
     __block NewHomePageController *blockSelf = self;
@@ -87,7 +153,7 @@
             [imageURLArray addObject:imageString];
         }
         blockSelf.poseterArray = imageURLArray;
-       [blockSelf.tableView reloadData];
+        [blockSelf.tableView reloadData];
     } failure:^(NSError *error) {
         
     }];
@@ -126,9 +192,9 @@
         cell.contentLabel.text = commerceType;
         cell.cityLabel.text = [NSString stringWithFormat:@"  %@",dic[@"commerce_location"]];
         cell.numberLabel.text = [NSString stringWithFormat:@"%@名会员",dic[@"ct"]];
-         [cell.cellView makeCorner:5];
+        [cell.cellView makeCorner:5];
         if ([dic[@"commerce_logo"] isKindOfClass:[NSNull class]]) {
-             [cell.commerceImage setImage:[UIImage imageNamed:@"default_avatar"]];
+            [cell.commerceImage setImage:[UIImage imageNamed:@"default_avatar"]];
         }else{
             [cell.commerceImage sd_setImageWithURL: [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,dic[@"commerce_logo"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (error) {
@@ -146,6 +212,8 @@
             return 177;
         }else if (indexPath.row == 1){
             return 206;
+        }else if(indexPath.row == 3){
+            return 163;
         }else{
             return 80;
         }
@@ -184,6 +252,26 @@
                 InvestmentDetailController *vc = [[UIStoryboard storyboardWithName:@"Investment" bundle:nil] instantiateViewControllerWithIdentifier:@"InvestmentDetailController"];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
+            [cell.peopleNeedView bk_whenTapped:^{
+                StudentJobController *vc = [[UIStoryboard storyboardWithName:@"StudentJob" bundle:nil] instantiateViewControllerWithIdentifier:@"StudentJobController"];
+                [self.navigationController pushViewController:vc
+                                                     animated:YES];
+            }];
+            [cell.libraryView bk_whenTapped:^{
+                LibraryController *vc =[[UIStoryboard storyboardWithName:@"Library" bundle:nil] instantiateViewControllerWithIdentifier:@"LibraryController"];
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+            return cell;
+        }break;
+        case 3:{
+            SmallWXCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"SmallWXCell"];
+            [cell.smallWX makeCorner:10];
+            cell.smallWX.userInteractionEnabled = YES;
+            [cell.smallWX bk_whenTapped:^{
+                SmallWXController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"SmallWXController"];
+                [self.navigationController pushViewController:vc
+                                                     animated:YES];
+            }];
             return cell;
         }break;
         case 2:{
@@ -209,7 +297,7 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        return 3;
+        return 4;
     }else{
         return self.commerceArray.count;
     }
@@ -231,8 +319,30 @@
 -(HomeSectionView *)sectionView{
     if (_sectionView == nil) {
         _sectionView = [[NSBundle mainBundle] loadNibNamed:@"homeview" owner:self options:nil][1];
+        [_sectionView.checkLabel bk_whenTapped:^{
+            SearchCommerceController *searchVC = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"SearchCommerceController"];
+            [self.navigationController pushViewController:searchVC animated:YES];
+        }];
         
     }
     return _sectionView;
+}
+-(UpdateAlertView *)updateAlertView{
+    if (_updateAlertView == nil) {
+        _updateAlertView = [[NSBundle mainBundle] loadNibNamed:@"UpdateAlertView" owner:self options:nil][0];
+        _updateAlertView.frame = CGRectMake(0, 0, ScreenW, ScreenH);
+        [_updateAlertView setBackgroundColor: [[UIColor whiteColor] colorWithAlphaComponent:0]];
+        [_updateAlertView.backgroundView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4]];
+        [_updateAlertView.cancelBtn bk_whenTapped:^{
+            exit(0);
+        }];
+        
+        [_updateAlertView.updateBtn bk_whenTapped:^{
+            NSString * urlStr = [NSString stringWithFormat: @"itms-apps://itunes.apple.com/app/id%@?mt=8",@"1454486224"];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+        }];
+        [[UIApplication sharedApplication].keyWindow addSubview:_updateAlertView];
+    }
+    return _updateAlertView;
 }
 @end

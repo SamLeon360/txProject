@@ -79,37 +79,25 @@
 //            formatter.dateFormat = @"yyyyMMddHHmmss";
 //            NSString *timeTemp = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
             [self payWithAppScheme:dic[@"query_str"]];
-     
+            
         }
     } failure:^(NSError *error) {
         
     }];
 }
 - (void)payWithAppScheme:(NSString *)payString{
-    __block PayServiceController *blockSelf = self;
-    [[AlipaySDK defaultService] payOrder:payString fromScheme:@"alipay" callback:^(NSDictionary *resultDic) { // 网页版
-        NSLog(@"支付宝支付结果 reslut = %@", resultDic);
-        
-        // 返回结果需要通过 resultStatus 以及 result 字段的值来综合判断并确定支付结果。 在 resultStatus=9000,并且 success="true"以及 sign="xxx"校验通过的情况下,证明支付成功。其它情况归为失败。较低安全级别的场合,也可以只通过检查 resultStatus 以及 success="true"来判定支付结果
-        
-//        if (resultDic && [resultDic objectForKey:@"resultStatus"] && ([[resultDic objectForKey:@"resultStatus"] intValue] == 9000)) {
-//            [blockSelf uploadData];
-//            
-//        } else {
-//            
-//            // 发通知带出支付失败结果
-//            //                [ZLNotificationCenter postNotificationName:QTXAliReturnFailedPayNotification object:resultDic];
-//        }
+    [[AlipaySDK defaultService] payOrder:payString fromScheme:@"txalipay" callback:^(NSDictionary *resultDic) { // 网页版
+        NSLog(@"%@",resultDic);
     }];
 }
     
 -(void)wxPay{
-    self.orderParam = [[NSDictionary alloc] initWithObjectsAndKeys:@"2",@"pay_method",self.dataDic[@"service_type"],@"pay_type",@"4",@"pay_using_type", nil];
+    self.orderParam = [[NSDictionary alloc] initWithObjectsAndKeys:@"2",@"pay_method",self.dataDic[@"service_type"],@"pay_type",@"4",@"pay_using_type",[self.dataDic[@"service_type"] integerValue] == 2?self.serviceDic[@"service_type"]:@"",@"classify",[self.serviceDic[@"service_type"] integerValue] == 1?self.paramDic[@"service_type"]:@"",@"pay_synthesis",USER_SINGLE.member_id,@"member", nil];
     [self wxpayFouction:self.orderParam];
    
 }
 -(void)aliPay{
-    self.orderParam = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"pay_method",self.dataDic[@"service_type"],@"pay_type",@"3",@"pay_using_type", nil];
+    self.orderParam = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"pay_method",self.dataDic[@"service_type"],@"pay_type",@"3",@"pay_using_type", [self.dataDic[@"service_type"] integerValue] == 2?self.serviceDic[@"service_type"]:@"",@"classify",[self.serviceDic[@"service_type"] integerValue] == 1?self.paramDic[@"service_type"]:@"",@"pay_synthesis",USER_SINGLE.member_id,@"member", nil];
     [self alipayFouction:self.orderParam];
 }
 -(NSString *)getRandomNumber{

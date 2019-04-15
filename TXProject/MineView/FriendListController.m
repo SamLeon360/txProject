@@ -56,6 +56,9 @@
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (!(SHOW_WEB)) {
+        return;
+    }
         NSDictionary *dic = self.friendsList[indexPath.row];
             MemberDetailController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberDetailController"];
             vc.memberDic = @{@"member_id":dic[@"friend_id"],@"commerce_id":USER_SINGLE.default_commerce_id};

@@ -8,6 +8,7 @@
 
 #import "LibraryController.h"
 #import "TXWebViewController.h"
+#import "LibraryListController.h"
 @interface LibraryController ()
 @property (weak, nonatomic) IBOutlet UIView *commerceLibrary;
 @property (weak, nonatomic) IBOutlet UIView *companyLibrary;
@@ -21,18 +22,18 @@
     self.title = @"文库";
     __block LibraryController *blockSelf = self;
     [self.commerceLibrary bk_whenTapped:^{
-        TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
-        vc.webUrl = [NSString stringWithFormat:@"%@library/commerce_library_list/1/1////0/1",WEB_HOST_URL];
-        [blockSelf.navigationController pushViewController:vc animated:YES];
+        [blockSelf clickToList:@"1"];
     }];
     [self.companyLibrary bk_whenTapped:^{
-        TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
-        vc.webUrl = [NSString stringWithFormat:@"%@library/commerce_library_list/1/2////0/1",WEB_HOST_URL];
-        [blockSelf.navigationController pushViewController:vc animated:YES];
+        [blockSelf clickToList:@"2"];
     }];
     
 }
-
+-(void)clickToList:(NSString *)type{
+    LibraryListController *vc = [[UIStoryboard storyboardWithName:@"Library" bundle:nil] instantiateViewControllerWithIdentifier:@"LibraryListController"];
+    vc.libraryVCType = type;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 /*
 #pragma mark - Navigation
 

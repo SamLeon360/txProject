@@ -18,8 +18,11 @@
 #import "NewMineMessageTableViewController.h"
 #import "NewHomePageController.h"
 #import "UITabBar+DKSTabBar.h"
+#import "SearchCommerceController.h"
+#import "UploadCommerceControllerController.h"
 @interface TXMainViewController ()<UITabBarControllerDelegate,RCIMReceiveMessageDelegate>
-
+@property (nonatomic) CommerceAlertView *comAlertView;
+@property (nonatomic) NSInteger tabIndex;
 @end
 
 @implementation TXMainViewController
@@ -82,11 +85,13 @@
                                title:@"广场"];
     
     HomeServerController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"HomeServerController"];
-
-    [self addChildViewController:vc
-                           image:[[UIImage imageNamed:@"server_no_select"] scaleToSize:CGSizeMake(19, 20)]
-                   selectedImage:[[UIImage imageNamed:@"server_select"] scaleToSize:CGSizeMake(19, 20)]
-                           title:@"应用"];
+    if ([NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length > 0) {
+        [self addChildViewController:vc
+                               image:[[UIImage imageNamed:@"server_no_select"] scaleToSize:CGSizeMake(19, 20)]
+                       selectedImage:[[UIImage imageNamed:@"server_select"] scaleToSize:CGSizeMake(19, 20)]
+                               title:@"应用"];
+    }
+    
     
     TXChatListController *webVc1 = [[TXChatListController alloc] init];
     [self addChildViewController:webVc1
@@ -95,12 +100,16 @@
                            title:@"聊天"];
    
     
-    TXWebViewController *webVc2 = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
-    webVc2.intype = shop_cycle;
-    [self addChildViewController:webVc2
-                               image:[[UIImage imageNamed:@"cycle_no_select"] scaleToSize:CGSizeMake(18, 18)]
-                       selectedImage:[[UIImage imageNamed:@"cycle_select"] scaleToSize:CGSizeMake(18, 18)]
-                               title:@"商圈"];
+    if ([NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length > 0) {
+        if (SHOW_WEB) {
+            TXWebViewController *webVc2 = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+            webVc2.intype = shop_cycle;
+            [self addChildViewController:webVc2
+                                   image:[[UIImage imageNamed:@"cycle_no_select"] scaleToSize:CGSizeMake(18, 18)]
+                           selectedImage:[[UIImage imageNamed:@"cycle_select"] scaleToSize:CGSizeMake(18, 18)]
+                                   title:@"商圈"];
+        }
+    }
     
     
     //我
@@ -133,6 +142,7 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
     NSInteger tabSeledIndex = tabBarController.selectedIndex;
+    self.tabIndex = tabSeledIndex;
     if (![USER_SINGLE isLogin] && tabSeledIndex!=0 && tabSeledIndex != 1 ) {
         [self gotoReLogin];
     }
@@ -144,10 +154,43 @@
     if (tabSeledIndex == 4) {
         NOTIFY_POST(@"getDataNetWork");
     }
+    if (tabSeledIndex == 1||tabSeledIndex == 2||tabSeledIndex == 3) {
+        if ([USER_SINGLE.default_commerce_name isEqualToString:@""]) {
+             [[UIApplication sharedApplication].keyWindow addSubview:self.comAlertView];
+        }
+    }
 }
 -(void)gotoReLogin{
     USER_SINGLE.token = @"";
     [USER_SINGLE logout];
 }
-
+-(CommerceAlertView *)comAlertView{
+    if (_comAlertView == nil) {
+        _comAlertView = [[NSBundle mainBundle] loadNibNamed:@"homeview" owner:self options:nil][2];
+        _comAlertView.frame = CGRectMake(0, 0, ScreenW, ScreenH);
+        _comAlertView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        [_comAlertView.comContentView makeCorner:5];
+        __block TXMainViewController *blockSelf = self;
+        [_comAlertView.commerceListView bk_whenTapped:^{
+            blockSelf.selectedIndex = 0;
+            UINavigationController *currentVc = blockSelf.childViewControllers[0];
+            [blockSelf.comAlertView removeFromSuperview];
+            SearchCommerceController *vc = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"SearchCommerceController"];
+            [currentVc pushViewController:vc animated:YES];
+            
+        }];
+        [_comAlertView.commerceCreatView bk_whenTapped:^{
+            blockSelf.selectedIndex = 0;
+            UINavigationController *currentVc = blockSelf.childViewControllers[0];
+            [blockSelf.comAlertView removeFromSuperview];
+            UploadCommerceControllerController *VC = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"UploadCommerceControllerController"];
+            [currentVc pushViewController:VC animated:YES];
+            
+        }];
+        [_comAlertView bk_whenTapped:^{
+            [blockSelf.comAlertView removeFromSuperview];
+        }];
+    }
+    return _comAlertView;
+}
 @end

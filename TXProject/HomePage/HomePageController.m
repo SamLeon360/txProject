@@ -72,7 +72,7 @@
     }
     
     cellBgImageArray =@[@"home_icon_1",@"home_icon_2",@"home_icon_3",@"home_icon_4",@"home_icon_5",@"home_icon_6",@"home_icon_7",@"home_icon_8"];
-    cellBgTitleArray = SHOW_WEB?@[@"社团介绍",@"会员风采",@"社团通知",@"社团新闻",@"通知反馈",@"社团工作",@"天寻广场",@"会员发布"]:@[@"社团介绍",@"会员风采",@"社团通知",@"社团新闻"];
+    cellBgTitleArray = SHOW_WEB?@[@"社团介绍",@"会员风采",@"社团通知",@"社团新闻",@"通知反馈",@"社团工作",@"天寻广场",@"会员发布"]:@[@"社团介绍",@"会员风采",@"社团通知",@"社团新闻",@"会员发布"];
     cellUrlArray = @[[NSString stringWithFormat:@"member/detail_platform/%@/1",USER_SINGLE.default_commerce_id],[NSString stringWithFormat:@"member/commerce_friend/%@//1/1/1",USER_SINGLE.default_commerce_id],@"member/commerce_notify//1",@"news_list/1/1/1",@"secretary/send_notify_status/1//1",@"member_work/1",@"home/common_square/1",@"member/application_index/1"];
     [self getScrollImages];
     
@@ -219,6 +219,10 @@
         }else if (indexPath.row == 4){
             CommerceWorkController *vc = [[UIStoryboard storyboardWithName:@"CommerceWork" bundle:nil] instantiateViewControllerWithIdentifier:@"CommerceWorkController"];
             [self.navigationController pushViewController:vc animated:YES];
+        }else if (indexPath.row == 5){
+            MemberPostController *vc = [[UIStoryboard storyboardWithName:@"MemberPost" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberPostController"];
+            [self.navigationController pushViewController:vc animated:YES];
+            return;
         }
     }
 }

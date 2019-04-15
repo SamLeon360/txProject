@@ -57,6 +57,9 @@
 #import "UIColor+RGBHex.h"
 #import <ShareSDK/ShareSDK.h>
 
+
+#import "CommerceAlertView.h"
+
 //Managers
 #import "RequestManager.h"
 //#import "LocationManager.h"

@@ -16,6 +16,8 @@
 #import "FriendListController.h"
 #import "NotifyListController.h"
 #import "MyGuideController.h"
+#import "UploadCommerceControllerController.h"
+#import "SearchCommerceController.h"
 @interface NewMineMessageTableViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *userHeaderIamge;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -34,6 +36,8 @@
 @property (weak, nonatomic) IBOutlet UIView *friendView;
 @property (nonatomic) NSDictionary *userDic;
 @property (nonatomic) NSArray *commerceArray;
+@property (nonatomic) CommerceAlertView *comAlertView;
+@property (nonatomic) NSArray *commerceJobArray;
 @end
 
 @implementation NewMineMessageTableViewController
@@ -43,6 +47,7 @@
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
     self.navigationItem.title = @"个人中心";
+    self.commerceJobArray = @[ @"会长",@"执行会长",@"常务副会长",@"副会长",@"常务理事",@"理事",@"监事长",@"副监事长",@"监事",@"名誉会长",@"荣誉会长",@"创会会长",@"顾问",@"秘书长",@"执行秘书长",@"专职秘书长",@"副秘书长",@"干事",@"办公室主任",@"文员",@"部长",@"会员",@"创会会长"];
     [self getDataNetWork];
     NOTIFY_ADD(getDataNetWork, @"getDataNetWork");//
     NOTIFY_ADD(getNewMeMessage, @"getNewMeMessage");
@@ -50,6 +55,8 @@
         if (self.commerceArray.count > 0) {
             MineCommerceController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MineCommerceController"];
             [self.navigationController pushViewController:vc animated:YES];
+        }else{
+            [[UIApplication sharedApplication].keyWindow addSubview:self.comAlertView];
         }
     }];
     __block NewMineMessageTableViewController *blockSelf = self;
@@ -142,12 +149,13 @@
             USER_SINGLE.member_name = self.userDic[@"member_name"];
             USER_SINGLE.member_id = [NSString stringWithFormat:@"%@",self.userDic[@"member_id"]];
             self.userNameLabel.text = self.userDic[@"member_name"];
-           self.userTypeLabel.text = [self.userDic[@"role_type"] integerValue] == 1?@"秘书处":@"会员";
+//           self.userTypeLabel.text = [self.userDic[@"role_type"] integerValue] == 1?@"秘书处":@"会员";
             [self.userHeaderIamge sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.userDic[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (error) {
                     [self.userHeaderIamge setImage:[UIImage imageNamed:@"default_avatar"]];
                 }
             }];
+            [self.userHeaderIamge makeCorner:self.userHeaderIamge.frame.size.height/2];
 
             [self getCommerceMessage];
 //            [self.myTableView reloadData];
@@ -164,15 +172,17 @@
         NSDictionary *dic = responseDic;
         if ([responseDic[@"code"] integerValue] == 0) {
             self.commerceArray = dic[@"data"];
-            if (USER_SINGLE.default_commerce_name == nil) {
+            if ([USER_SINGLE.default_commerce_name isEqualToString:@""]) {
                 if (self.commerceArray.count <= 0) {
-                    self.commerceName.text = @"请先申请加入社团";
+                    self.commerceName.text = @"当前社团:无";
                 }else{
                     NSDictionary *dic = self.commerceArray.firstObject;
                     self.commerceName.text = dic[@"commerce_name"];
+                    self.userTypeLabel.text = self.commerceJobArray[[dic[@"member_post_in_commerce"] integerValue]- 1];
                 }
             }else{
                 self.commerceName.text = USER_SINGLE.default_commerce_name;
+                self.userTypeLabel.text = self.commerceJobArray[[USER_SINGLE.commerceDic[@"member_post_in_commerce"] integerValue]- 1];
             }
 //            [self.myTableView reloadData];
         }else if([responseDic[@"code"] integerValue] == -1001){
@@ -182,5 +192,28 @@
     } failure:^(NSError *error) {
         
     }];
+}
+-(CommerceAlertView *)comAlertView{
+    if (_comAlertView == nil) {
+        _comAlertView = [[NSBundle mainBundle] loadNibNamed:@"homeview" owner:self options:nil][2];
+        _comAlertView.frame = CGRectMake(0, 0, ScreenW, ScreenH);
+        _comAlertView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        [_comAlertView.comContentView makeCorner:5];
+        __block NewMineMessageTableViewController *blockSelf = self;
+        [_comAlertView.commerceListView bk_whenTapped:^{
+            [blockSelf.comAlertView removeFromSuperview];
+            SearchCommerceController *vc = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"SearchCommerceController"];
+            [blockSelf.navigationController pushViewController:vc animated:YES];
+        }];
+        [_comAlertView.commerceCreatView bk_whenTapped:^{
+            [blockSelf.comAlertView removeFromSuperview];
+            UploadCommerceControllerController *VC = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"UploadCommerceControllerController"];
+            [blockSelf.navigationController pushViewController:VC animated:YES];
+        }];
+        [_comAlertView bk_whenTapped:^{
+            [blockSelf.comAlertView removeFromSuperview];
+        }];
+    }
+    return _comAlertView;
 }
 @end

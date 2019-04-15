@@ -70,12 +70,15 @@
     if (indexPath.row == 0) {
         return 405;
     }else if(indexPath.row == 1){
-        return 89;
+        return 54 +[CustomFountion getHeightLineWithString:self.detailDataDic[@"service_desc"] withWidth:335*kScale withFont:[UIFont systemFontOfSize:15]];
     }else if (indexPath.row == 6){
         return 165;
     }else if (indexPath.row == 7){
-        return 90;
-    }else{
+        return 54 + [CustomFountion getHeightLineWithString:self.detailDataDic[@"enterprise_introduction"] withWidth:335*kScale withFont:[UIFont systemFontOfSize:15]];
+    }else if (indexPath.row == 5){
+        return 50 + [CustomFountion getHeightLineWithString:self.detailDataDic[@"address"] withWidth:335*kScale withFont:[UIFont systemFontOfSize:15]];
+    }
+    else{
         return 50;
     }
 }
@@ -99,6 +102,12 @@
         cell.contentLabel.text = self.detailDataDic[@"member_name"];
         [cell.cellImage setImage:[UIImage imageNamed:@"IOS_Phone_Blue"]];
         cell.cellImage.hidden = NO;
+        [cell bk_whenTapped:^{
+            NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"telephone"]];
+            UIWebView * callWebview = [[UIWebView alloc] init];
+            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            [self.view addSubview:callWebview];
+        }];
         return cell;
     }else if (indexPath.row == 3){
         EntreMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EntreMessageCell"];

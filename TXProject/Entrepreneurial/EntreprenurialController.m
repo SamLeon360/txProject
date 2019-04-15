@@ -11,7 +11,9 @@
 #import "Entrepreneurial.h"
 #import "MJRefresh.h"
 #import "TXWebViewController.h"
+#import "ChuangyeAllListController.h"
 #import "EntrepernurialAllListController.h"
+#import "EntreCheckMoreController.h"
 @interface EntreprenurialController ()<UITableViewDataSource,UITableViewDelegate>
 @property (nonatomic) NSInteger nPage;
 @property (nonatomic) NSMutableArray *hottopicArray;
@@ -55,11 +57,17 @@
             
             [blockSelf.hottopicArray addObjectsFromArray:responseDic[@"data"] ];
             [blockSelf.tableView reloadData];
-            
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }else{
+                [blockSelf.tableView.mj_footer endRefreshing];
+            }
         }else{
             blockSelf.nPage --;
+            [blockSelf.tableView.mj_footer endRefreshing];
         }
-        [blockSelf.tableView.mj_footer endRefreshing];
+        
     } failure:^(NSError *error) {
         blockSelf.nPage -- ;
         [blockSelf.tableView.mj_footer endRefreshing];
@@ -133,6 +141,7 @@
 -(void)clickToWebView:(NSString *)urlString andTitle:(NSString *)title{
     TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
     vc.webUrl = urlString;
+    vc.wayIn = @"创业";
     vc.title = title;
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -142,44 +151,33 @@
         _entreHeader.cycleScrollview.imageURLStringsGroup = self.advertImageArray;
         _entreHeader.cycleScrollview.showPageControl = YES;
         [_entreHeader.cycleScrollview makeCorner:10];
-        _entreHeader.frame = CGRectMake(0, 0, ScreenW, 439*kScale);
+        _entreHeader.frame = CGRectMake(0, 0, ScreenW, 513*kScale);
         __block EntreprenurialController *blockSelf = self;
-        [_entreHeader.treasureView bk_whenTapped:^{
-           
-            [blockSelf clickToEntre:@"工商注册"];
-        }];
-        [_entreHeader.coachView bk_whenTapped:^{
-             [blockSelf clickToEntre:@"财税服务"];
-        }];
-        [_entreHeader.leaseView bk_whenTapped:^{
-            [blockSelf clickToEntre:@"知识产权"];
-        }];
-        [_entreHeader.facilitiesView bk_whenTapped:^{
-            [blockSelf clickToEntre:@"资质办理"];
-        }];
+    
         [_entreHeader.circlesView bk_whenTapped:^{
-           [blockSelf clickToEntre:@"法律服务"];
+           [blockSelf clickToEntre:@"工商注册"];
         }];
         [_entreHeader.knowledgeView bk_whenTapped:^{
-            [blockSelf clickToEntre:@"人力社保"];
+            [blockSelf clickToEntre:@"知识产权"];
         }];
         [_entreHeader.lawView bk_whenTapped:^{
-             [blockSelf clickToEntre:@"场地服务"];
+             [blockSelf clickToEntre:@"法律服务"];
         }];
-        [_entreHeader.financingView bk_whenTapped:^{
-             [blockSelf clickToEntre:@"创业辅导"];
+        [_entreHeader.moneyView bk_whenTapped:^{
+            [blockSelf clickToEntre:@"财税服务"];
         }];
-        [_entreHeader.adviserView bk_whenTapped:^{
-             [blockSelf clickToEntre:@"投融资"];
+        [_entreHeader.zizhiView bk_whenTapped:^{
+            [blockSelf clickToEntre:@"资质办理"];
         }];
         [_entreHeader.moreView bk_whenTapped:^{
-//            if (SHOW_WEB) {
-//                [blockSelf clickToWebView:[NSString stringWithFormat:@"%@moreMenus/1",WEB_HOST_URL] andTitle:@"查看更多"];
-//            }
+            ChuangyeAllListController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"ChuangyeAllListController"];
+            [self.navigationController pushViewController:vc animated:YES];
          
         }];
         [_entreHeader.clickCheckMoreView bk_whenTapped:^{
-            [blockSelf clickToWebView:[NSString stringWithFormat:@"%@services_public/1/1/1",WEB_HOST_URL] andTitle:@"创业资讯"];
+            EntreCheckMoreController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"EntreCheckMoreController"];
+            vc.typeIndex = 1;
+            [blockSelf.navigationController pushViewController:vc animated:YES];
         }];
     return _entreHeader;
 }

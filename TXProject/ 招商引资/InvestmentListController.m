@@ -62,8 +62,15 @@
     self.tableView.mj_footer = footer;
     NOTIFY_ADD(getinvestmentArrayByRefresh, @"getinvestmentArrayByRefresh");
     [self setupClickAction];
-}-(void)viewWillAppear:(BOOL)animated{
-    [self.navigationController setNavigationBarHidden:YES];
+}
+-(void)viewWillAppear:(BOOL)animated{
+    
+}
+-(void)viewDidLayoutSubviews{
+     [self.navigationController setNavigationBarHidden:YES animated:NO];
+}
+-(void)viewDidAppear:(BOOL)animated{
+  
 }
 -(void)setupClickAction{
     __block InvestmentListController *blockSelf = self;
@@ -95,12 +102,15 @@
         [blockSelf.haveMotionLabel setTextColor:[UIColor whiteColor]];
         [blockSelf.investmentLabel setTextColor:[UIColor colorWithRGB:0xFACB46]];
         blockSelf.selectType = 0;
-        
+         [self.navigationController setNavigationBarHidden:YES animated:NO];
+        [blockSelf getinvestmentArrayByRefresh];
     }];
     [self.haveMotionLabel bk_whenTapped:^{
         [blockSelf.investmentLabel setTextColor:[UIColor whiteColor]];
         [blockSelf.haveMotionLabel setTextColor:[UIColor colorWithRGB:0xFACB46]];
         blockSelf.selectType = 1;
+         [self.navigationController setNavigationBarHidden:YES animated:NO];
+        [blockSelf getMotionArrayDataByRefresh];
     }];
     [self.projectSelectView.resetBtn bk_whenTapped:^{
         blockSelf.projectSelectView.minPriceTF.text = @"";
@@ -119,6 +129,7 @@
             self.motionArray = [NSMutableArray arrayWithCapacity:0];
             [self.motionArray addObjectsFromArray:responseDic[@"data"]];
             [self.tableView reloadData];
+          
         }else{
              [AlertView showYMAlertView:self.view andtitle:@"获取数据失败"];
         }
@@ -154,10 +165,17 @@
             [self.investmentArray addObjectsFromArray: responseDic[@"data"]];
             self.nPage ++;
             [self.tableView reloadData];
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }else{
+                 [self.tableView.mj_footer endRefreshing];
+            }
         }else{
             [AlertView showYMAlertView:self.view andtitle:@"获取数据失败"];
+             [self.tableView.mj_footer endRefreshing];
         }
-        [self.tableView.mj_footer endRefreshing];
+       
        
     } failure:^(NSError *error) {
         [AlertView showYMAlertView:self.view andtitle:@"网络异常,请检查网络"];
@@ -190,9 +208,12 @@
     if (![dic[@"picture"] isKindOfClass:[NSNull class]]) {
         
         NSArray *picArray = [dic[@"picture"] componentsSeparatedByString:@"|"];
-        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?imageView2/3/w/82/h/82",AVATAR_HOST_URL,picArray.firstObject]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?imageView2/2/w/200/h/200",AVATAR_HOST_URL,picArray.firstObject]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (error) {
+                cell.avatarImage.contentMode = UIViewContentModeScaleAspectFit;
                 [cell.avatarImage setImage:[UIImage imageNamed:@"default_avatar"]];
+            }else{
+                [cell.avatarImage setImage: image];
             }
         }];
     }else{

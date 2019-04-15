@@ -9,11 +9,15 @@
 #import "MemberPostController.h"
 #import "TXWebViewController.h"
 #import "HomePageModelCell.h"
+#import "JobListController.h"
+#import "MineProductListController.h"
+#import "AddServiceFormController.h"
 @interface MemberPostController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (nonatomic) NSArray *imageArray;
 @property (nonatomic) NSArray *titleArray;
 @property (nonatomic) NSArray *urlArray;
+@property (nonatomic) NSArray *companyList;
 @end
 
 @implementation MemberPostController
@@ -51,7 +55,45 @@
     cell.titleLabel.text = self.titleArray[indexPath.row];
     return cell;
 }
+-(void)GetCompanyData{
+    __block MemberPostController *blockSelf = self;
+    [HTTPREQUEST_SINGLE postWithURLString:SH_COMPANY_LIST parameters:@{@"member_id":USER_SINGLE.member_id} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue]== 0) {
+            blockSelf.companyList = responseDic[@"data"];
+            
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+}
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row == 1) {
+        JobListController *vc =[[UIStoryboard storyboardWithName:@"StudentJob" bundle:nil] instantiateViewControllerWithIdentifier:@"JobListController"];
+        vc.companyArray = self.companyList;
+        [self.navigationController pushViewController:vc
+                                             animated:YES];
+        return;
+    }
+    if (indexPath.row == 3) {
+        
+        MineProductListController *vc = [[UIStoryboard storyboardWithName:@"Production" bundle:nil] instantiateViewControllerWithIdentifier:@"MineProductListController"];
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    if (indexPath.row == 5) {
+        AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
+        vc.typeString =@"综合服务";
+        
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    if (indexPath.row == 6) {
+        AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
+        vc.typeString =@"创业宝典";
+      
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
     NSString *url = self.urlArray[indexPath.row];
     TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
     vc.webUrl = url;

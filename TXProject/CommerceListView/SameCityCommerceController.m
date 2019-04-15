@@ -93,7 +93,7 @@
     NSDictionary *dic = self.commerceArray[indexPath.row];
     CommerceDetailController *vc = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"CommerceDetailController"];
     vc.commerceId = [NSString stringWithFormat:@"%ld",[dic[@"commerce_id"] integerValue]];
-    
+    vc.wayIn = @"application";
     [self.navigationController pushViewController:vc animated:YES];
 //    TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
 //    vc.webUrl = [NSString stringWithFormat:@"https://app.tianxun168.com/h5/#/member/detail_platform/%@/",dic[@"commerce_id"]];

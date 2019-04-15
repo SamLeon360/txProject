@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="qrX-Sx-0Dr" customClass="ProductionTypeCell">
+            <rect key="frame" x="0.0" y="0.0" width="95" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="95" height="48"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S3u-Rf-dN2">
+                        <rect key="frame" x="0.0" y="0.0" width="95" height="48"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Al-fM-lwJ">
+                                <rect key="frame" x="0.0" y="0.0" width="95" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.40392156862745099" green="0.40784313725490196" blue="0.40784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="8Al-fM-lwJ" firstAttribute="top" secondItem="S3u-Rf-dN2" secondAttribute="top" id="H6b-JZ-vR6"/>
+                            <constraint firstAttribute="bottom" secondItem="8Al-fM-lwJ" secondAttribute="bottom" id="bB7-2J-8Y7"/>
+                            <constraint firstAttribute="trailing" secondItem="8Al-fM-lwJ" secondAttribute="trailing" id="gT5-GR-DHn"/>
+                            <constraint firstItem="8Al-fM-lwJ" firstAttribute="leading" secondItem="S3u-Rf-dN2" secondAttribute="leading" id="mib-jw-K1J"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="S3u-Rf-dN2" firstAttribute="leading" secondItem="qrX-Sx-0Dr" secondAttribute="leading" id="EL7-PM-Izh"/>
+                <constraint firstAttribute="bottom" secondItem="S3u-Rf-dN2" secondAttribute="bottom" id="K9E-8h-J5k"/>
+                <constraint firstAttribute="trailing" secondItem="S3u-Rf-dN2" secondAttribute="trailing" id="iMW-oO-Ijr"/>
+                <constraint firstItem="S3u-Rf-dN2" firstAttribute="top" secondItem="qrX-Sx-0Dr" secondAttribute="top" id="jf7-xw-YXV"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="a3x-dx-WWN"/>
+            <connections>
+                <outlet property="bgView" destination="S3u-Rf-dN2" id="FIa-jX-WKE"/>
+                <outlet property="title" destination="8Al-fM-lwJ" id="CoL-Yb-0vO"/>
+            </connections>
+            <point key="canvasLocation" x="267" y="89"/>
+        </collectionViewCell>
+    </objects>
+</document>

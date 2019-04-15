@@ -37,9 +37,12 @@
 @property (nonatomic) NSArray *mainJobArray;
 @property (nonatomic) NSString *parentId;
 @property (nonatomic) NSString *regionId;
+@property (nonatomic) BOOL isLocationProvince;
+@property (nonatomic) BOOL isLocationCity;
 @property (nonatomic) BOOL isprovince;
 @property (nonatomic) NSInteger selectType;
 @property (nonatomic) BOOL selectMainJob;
+@property (nonatomic) NSDictionary *detailCommerceDic;
 @end
 
 @implementation UploadCommerceControllerController
@@ -63,7 +66,26 @@
 //    [[UIApplication sharedApplication].keyWindow  addSubview:self.areaPickerView];
     [self setupClickAction];
     [self getAreaData];
+//    if (self.editDic != nil) {
+//        
+//    }
     self.mainJobArray = @[@"包装印刷-包装",@"包装印刷-印刷",@"地产建材-地产开发",@"地产建材-建筑材料",@"地产建材-建筑监理及设计",@"法律咨询-法律咨询及服务",@"法律咨询-知识产权咨询及服务",@"纺织服饰-布匹",@"纺织服饰-服装",@"纺织服饰-箱包",@"工程贸易-工程施工",@"工程贸易-零售贸易",@"广告传媒-广告设计制作",@"广告传媒-文化传媒",@"广告传媒-新媒体广告",@"环保化工-环保检测治理",@"环保化工-生物化工",@"家电灯饰-灯饰配件",@"家电灯饰-灯饰照明",@"家电灯饰-家电配件",@"家电灯饰-家用电器",@"家具装饰-办公家具",@"家具装饰-家居用品",@"家具装饰-装饰工程",@"教育艺术-教育培训",@"教育艺术-文化艺术",@"金融财会-财会服务",@"金融财会-金融投资",@"酒店餐饮-餐饮服务",@"酒店餐饮-综合酒店",@"能源矿产-矿产开发",@"能源矿产-新能源产业",@"网络电子-电脑及配件",@"网络电子-软件工程",@"网络电子-网络技术",@"五金机械-机械装备",@"五金机械-模具铸造",@"五金机械-五金加工",@"物流运输-货物流通",@"物流运输-客运",@"医药保健-保健品",@"医药保健-医药销售",@"其他行业-其他行业",];
+}
+-(void)getCommerceDetail{
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.editDic[@"commerce_id"],@"id", nil];
+    __block UploadCommerceControllerController *blockSelf = self;
+    [HTTPREQUEST_SINGLE postWithURLString:SH_COMMERCE_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == 1) {
+            NSArray *arr = responseDic[@"data"];
+            blockSelf.detailCommerceDic = arr.firstObject;
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+}
+-(void)setupDetailData{
+    self.commerceNameLabel.text = self.detailCommerceDic[@"commerce_name"];
+   
 }
 -(void)setupClickAction{
     self.pickSureBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, ScreenH-340, ScreenW, 40)];
@@ -117,7 +139,8 @@
         blockSelf.typeTF.text = blockSelf.selectTypeView.fourLabel.text;
         blockSelf.selectTypeView.hidden = YES;
         blockSelf.changeLabel.text = @"社团会籍 * :";
-       
+        blockSelf.changeCommerceLabel.text = @"省";
+        blockSelf.changeCommerceCityLabel.text = @"市";
         blockSelf.commerceAutoHeight.constant = 100;
         __block UploadCommerceControllerController *bblockSelf = self;
         [blockSelf.changeCommerceLabel bk_whenTapped:^{
@@ -127,6 +150,7 @@
             bblockSelf.areaPickerView.hidden = NO;
             bblockSelf.isprovince = YES;
             bblockSelf.pickSureBtn.hidden = NO;
+            bblockSelf.isLocationProvince = NO;
         }];
         [blockSelf.changeCommerceCityLabel bk_whenTapped:^{
             if (bblockSelf.provinceTF.text.length > 0) {
@@ -134,6 +158,7 @@
                 [bblockSelf getAreaData];
                 bblockSelf.isprovince = NO;
                 bblockSelf.pickSureBtn.hidden = NO;
+                bblockSelf.isLocationCity = NO;
             }else{
                 return ;
             }
@@ -143,11 +168,13 @@
     [self.provinceTF bk_whenTapped:^{
         blockSelf.parentId = @"1";
         blockSelf.regionId = @"1";
+        [blockSelf getAreaData];
          blockSelf.selectMainJob = NO;
         [blockSelf.areaPickerView reloadAllComponents];
         blockSelf.areaPickerView.hidden = NO;
         blockSelf.isprovince = YES;
         blockSelf.pickSureBtn.hidden = NO;
+        blockSelf.isLocationProvince = YES;
     }];
     [self.cityTF bk_whenTapped:^{
         if (blockSelf.provinceTF.text.length > 0) {
@@ -155,6 +182,7 @@
             [blockSelf getAreaData];
             blockSelf.isprovince = NO;
             blockSelf.pickSureBtn.hidden = NO;
+            blockSelf.isLocationCity = YES;
         }else{
             return ;
         }
@@ -215,10 +243,20 @@
         self.regionId = [NSString stringWithFormat:@"%@",@"2"];
         if (self.selectType == 3) {
             if (self.isprovince) {
-                self.changeCommerceLabel.text = dic[@"region_name"];
+                if (!self.isLocationProvince) {
+                    self.changeCommerceLabel.text = dic[@"region_name"];
+                }else{
+                    self.provinceTF.text = dic[@"region_name"];
+                }
+                
             }else{
-                self.changeCommerceCityLabel.text = dic[@"region_name"];
+                if (!self.isLocationCity) {
+                     self.changeCommerceCityLabel.text = dic[@"region_name"];
+                }else{
+                    self.cityTF.text = dic[@"region_name"];
+                }
             }
+            
         }else{
             if (self.isprovince) {
                 self.provinceTF.text = dic[@"region_name"];
@@ -240,18 +278,16 @@
 }
 - (IBAction)clickToUpload:(id)sender {
     NSDictionary *param;
-    if (self.selectType != 0&&self.selectType != 3) {
-        param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%d",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@|%@",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark", nil];
-    }else{
+   
         if (self.selectType == 3) {
-            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%d",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@|%@",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_lcation",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",self.changeCommerceLabel.text,@"commerce_belong_membership",[NSString stringWithFormat:@"%@|%@",self.changeCommerceLabel.text,self.changeCommerceCityLabel.text],@"commerce_belong_membership_real", nil];
+            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%ld",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@省|%@市",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_location",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",self.changeCommerceLabel.text,@"commerce_belong_membership",[NSString stringWithFormat:@"%@省|%@市",self.changeCommerceLabel.text,self.changeCommerceCityLabel.text],@"commerce_belong_membership_real",@"",@"main_business", nil];
         }else if (self.selectType == 1){
-            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%d",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@|%@",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_lcation",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",@"",@"commerce_belong_membership",@"||",@"commerce_belong_membership_real",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainJobArray indexOfObject:self.changeCommerceLabel.text]],@"main_business", nil];
+            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%ld",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@省|%@市",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_location",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",@"",@"commerce_belong_membership",@"||",@"commerce_belong_membership_real",[NSString stringWithFormat:@"%lu",(unsigned long)[self.mainJobArray indexOfObject:self.changeCommerceLabel.text]],@"main_business", nil];
         }else{
-            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%ld",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@|%@",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_lcation",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",@"",@"commerce_belong_membership",@"||",@"commerce_belong_membership_real", nil];
+            param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%ld",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@省|%@市",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_location",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",@"",@"commerce_belong_membership",@"||",@"commerce_belong_membership_real",@"",@"main_business", nil];
         }
       
-    }
+    
     [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:SH_CREATE_COMMERCE parameters:param withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyyMMddHHmmss";
@@ -263,9 +299,12 @@
     } success:^(NSDictionary *responseDic) {
         NSLog(@"%@",responseDic);
         if ([responseDic[@"code"] integerValue] == -1002) {
-            [AlertView showYMAlertView:self.view andtitle:@"入驻成功"];
+            [AlertView showYMAlertView:self.view andtitle:@"申请成功,等待审核"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
         }else{
-            [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
+            [AlertView showYMAlertView:self.view andtitle:responseDic[@"messagep"]];
         }
         [SVProgressHUD dismiss];
     } failure:^(NSError *error) {

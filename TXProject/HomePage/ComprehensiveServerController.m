@@ -12,6 +12,7 @@
 #import "HottopicCell.h"
 #import "TXWebViewController.h"
 #import "EntrepernurialAllListController.h"
+#import "EntreCheckMoreController.h"
 @interface ComprehensiveServerController ()<UITableViewDataSource,UITableViewDelegate>
 @property (nonatomic) NSInteger nPage;
 @property (nonatomic) NSMutableArray *hottopicArray;
@@ -54,14 +55,18 @@
     NSDictionary *param =  [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)self.nPage],@"page",@"2",@"type", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_SERVER_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
-            
+            [blockSelf.tableView.mj_footer endRefreshing];
             [blockSelf.hottopicArray addObjectsFromArray:responseDic[@"data"] ];
             [blockSelf.tableView reloadData];
-            
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
         }else{
             blockSelf.nPage --;
+            [blockSelf.tableView.mj_footer endRefreshing];
         }
-        [blockSelf.tableView.mj_footer endRefreshing];
+        
     } failure:^(NSError *error) {
         blockSelf.nPage -- ;
         [blockSelf.tableView.mj_footer endRefreshing];
@@ -72,13 +77,21 @@
     NSDictionary *param =  [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)self.nPage],@"page",@"2",@"type", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_SERVER_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
+            [blockSelf.tableView.mj_header endRefreshing];
             blockSelf.nPage = 1;
             blockSelf.hottopicArray = [NSMutableArray arrayWithCapacity:0];
             [blockSelf.hottopicArray addObjectsFromArray:responseDic[@"data"] ];
-            [blockSelf.tableView reloadData];
             
+             self.tableView.tableHeaderView = self.entreHeader;
+            [blockSelf.tableView reloadData];
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+        }else{
+            [blockSelf.tableView.mj_header endRefreshing];
         }
-        [blockSelf.tableView.mj_header endRefreshing];
+        
     } failure:^(NSError *error) {
         [blockSelf.tableView.mj_header endRefreshing];
     }];
@@ -94,7 +107,7 @@
                 NSString *imageString = [NSString stringWithFormat:@"%@%@",@"https://app.tianxun168.com",imageurlArray[i]];
                 [blockSelf.advertImageArray addObject:imageString];
             }
-            self.tableView.tableHeaderView = self.entreHeader;
+           
             [blockSelf.tableView reloadData];
         }
     } failure:^(NSError *error) {
@@ -117,7 +130,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSDictionary *cellDic = self.hottopicArray[indexPath.row];
     HottopicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HottopicCell"];
-    [cell.cellImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?imageView2/1/w/200/h/200",AVATAR_HOST_URL,cellDic[@"headlines_img"]]]];
+    [cell.cellImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?imageslim",AVATAR_HOST_URL,cellDic[@"headlines_img"]]]];
     [cell.cellContent setText:cellDic[@"headlines"]];
     NSString *timeString = [cellDic[@"publish_time"] componentsSeparatedByString:@" "][0];
     [cell.cellTime setText:timeString];
@@ -137,6 +150,7 @@
 -(void)clickToWebView:(NSString *)urlString andTitle:(NSString *)title{
     TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
     vc.webUrl = urlString;
+    vc.wayIn = @"综合";
     vc.title = title;
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -146,49 +160,60 @@
     _entreHeader.cycleScrollview.imageURLStringsGroup = self.advertImageArray;
     _entreHeader.cycleScrollview.showPageControl = YES;
     [_entreHeader.cycleScrollview makeCorner:10];
-    _entreHeader.frame = CGRectMake(0, 0, ScreenW, 439*kScale);
+    _entreHeader.frame = CGRectMake(0, 0, ScreenW, 580*kScale);
     __block ComprehensiveServerController *blockSelf = self;
     [_entreHeader.treasureView bk_whenTapped:^{
  
-        [blockSelf clickToEntre:@"银行信贷"];
+        [blockSelf clickToEntre:@"融资信贷"];
     }];
     [_entreHeader.coachView bk_whenTapped:^{
     
-     [blockSelf clickToEntre:@"健康保健"];
+     [blockSelf clickToEntre:@"科技创新"];
     }];
     [_entreHeader.leaseView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"活动策划"];
+        [blockSelf clickToEntre:@"健康体检"];
         
     }];
     [_entreHeader.facilitiesView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"境外游学"];
+        [blockSelf clickToEntre:@"活动策划"];
     }];
     [_entreHeader.circlesView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"保险代理"];
-    }];
-    [_entreHeader.knowledgeView bk_whenTapped:^{
         [blockSelf clickToEntre:@"高端定制"];
     }];
+    [_entreHeader.knowledgeView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"车辆保养"];
+    }];
     [_entreHeader.lawView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"商务翻译"];
+        [blockSelf clickToEntre:@"展会展览"];
     }];
     [_entreHeader.financingView bk_whenTapped:^{
-       [blockSelf clickToEntre:@"公司搬迁"];
+       [blockSelf clickToEntre:@"住宿餐饮"];
     }];
     [_entreHeader.adviserView bk_whenTapped:^{
-       [blockSelf clickToEntre:@"健康保健"];
+       [blockSelf clickToEntre:@"涉外服务"];
     }];
-    [_entreHeader.moreView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"车辆维护保养"];
+    [_entreHeader.projectView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"项目申报"];
     }];
-    [_entreHeader.busnessOutView bk_whenTapped:^{
-       [blockSelf clickToEntre:@"商务出行"];
+    [_entreHeader.houseView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"房地产"];
     }];
-    [_entreHeader.tickectServerView bk_whenTapped:^{
-        [blockSelf clickToEntre:@"票卷服务"];
+    [_entreHeader.translateView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"商务翻译"];
+    }];
+    [_entreHeader.companyView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"公司搬迁"];
+    }];
+    [_entreHeader.takePhotoView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"摄影摄像"];
+    }];
+    [_entreHeader.carView bk_whenTapped:^{
+        [blockSelf clickToEntre:@"汽车租赁"];
     }];
     [_entreHeader.clickCheckMoreView bk_whenTapped:^{
-        [blockSelf clickToWebView:[NSString stringWithFormat:@"%@services_public/1/2/1",WEB_HOST_URL] andTitle:@"行业热门话题"];
+        EntreCheckMoreController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"EntreCheckMoreController"];
+        vc.typeIndex = 2;
+        [blockSelf.navigationController pushViewController:vc animated:YES];
     }];
     return _entreHeader;
 }

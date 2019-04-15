@@ -28,7 +28,7 @@
     self.myTableView.dataSource = self;
     self.title = @"我的";
     NOTIFY_ADD(getMineMessage, @"getMineMessage");
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3F78BC];
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
     [self getFriendNumber];
    

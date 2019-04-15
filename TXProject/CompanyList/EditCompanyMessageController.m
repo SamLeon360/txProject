@@ -8,7 +8,9 @@
 
 #import "EditCompanyMessageController.h"
 #import "ZLPhotoActionSheet.h"
-@interface EditCompanyMessageController ()<UIPickerViewDataSource,UIPickerViewDelegate>
+#import "SHEditCommidityCameraController.h"
+#import "NewEditAlertView.h"
+@interface EditCompanyMessageController ()<UIPickerViewDataSource,UIPickerViewDelegate,SHEditCommidityCameraDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *companyLogoImage;
 @property (weak, nonatomic) IBOutlet UITextField *companyName;
 @property (weak, nonatomic) IBOutlet UITextField *companyBoss;
@@ -49,7 +51,9 @@
 @end
 
 @implementation EditCompanyMessageController
-
+{
+    NewEditAlertView *alertView;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
      self.typeArray = @[@"全部", @"高新技术企业", @"科技型中小企业", @"规模以上企业", @"创新型企业", @"民营科技企业", @"大中型企业", @"其他"];
@@ -70,7 +74,7 @@
         [self.updataBtn setTitle:@"添加" forState:UIControlStateNormal];
     }
     [self setupClickAction];
-    
+    [self setupNewAlertView];
 }
 - (IBAction)clickToUpdate:(id)sender {
     if (self.companyIdDic != nil) {
@@ -123,23 +127,24 @@
     [[UIApplication sharedApplication].keyWindow  addSubview:self.pickSureBtn];
     
     [self.companyLogoImage bk_whenTapped:^{
-        ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
-        
-        //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
-        ac.configuration.maxSelectCount = 1;
-        ac.configuration.maxPreviewCount = 10;
-        ac.configuration.allowMixSelect = NO;
-        
-        //如调用的方法无sender参数，则该参数必传
-        ac.sender = blockSelf;
-        __block EditCompanyMessageController *bblockSelf = blockSelf;
-        //选择回调
-        [ac setSelectImageBlock:^(NSArray<UIImage *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
-            [bblockSelf.companyLogoImage setImage:images[0]];
-        }];
-        
-        //调用相册
-        [ac showPreviewAnimated:YES];
+         [self showEditAlertView];
+        //        ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
+//
+//        //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
+//        ac.configuration.maxSelectCount = 1;
+//        ac.configuration.maxPreviewCount = 10;
+//        ac.configuration.allowMixSelect = NO;
+//
+//        //如调用的方法无sender参数，则该参数必传
+//        ac.sender = blockSelf;
+//        __block EditCompanyMessageController *bblockSelf = blockSelf;
+//        //选择回调
+//        [ac setSelectImageBlock:^(NSArray<UIImage *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
+//            [bblockSelf.companyLogoImage setImage:images[0]];
+//        }];
+//
+//        //调用相册
+//        [ac showPreviewAnimated:YES];
     }];
     
     [self.mainWork1 bk_whenTapped:^{
@@ -184,6 +189,64 @@
         [blockSelf.areaPickerView reloadAllComponents];
         self.companyZZ.text = self.typeArray[0];
     }];
+}
+
+-(void)showEditAlertView{
+    [UIView animateWithDuration:0.5 animations:^{
+        self->alertView.alpha = 1;
+    }];
+}
+-(void)hideEditAlertView{
+    [UIView animateWithDuration:0.5 animations:^{
+        self->alertView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self->alertView removeFromSuperview];
+    }];
+    
+}
+/**
+ 门店图
+ */
+-(void)clickToTakePhoto{
+    [self hideEditAlertView];
+    SHEditCommidityCameraController *cameraVC = [[SHEditCommidityCameraController alloc] initWithArray:nil maxPhotoNum:1];
+    cameraVC.delegate = self;
+    
+    [self.navigationController pushViewController:cameraVC animated:YES];
+}
+
+
+/**
+ 门店图相册
+ */
+-(void)clickToTakeLib{
+    [self hideEditAlertView];
+    
+    //相册问题
+    ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
+    
+    //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
+    ac.configuration.maxSelectCount = 1;
+    ac.configuration.allowSelectVideo = NO;
+    ac.configuration.allowTakePhotoInLibrary = NO;
+    ac.configuration.maxPreviewCount = 1;
+    ac.configuration.editAfterSelectThumbnailImage = YES;
+    ac.configuration.hideClipRatiosToolBar = YES;
+    ac.configuration.clipRatios = @[GetClipRatio(1, 1)];
+    ac.configuration.saveNewImageAfterEdit = NO;
+    //    ac.configuration.clipRatios = @[1,1];
+    //如调用的方法无sender参数，则该参数必传
+    ac.sender = self;
+    __block EditCompanyMessageController *blockself = self;
+    //选择回调
+    [ac setSelectImageBlock:^(NSArray<UIImage *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
+        [blockself.companyLogoImage setImage:images[0]];
+//        [blockself upavatar];
+        
+    }];
+    
+    
+    [ac showPhotoLibrary];
 }
 -(void)editCompany{
     [HTTPREQUEST_SINGLE postWithURLString:SH_DETAIL_COMPANY parameters:@{@"enterprise_id":self.companyIdDic[@"enterprise_id"]} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
@@ -276,5 +339,20 @@
         _areaPickerView.hidden = YES;
     }
     return  _areaPickerView;
+}
+
+-(void)setupNewAlertView{
+    __block EditCompanyMessageController *blockSelf = self;
+    alertView = [[NSBundle mainBundle] loadNibNamed:@"NewEditAlertView" owner:self options:nil][0];
+    [alertView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4]];
+    alertView.frame = CGRectMake(0, 0, ScreenW, ScreenH);
+    alertView.alpha = 0;
+    [alertView.cancelBtn addTarget:self action:@selector(hideEditAlertView) forControlEvents:UIControlEventTouchUpInside];
+    [alertView.takePhotoBtn addTarget:self action:@selector(clickToTakePhoto) forControlEvents:UIControlEventTouchUpInside];
+    [alertView.photoLib addTarget:self action:@selector(clickToTakeLib) forControlEvents:UIControlEventTouchUpInside];
+    [alertView bk_whenTapped:^{
+        [blockSelf hideEditAlertView];
+    }];
+    [[[UIApplication sharedApplication] keyWindow] addSubview:alertView];
 }
 @end

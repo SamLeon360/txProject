@@ -54,15 +54,15 @@
         } failure:^(NSError *error) {
                                           
         }];
-    
-//    if (SHOW_WEB&&self.commerceId!=nil) {
-//        UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        editBtn.frame = CGRectMake(0, 0, 20, 20);
-//        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_icon"] forState:UIControlStateNormal];
-//        [editBtn addTarget:self action:@selector(clickToEdit) forControlEvents:UIControlEventTouchUpInside];
-//        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:editBtn];
-//        self.navigationItem.rightBarButtonItem = rightItem;
-//    }
+//    NSLog(@"%@---%@",USER_SINGLE.role_type,USER_SINGLE.default_role_type);
+    if (SHOW_WEB&&self.commerceId!=nil && [USER_SINGLE.default_role_type integerValue] == 1) {
+        UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        editBtn.frame = CGRectMake(0, 0, 20, 20);
+        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_icon"] forState:UIControlStateNormal];
+        [editBtn addTarget:self action:@selector(clickToEdit) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:editBtn];
+        self.navigationItem.rightBarButtonItem = rightItem;
+    }
 }
 -(void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
@@ -170,9 +170,10 @@
         _commerceFooter = [[NSBundle mainBundle] loadNibNamed:@"CommerceList" owner:self options:nil][3];
         [_commerceFooter.bigBtn makeCorner:5];
         [_commerceFooter.historyBtn makeCorner:5];
-        if (![[NSString stringWithFormat:@"%@",USER_SINGLE.default_commerce_id] isEqualToString:self.commerceId]) {
-            _commerceFooter.bigBtn.hidden = YES;
-            _commerceFooter.historyBtn.hidden  = YES;
+        _commerceFooter.bigBtn.hidden = YES;
+        _commerceFooter.historyBtn.hidden  = YES;
+        if (![[NSString stringWithFormat:@"%@",USER_SINGLE.default_commerce_id] isEqualToString:self.commerceId]&&![self.wayIn isEqualToString:@"application"]) {
+           
            [_commerceFooter.footerBtn setTitle:@"申请入会" forState:UIControlStateNormal];
            
         }else{
@@ -183,7 +184,7 @@
                 return ;
             }
             TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
-            vc.webUrl = [NSString stringWithFormat:@"%@scommerce/event/%@/1/1",WEB_HOST_URL,self.commerceDic[@"commerce_id"]];
+            vc.webUrl = [NSString stringWithFormat:@"%@commerce/event/%@/1/1",WEB_HOST_URL,self.commerceDic[@"commerce_id"]];
             [self.navigationController pushViewController:vc animated:YES];
         }];
         [_commerceFooter.historyBtn bk_whenTapped:^{
@@ -201,7 +202,7 @@
                 [self.navigationController pushViewController:vc animated:YES];
             }else{
             MemberListController *vc = [[UIStoryboard storyboardWithName:@"MemberList" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberListController"];
-            vc.checkMember = YES;
+            vc.checkMember =[self.commerceId isEqualToString:USER_SINGLE.default_commerce_id]? YES:NO;
             vc.commerceDic = self.commerceDic;
             [self.navigationController pushViewController:vc animated:YES];
             }

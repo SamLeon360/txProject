@@ -62,11 +62,14 @@
         NSArray *arr = responseDic[@"data"];
         if (arr.count > 0) {
             [blockSelf.schoolListArray addObjectsFromArray:responseDic[@"data"]];
-         [blockSelf.tableView reloadData];
+            [blockSelf.tableView reloadData];
+             [blockSelf.tableView.mj_footer endRefreshing];
         }else{
             blockSelf.nPage --;
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            
         }
-        [blockSelf.tableView.mj_footer endRefreshing];
+       
         
     } failure:^(NSError *error) {
         blockSelf.nPage --;

@@ -11,7 +11,7 @@
 #import "TXLoginController.h"
 #import "TXLoginNavControllerViewController.h"
 #import "Appdelegate.h"
-
+#import "MemberDetailController.h"
 @interface TXWebViewController ()<WKUIDelegate,WKNavigationDelegate>
 @property (nonatomic,strong) UIProgressView *progressView;
 @property (nonatomic) UIButton *reloadBtn;
@@ -37,7 +37,11 @@
     }
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
-    [self.navigationController setNavigationBarHidden:YES];
+    if ([self.wayIn isEqualToString:@"综合"]||[self.wayIn isEqualToString:@"创业"]) {
+         [self.navigationController setNavigationBarHidden:NO];
+    }else{
+        [self.navigationController setNavigationBarHidden:YES];
+    }
     webView.UIDelegate = self;
     [self.view addSubview:webView];
     wkwebJsBrideg = [WKWebViewJavascriptBridge bridgeForWebView:webView];
@@ -63,6 +67,7 @@
            [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.webUrl ]]];
     }else{
         if (self.dataDic) {
+            [self.navigationController setNavigationBarHidden:NO];
             NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"first",self.dataDic[@"id"],@"id",@"3",@"jump_flag", nil];
             [HTTPREQUEST_SINGLE postWithURLString:SH_WEB_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
                 NSArray *arr = responseDic[@"data"];
@@ -89,7 +94,7 @@
     [self setupPopBtn];
 }
 -(void)viewWillAppear:(BOOL)animated{
-    if (self.localHTML == nil&&self.dataDic==nil) {
+    if (self.localHTML == nil&&self.dataDic==nil&&self.wayIn == nil) {
          [self.navigationController setNavigationBarHidden:YES];
     }else{
         [self.navigationController setNavigationBarHidden:NO];
@@ -108,7 +113,7 @@
                 self.title = @"商圈";
                 [self setupNavStyle];
                 [self.navigationController setNavigationBarHidden:YES];
-                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEB_HOST_URL,@"member/moment_index"]]]];
+                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEB_HOST_URL,@"member/moment_index/1"]]]];
             }break;
             case 1:{
                 self.title = @"我的";
@@ -268,8 +273,14 @@
                 [self.navigationController setNavigationBarHidden:NO];
                 [webView loadHTMLString:self.localHTML baseURL:[NSURL URLWithString:@"https://app.tianxun168.com/h5/#/member/commerce_notify//"]];
             }
-            default:
-                break;
+            default:{
+                if ([self.wayIn isEqualToString:@"综合"]) {
+                    [self.navigationController setNavigationBarHidden:YES];
+                }else{
+                    [self.navigationController setNavigationBarHidden:NO];
+                    [webView loadHTMLString:self.localHTML baseURL:nil];
+                }
+            }break;
         }
     
 }
@@ -380,6 +391,22 @@
 //            appDelegate.window.rootViewController = vc;
 //            [appDelegate.window makeKeyAndVisible];
         }
+    }];
+    [wkwebJsBrideg registerHandler:@"clickToUserMessage" handler:^(id data, WVJBResponseCallback responseCallback) {
+        if (!(SHOW_WEB)) {
+            return;
+        }
+        NSDictionary *dic = data;
+        [self.navigationController setNavigationBarHidden:NO animated:NO];
+        self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
+        self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
+        UICollectionViewFlowLayout *layout =[[UICollectionViewFlowLayout alloc]init];
+        layout.sectionInset =UIEdgeInsetsMake(0,0, 0, 0);
+        layout.headerReferenceSize =CGSizeMake(ScreenW,208*kScale);
+        MemberDetailController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberDetailController"];
+        vc.wayIn = @"web";
+        vc.memberDic = dic;
+        [self.navigationController pushViewController:vc animated:YES];
     }];
     [wkwebJsBrideg registerHandler:@"getStorageData" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSDictionary *userdic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.TokenFrom,@"TokenFrom",USER_SINGLE.default_commerce_id,@"default_commerce_id",USER_SINGLE.default_commerce_name,@"default_commerce_name",USER_SINGLE.default_role_type,@"default_role_type",USER_SINGLE.exp,@"exp",USER_SINGLE.token,@"token",USER_SINGLE.member_id,@"member_id",USER_SINGLE.role_type,@"role_type",USER_SINGLE.isSecretary,@"i", USER_SINGLE.commerceDic==nil?@"":USER_SINGLE.commerceDic,@"s",nil];

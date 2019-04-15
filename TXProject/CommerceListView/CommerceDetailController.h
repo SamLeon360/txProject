@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CommerceDetailController : UIViewController
 @property (nonatomic) NSString *commerceId;
+@property (nonatomic) NSString *wayIn;
 @end
 
 NS_ASSUME_NONNULL_END

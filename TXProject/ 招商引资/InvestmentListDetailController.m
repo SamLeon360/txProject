@@ -23,6 +23,7 @@
 @property (nonatomic) BOOL twoCheckMore;
 @property (nonatomic) CGFloat oneCheckHeight;
 @property (nonatomic) CGFloat twoCheckHeight;
+@property (nonatomic) UIWebView * callWebview;
 @end
 
 @implementation InvestmentListDetailController
@@ -35,8 +36,7 @@
     self.twoCheckMore = NO;
     [self.navigationController setNavigationBarHidden:NO];
     self.title = @"招商详情";
-    self.projectTypeArray = @[ @"全部",@"园区建设",@"基础设施",@"农牧农副",
-                               @"工业制造",@"医药化工",@"文化旅游",@"能源矿产"];
+    self.projectTypeArray = @[ @"全部",@"园区建设",@"基础设施",@"农牧农副",@"工业制造",@"医药化工",@"文化旅游",@"能源矿产",@"金融投资",@"商贸物流",@"生物医药",@"现代服务业",@"大健康医药",@"健康养老",@"医疗服务业",@"科教文卫",@"科教文卫",@"高新科技",@"设施管理",@"其他"];
     self.messageArray = [NSMutableArray arrayWithCapacity:0];
     [self getInvestDetail];
 }
@@ -108,13 +108,13 @@
          
             return self.oneCheckHeight+87;
         }
-        return 180;
+        return 210;
     }else if (indexPath.row == 1){
         if (self.twoCheckMore) {
            
             return self.twoCheckHeight+87;
         }
-        return 180;
+        return 210;
     }else if (indexPath.row == 2){
         return 500;
     }else{
@@ -134,8 +134,8 @@
                 webView = cell.webcontentView.subviews.firstObject;
                 webView.frame = CGRectMake(0, 0,cell.webcontentView.frame.size.width,self.oneCheckMore?self.oneCheckHeight:83);
             }
-            cell.webcontentView.frame = CGRectMake(0, 0,cell.webcontentView.frame.size.width,self.oneCheckMore?self.oneCheckHeight:83);
-        
+            cell.webcontentView.frame = CGRectMake(0, 41,cell.webcontentView.frame.size.width,self.oneCheckMore?self.oneCheckHeight:83);
+           
             
             [webView setNavigationDelegate:self];
             webView.clipsToBounds = YES;
@@ -151,6 +151,7 @@
             self.oneCheckMore = !self.oneCheckMore;
             cell.checkMoreLabel.text = self.oneCheckMore?@"收起":@"查看更多";
             self.oneCheckHeight = self.oneCheckMore?webView.scrollView.contentSize.height+87:0;
+             [cell.webAutoHeight setConstant:self.oneCheckMore?webView.scrollView.contentSize.height:83];
             [self.tableView reloadData];
             [self.view layoutIfNeeded];
         }];
@@ -167,7 +168,8 @@
                 webView = cell.webcontentView.subviews.firstObject;
                 webView.frame = CGRectMake(0, 0,cell.webcontentView.frame.size.width,self.twoCheckMore?self.twoCheckHeight:83);
             }
-            cell.webcontentView.frame = CGRectMake(0, 0,cell.webcontentView.frame.size.width,self.twoCheckMore?self.twoCheckHeight:83);
+            cell.webcontentView.frame = CGRectMake(0, 41,cell.webcontentView.frame.size.width,self.twoCheckMore?self.twoCheckHeight:83);
+            [cell.webAutoHeight setConstant:self.twoCheckMore?self.twoCheckHeight:83];
         [webView setNavigationDelegate:self];
         webView.clipsToBounds = YES;
         webView.UIDelegate = self;
@@ -183,6 +185,7 @@
             self.twoCheckMore = !self.twoCheckMore;
              cell.checkMoreLabel.text = self.twoCheckMore?@"收起":@"查看更多";
             self.twoCheckHeight = self.twoCheckMore?webView.scrollView.contentSize.height+87:0;
+            [cell.webAutoHeight setConstant:self.twoCheckMore?webView.scrollView.contentSize.height:83];
             [self.tableView reloadData];
             [self.view layoutIfNeeded];
         }];
@@ -190,22 +193,24 @@
     }else if(indexPath.row == 2){
         InvestMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InvestMsgCell"];
         cell.contactLabel.text = self.detailDataDic[@"contacts"];
-        cell.jobLabel.text = self.detailDataDic[@"job_title"];
+        cell.jobLabel.text = [self.detailDataDic[@"job_title"] isKindOfClass:[NSNull class]]?@"":self.detailDataDic[@"job_title"];
         cell.callNumberLabel.text = self.detailDataDic[@"phone_number"];
-        cell.phoneLabel.text = self.detailDataDic[@"cell_phone"];
-        cell.emailLabel.text = self.detailDataDic[@"email"];
+        cell.phoneLabel.text = [self.detailDataDic[@"cell_phone"] isKindOfClass:[NSNull class]]?@"":self.detailDataDic[@"cell_phone"];
+        cell.emailLabel.text = [self.detailDataDic[@"email"] isKindOfClass:[NSNull class]]?@"":self.detailDataDic[@"email"];
         cell.addressLabel.text = [NSString stringWithFormat:@"%@ %@",[self.detailDataDic[@"projects_venue"] stringByReplacingOccurrencesOfString:@"|" withString:@""],self.detailDataDic[@"projects_venue2"]];
         cell.messageTF.layer.borderWidth = 1;
         cell.messageTF.layer.borderColor = [UIColor colorWithRGB:0XEDEDED].CGColor;
         [cell.callNumberView bk_whenTapped:^{
             NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"phone_number"]];
-            UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            UIWebView * callWebview = [[UIWebView alloc] init];
+            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
             [self.view addSubview:callWebview];
         }];
         [cell.phoneView bk_whenTapped:^{
             NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"cell_phone"]];
-            UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
-            [self.view addSubview:callWebview];
+            UIWebView * callWebview1 = [[UIWebView alloc] init];
+            [callWebview1 loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            [self.view addSubview:callWebview1];
         }];
         [cell.submitBtn bk_whenTapped:^{
             NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:cell.messageTF.text,@"content",self.dataDic[@"projects_id"],@"news_id",self.detailDataDic[@"member_id"],@"receiver_author",@"",@"son_id" ,nil];

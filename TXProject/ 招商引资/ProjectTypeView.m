@@ -35,9 +35,16 @@
     return  40;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    self.listVc.selectTypeIndex = indexPath.row;
-    self.listVc.nPage = 1;
-    NOTIFY_POST(@"getinvestmentArrayByRefresh");
+    
+    
+    if (self.functionName == nil) {
+        self.listVc.selectTypeIndex = indexPath.row;
+        self.listVc.nPage = 1;
+       NOTIFY_POST(@"getinvestmentArrayByRefresh");
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:self.functionName object:[NSString stringWithFormat:@"%ld",indexPath.row]];
+    }
+    
     [UIView animateWithDuration:0.3 animations:^{
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, ScreenW, 0);
     }];

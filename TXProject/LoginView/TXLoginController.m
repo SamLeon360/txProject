@@ -70,7 +70,11 @@
         CGFloat version = [[[UIDevice currentDevice]systemVersion]floatValue];
         if (version >= 10.0) {
             /// 大于等于10.0系统使用此openURL方法
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str] options:@{} completionHandler:nil];
+            if (@available(iOS 10.0, *)) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str] options:@{} completionHandler:nil];
+            } else {
+                // Fallback on earlier versions
+            }
         } else {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
         }
@@ -107,7 +111,20 @@
                 NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.exp,@"exp",USER_SINGLE.member_id,@"member_id",USER_SINGLE.role_type,@"role_type",USER_SINGLE.default_commerce_id,@"default_commerce_id",USER_SINGLE.default_role_type,@"default_role_type",USER_SINGLE.TokenFrom,@"TokenFrom", nil];
                 [HTTPREQUEST_SINGLE shitPostWithURLString:COMMERCE_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
                     NSArray *dataArray = responseDic[@"data"];
-                    USER_SINGLE.commerceArray = dataArray;
+                    NSMutableArray *newCommerceArray = [NSMutableArray arrayWithCapacity:0];
+                    for (NSDictionary *dic in dataArray) {
+                        NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+                        [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                            if ([obj isKindOfClass:[NSNull class]]) {
+                                [newDic setObject:@"" forKey:key];
+                            }else{
+                                [newDic setObject:obj forKey:key];
+                            }
+                        }];
+                        [newCommerceArray addObject:newDic];
+                    }
+                    
+                    USER_SINGLE.commerceArray = newCommerceArray;
                 
                     if (dataArray.count <= 0) {
                         [blockblockSelf gotoMainView];

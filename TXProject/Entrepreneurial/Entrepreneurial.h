@@ -12,22 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Entrepreneurial : UIView
 @property (weak, nonatomic) IBOutlet SDCycleScrollView *cycleScrollview;
-/**
- 创业宝典
- */
-@property (weak, nonatomic) IBOutlet UIView *treasureView;
-/**
- 创业辅导
- */
-@property (weak, nonatomic) IBOutlet UIView *coachView;
-/**
- 场所租赁
- */
-@property (weak, nonatomic) IBOutlet UIView *leaseView;
-/**
- 办公设施
- */
-@property (weak, nonatomic) IBOutlet UIView *facilitiesView;
+
 /**
 工商注册
  */
@@ -41,13 +26,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (weak, nonatomic) IBOutlet UIView *lawView;
 /**
- 投融资
+ 财税服务
  */
-@property (weak, nonatomic) IBOutlet UIView *financingView;
+@property (weak, nonatomic) IBOutlet UIView *moneyView;
 /**
- 创业顾问
+ 资质办理
  */
-@property (weak, nonatomic) IBOutlet UIView *adviserView;
+@property (weak, nonatomic) IBOutlet UIView *zizhiView;
+
+
 /**
  查看更多
  */

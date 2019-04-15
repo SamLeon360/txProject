@@ -25,7 +25,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource  = self;
 //    self.serverNameArray = SHOW_WEB?@[@"人脉社交",@"商务信息",@"文库",@"企业商务服务"]:@[@"人脉社交"];
-    self.serverNameArray = @[@"人脉社交"];//,@"商务信息"
+    self.serverNameArray = @[@"人脉社交",@"商务信息"];//
     self.serverImageArray = @[@[@{@"image":@"ren_icon_1",@"title":@"同籍社团"},@{@"image":@"ren_icon_2",@"title":@"同城社团"}],@[@{@"image":@"chan_icon_1",@"title":@"产品需求信息"},@{@"image":@"chan_icon_2",@"title":@"服务需求信息"}]];
 //    self.serverImageArray =
 //    SHOW_WEB? @[@[ @{@"image":@"ren_icon_1",@"title":@"同籍社团"},@{@"image":@"ren_icon_2",@"title":@"同城社团"},@{@"image":@"ren_icon_3",@"title":@"行业查找"}],@[@{@"image":@"chan_icon_1",@"title":@"产品需求信息"},@{@"image":@"chan_icon_2",@"title":@"服务需求信息"}],@[@{@"image":@"wen_icon_1",@"title":@"社团文库"},@{@"image":@"wen_icon_2",@"title":@"企业文库"}],@[@{@"image":@"qi_icon_1",@"title":@"企业管理"},@{@"image":@"qi_icon_2",@"title":@"基地"},@{@"image":@"qi_icon_3",@"title":@"工作"},@{@"image":@"qi_icon_4",@"title":@"实习审核"},@{@"image":@"qi_icon_5",@"title":@"实习需求"},@{@"image":@"qi_icon_6",@"title":@"项目合作"}]]:;
@@ -41,10 +41,10 @@
     return self.serverNameArray.count;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == self.serverNameArray.count - 1) {
-        return 125*2 + 50;
-    }
-    return 175;
+//    if (indexPath.row == self.serverNameArray.count - 1) {
+//        return 125*2 + 50;
+//    }
+    return 125*kScale + 50;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

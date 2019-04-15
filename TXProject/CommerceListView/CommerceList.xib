@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -492,6 +492,9 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="Lw6-qY-CA9"/>
+            <connections>
+                <outlet property="titleLabel" destination="Wrx-bx-qLS" id="9Wk-ON-Etu"/>
+            </connections>
             <point key="canvasLocation" x="856" y="326.98650674662673"/>
         </view>
         <view contentMode="scaleToFill" id="hSq-Pk-jdD" customClass="UploadSelectTypeView">
@@ -564,8 +567,8 @@
     <resources>
         <image name="IOS_Search" width="45" height="49.333332061767578"/>
         <image name="add_things_icon" width="64.666664123535156" height="64.666664123535156"/>
-        <image name="avatar_bg" width="498.239990234375" height="268.55999755859375"/>
-        <image name="default_avatar" width="73.5" height="70.5"/>
-        <image name="select_close" width="32" height="32"/>
+        <image name="avatar_bg" width="346" height="186.5"/>
+        <image name="default_avatar" width="49" height="47"/>
+        <image name="select_close" width="16" height="16"/>
     </resources>
 </document>

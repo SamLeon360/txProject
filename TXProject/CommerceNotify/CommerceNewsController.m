@@ -27,6 +27,9 @@
     self.title = @"社团新闻";
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 1)];
     
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getMoreNotifyData)];
+    self.tableView.mj_footer = footer;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 1)];
 //        UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 //        editBtn.frame = CGRectMake(0, 0, 20, 20);
 //        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_icon"] forState:UIControlStateNormal];
@@ -38,6 +41,10 @@
     
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+}
+-(void)viewDidLayoutSubviews{
     self.nPage = 1;
     [self getNotifyData];
 }
@@ -48,16 +55,43 @@
 }
 
 -(void)getNotifyData{
-    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.default_commerce_id,@"id",nil];
+    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.default_commerce_id,@"commerce_id",@"1",@"page",@"",@"news_types",@"",@"news_headlines",@"1",@"allow_publish" ,nil];
     __block CommerceNewsController *blockSelf = self;
-    [HTTPREQUEST_SINGLE allUserHeaderPostWithURLString:SH_DETAIL_NEWS parameters:dic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-        if ([responseDic[@"code"] integerValue] == 0) {
+    [HTTPREQUEST_SINGLE allUserHeaderPostWithURLString:SH_LIST_NEWS parameters:dic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == 1) {
             blockSelf.newsArray = [NSMutableArray arrayWithCapacity:0];
             [blockSelf.newsArray addObjectsFromArray:responseDic[@"data"]];
         }
         [blockSelf.tableView reloadData];
     } failure:^(NSError *error) {
         
+    }];
+}
+
+-(void)getMoreNotifyData{
+    self.nPage ++;
+    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.default_commerce_id,@"commerce_id",[NSString stringWithFormat:@"%ld",(long)self.nPage],@"page",@"",@"news_types",@"",@"news_headlines",@"1",@"allow_publish"  ,nil];
+    __block CommerceNewsController *blockSelf = self;
+    [HTTPREQUEST_SINGLE allUserHeaderPostWithURLString:SH_NOTIFY_MESSAGE parameters:dic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == 1) {
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                blockSelf.nPage --;
+                [blockSelf.tableView.mj_footer endRefreshingWithNoMoreData];
+            }else{
+                [blockSelf.tableView.mj_footer endRefreshing];
+                [blockSelf.newsArray addObjectsFromArray:responseDic[@"data"]];
+                [blockSelf.tableView.mj_footer endRefreshing];
+            }
+            
+        }else{
+            blockSelf.nPage --;
+            [blockSelf.tableView.mj_footer endRefreshing];
+        }
+        [blockSelf.tableView reloadData];
+    } failure:^(NSError *error) {
+        blockSelf.nPage--;
+        [blockSelf.tableView.mj_footer endRefreshing];
     }];
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{

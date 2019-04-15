@@ -13,10 +13,12 @@
 #import "MJRefresh.h"
 #import "UploadCommerceControllerController.h"
 #import "BottomView.h"
+#import "GetAreaView.h"
 #import "CommerceDetailController.h"
 @interface SearchCommerceController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UILabel *commerceType;
 @property (weak, nonatomic) IBOutlet UILabel *searchView;
+@property (weak, nonatomic) IBOutlet UILabel *areaLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) SearchCommerceNameView *searchNameView;
 @property (nonatomic) SearchCommerceTypeView *searchTypeView;
@@ -24,6 +26,9 @@
 @property (nonatomic) NSMutableArray *commerceArray;
 @property (nonatomic) NSString *selCommerceType;
 @property (nonatomic) NSInteger nPage;
+
+@property (nonatomic) GetAreaView *getAreaView;
+@property (nonatomic) NSString *selectAreaString;
 @end
 
 @implementation SearchCommerceController
@@ -38,6 +43,8 @@
     [self.view addSubview:self.searchNameView];
     [self.view addSubview:self.searchTypeView];
     [self.view addSubview:self.bottomBtn];
+    self.selectAreaString = @"";
+    self.getAreaView.hidden = YES;
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 85)];
     self.tableView.tableFooterView = footerView;
     [self.bottomBtn makeConstraints:^(MASConstraintMaker *make) {
@@ -69,13 +76,21 @@
             blockSelf.searchNameView.hidden = YES;
         }
     }];
+    [self.areaLabel bk_whenTapped:^{
+        blockSelf.getAreaView.hidden = !blockSelf.getAreaView.hidden;
+    }];
+    [self.view bk_whenTapped:^{
+        blockSelf.searchNameView.hidden = YES;
+        blockSelf.searchTypeView.hidden = YES;
+    }];
     [self getCommerceArray];
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getDataArrayByMore)];
     self.tableView.mj_footer = footer;
+    NOTIFY_ADD(getCommerceArray, @"getcommerceArray");
 }
 -(void)getCommerceArray{
     __block SearchCommerceController *blockSelf = self;
-    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",self.searchNameView.searchTF.text,@"commerce_name",self.selCommerceType,@"commerce_type",@"1",@"page",@"",@"ios", nil];
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.selectAreaString,@"affiliated_area",self.searchNameView.searchTF.text,@"commerce_name",self.selCommerceType,@"commerce_type",@"1",@"page",@"",@"ios", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_HOME_COMMERCES parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             blockSelf.commerceArray = [NSMutableArray arrayWithCapacity:0];
@@ -90,16 +105,23 @@
     self.nPage ++;
     NSString *name =self.searchNameView.searchTF.text.length==0?@"":self.searchNameView.searchTF.text;
     __block SearchCommerceController *blockSelf = self;
-    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",name,@"commerce_name",self.selCommerceType == nil?@"":self.selCommerceType,@"commerce_type",[NSString stringWithFormat:@"%ld",self.nPage],@"page",@"",@"ios", nil];
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.selectAreaString,@"affiliated_area",name,@"commerce_name",self.selCommerceType == nil?@"":self.selCommerceType,@"commerce_type",[NSString stringWithFormat:@"%ld",self.nPage],@"page",@"",@"ios", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_HOME_COMMERCES parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             [blockSelf.commerceArray addObjectsFromArray:responseDic[@"data"]] ;
             [blockSelf.tableView reloadData];
-           
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }else{
+                 [blockSelf.tableView.mj_footer endRefreshing];
+            }
+            
         }else{
             self.nPage --;
+             [blockSelf.tableView.mj_footer endRefreshing];
         }
-         [blockSelf.tableView.mj_footer endRefreshing];
+        
     } failure:^(NSError *error) {
         self.nPage -- ;
          [blockSelf.tableView.mj_footer endRefreshing];
@@ -241,4 +263,30 @@
     return _bottomBtn;
 }
 
+-(GetAreaView *)getAreaView{
+    if (_getAreaView == nil) {
+        __block SearchCommerceController *blockSelf = self;
+        _getAreaView = [[NSBundle mainBundle] loadNibNamed:@"Area" owner:self options:nil][0];
+        _getAreaView.frame = CGRectMake(0, 0, ScreenW, self.view.frame.size.height);
+        [self.view addSubview:_getAreaView];
+        _getAreaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
+        [_getAreaView setupTableView];
+        [_getAreaView.sureBtn bk_whenTapped:^{
+            blockSelf.selectAreaString = [NSString stringWithFormat:@"%@省|%@市|",blockSelf.getAreaView.selectProvince,blockSelf.getAreaView.selecCity];
+//            [blockSelf.dataDic setObject:blockSelf.selectAreaString forKey:@"area"];
+            blockSelf.getAreaView.hidden = YES;
+            [blockSelf getCommerceArray];
+        }];
+        [_getAreaView.clearBtn bk_whenTapped:^{
+            blockSelf.selectAreaString = @"";
+            blockSelf.getAreaView.selecCity = @"";
+            blockSelf.getAreaView.selectProvince = @"";
+            [blockSelf.getAreaView.provinceTable reloadData];
+            [blockSelf.getAreaView.cityTable reloadData];
+            blockSelf.getAreaView.hidden = YES;
+            [blockSelf getCommerceArray];
+        }];
+    }
+    return _getAreaView;
+}
 @end

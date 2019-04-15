@@ -11,7 +11,7 @@
 #import "LoginBottomView.h"
 #import "AppDelegate.h"
 #import "SDCycleScrollView.h"
-#import "TXLoginController.h"
+#import "NewTXLoginController.h"
 #import "TXWebViewController.h"
 #import "GroundCell.h"
 #import "EntreprenurialController.h"
@@ -52,7 +52,7 @@
     self.tableView.dataSource = self;
     [self.loginBtnView.loginBtn bk_addEventHandler:^(id sender) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            TXLoginController *vc = [[UIStoryboard storyboardWithName:@"Login" bundle:nil] instantiateViewControllerWithIdentifier:@"TXLoginController"];
+            NewTXLoginController *vc = [[UIStoryboard storyboardWithName:@"Login" bundle:nil] instantiateViewControllerWithIdentifier:@"NewTXLoginController"];
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             
             appDelegate.window.rootViewController = vc;
@@ -236,7 +236,11 @@
         CGFloat version = [[[UIDevice currentDevice]systemVersion]floatValue];
         if (version >= 10.0) {
             /// 大于等于10.0系统使用此openURL方法
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str] options:@{} completionHandler:nil];
+            if (@available(iOS 10.0, *)) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str] options:@{} completionHandler:nil];
+            } else {
+                // Fallback on earlier versions
+            }
         } else {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
         }

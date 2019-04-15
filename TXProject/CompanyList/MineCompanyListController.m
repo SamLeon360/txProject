@@ -28,6 +28,7 @@
     self.typeArray = @[@"全部", @"高新技术企业", @"科技型中小企业", @"规模以上企业", @"创新型企业", @"民营科技企业", @"大中型企业", @"其他"];
     [self GetCompanyData];
     [self addRightBtn];
+    self.myTableView.tableFooterView = [[UIView alloc] init];
 }
 -(void)viewWillAppear:(BOOL)animated{
     [self GetCompanyData];
@@ -69,11 +70,16 @@
              [cell.companyImage setImage:[UIImage imageNamed:@"default_avatar"]];
         }
     }];
+    if ([USER_SINGLE.default_company_dic[@"enterprise_name"] isEqualToString:dic[@"enterprise_name"]]) {
+        cell.defaultLabel.hidden = NO;
+    }else{
+        cell.defaultLabel.hidden = YES;
+    }
     cell.companyNameLabel.text = [dic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":dic[@"enterprise_name"];
     cell.companyTypeCell.text = self.typeArray[[dic[@"enterprise_type"] integerValue]];
     cell.companyAddressLabel.text = [dic[@"area"] isKindOfClass:[NSNull class]]?@"":dic[@"area"];
     [cell.selectDefualtBtn bk_whenTapped:^{
-        [self ChangeCompanyDefault:@{@"enterprise_id":dic[@"enterprise_id"],@"handle_type":@"1"}];
+        [self ChangeCompanyDefault:@{@"enterprise_id":dic[@"enterprise_id"],@"handle_type":@"1"} andIndex:indexPath];
     }];
     return cell;
 }
@@ -83,9 +89,16 @@
     vc.companyIdDic = dic;
     [self.navigationController pushViewController:vc animated:YES];
 }
--(void)ChangeCompanyDefault:(NSDictionary *)param{
+-(void)ChangeCompanyDefault:(NSDictionary *)param andIndex : (NSIndexPath *)indexP{
     [HTTPREQUEST_SINGLE postWithURLString:SH_COMPANY_DEFAULT parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:self.companyListArray[indexP.row]];
+            [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSNull class]]) {
+                    [dic setObject:@"" forKey:key];
+                }
+            }];
+            USER_SINGLE.default_company_dic = dic;
             [AlertView showYMAlertView:self.view andtitle: responseDic[@"message"]];
         }else{
             [AlertView showYMAlertView:self.view andtitle: @"绑定失败"];
@@ -94,4 +107,5 @@
          [AlertView showYMAlertView:self.view andtitle: @"绑定失败"];
     }];
 }
+
 @end

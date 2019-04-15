@@ -10,7 +10,9 @@
 #import "AppDelegate.h"
 #import "TXMainViewController.h"
 #import "CommerceCell.h"
+
 @interface CommerceList()<UITableViewDelegate,UITableViewDataSource>
+@property (nonatomic) NSArray *commerceJobArray;
 @end
 @implementation CommerceList
 //
@@ -29,6 +31,7 @@
     self.tableView.dataSource = self;
     [self.tableView registerNib:[UINib  nibWithNibName:@"CommerceCell" bundle:nil] forCellReuseIdentifier:@"CommerceCell"];
      [self.tableView reloadData];
+    self.commerceJobArray = @[ @"会长",@"执行会长",@"常务副会长",@"副会长",@"常务理事",@"理事",@"监事长",@"副监事长",@"监事",@"名誉会长",@"荣誉会长",@"创会会长",@"顾问",@"秘书长",@"执行秘书长",@"专职秘书长",@"副秘书长",@"干事",@"办公室主任",@"文员",@"部长",@"会员",@"创会会长"];
     
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -59,7 +62,7 @@
     CommerceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CommerceCell"];
     NSDictionary *dic = self.commerceArray[indexPath.row];
     cell.commerceName.text = dic[@"commerce_name"];
-    cell.userType.text = [dic[@"role_id"] integerValue] == 1?@"秘书处":@"会员";
+    cell.userType.text = self.commerceJobArray[[dic[@"member_post_in_commerce"] integerValue] - 1];
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

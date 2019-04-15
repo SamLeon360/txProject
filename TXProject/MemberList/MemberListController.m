@@ -73,8 +73,11 @@
     [HTTPREQUEST_SINGLE allUserHeaderPostWithURLString:SH_GET_COMMERCE_MEMBER_LIST parameters:dic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             NSArray *arr =responseDic[@"data"];
+            [blockSelf.tableView.mj_footer endRefreshing];
+
             if (arr.count <= 0&&blockSelf.nPage>1) {
                 blockSelf.nPage --;
+                [blockSelf.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             [blockSelf.memberListArray addObjectsFromArray:responseDic[@"data"]];
             [blockSelf.tableView reloadData];
@@ -82,7 +85,6 @@
         }else{
             blockSelf.nPage -- ;
         }
-        [blockSelf.tableView.mj_footer endRefreshing];
     } failure:^(NSError *error) {
          blockSelf.nPage -- ;
         [blockSelf.tableView.mj_footer endRefreshing];
@@ -98,6 +100,10 @@
             NSArray *arr =responseDic[@"data"];
             if (arr.count <= 0&&blockSelf.nPage>1) {
                 blockSelf.nPage --;
+                NSArray *arr = responseDic[@"data"];
+                if (arr.count <= 0) {
+                    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                }
             }
             [blockSelf.memberListArray addObjectsFromArray:responseDic[@"data"]];
             [blockSelf.tableView reloadData];
@@ -140,7 +146,7 @@
     if ([dic[@"role_id"] isKindOfClass:[NSNull class]]) {
         cell.commerceType.text = @" 会员 ";
     }else{
-        cell.commerceType.text = self.typeArray[[dic[@"member_post_in_commerce"] integerValue]];
+        cell.commerceType.text = self.typeArray[[dic[@"member_post_in_commerce"] integerValue]-1];
     }
     [cell.commerceType makeCorner:5];
     return cell;
@@ -148,9 +154,13 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSDictionary *dic = self.memberListArray[indexPath.row];
-    MemberDetailController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberDetailController"];
-    vc.memberDic = dic;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (SHOW_WEB) {
+        MemberDetailController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MemberDetailController"];
+        vc.memberDic = dic;
+        vc.wayIn = self.checkMember?nil:@"hidden";
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+  
     
 }
 

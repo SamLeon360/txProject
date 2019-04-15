@@ -33,8 +33,8 @@
     [super viewDidLoad];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.title = @"会员风采";
-    self.dataTitleArray = @[@[@"",@"商会",@"手机",@"籍贯"],@[@"他的动态"],@[@""],@[@"政治面貌",@"毕业院校",@"从军经历",@"特长爱好",@"个人收件地址"]];
+    self.title = self.wayIn == nil ? @"会员风采" : self.memberDic[@"member_name"];
+    self.dataTitleArray = SHOW_WEB ? @[@[@"",@"商会",@"手机",@"籍贯"],@[@"他的动态"],@[@""],@[@"政治面貌",@"毕业院校",@"从军经历",@"特长爱好",@"个人收件地址"]]: @[@[@"",@"商会",@"籍贯"],@[@"他的动态"],@[@""],@[@"毕业院校",@"特长爱好",@"个人收件地址"]];
     self.companyTypeArray = @[@"全部",@"电子信息",@"装备制造", @"能源环保",@"生物技术与医药",@"新材料",@"现代农药", @"其他"];
     [self GetCompanyData];
     [self getMemberData];
@@ -74,10 +74,10 @@
     [HTTPREQUEST_SINGLE postWithURLString:SH_MEMBER_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             [blockSelf.memberDetailDic setDictionary:responseDic[@"data"]];
-            [blockSelf.memberDetailDic setObject:responseDic[@"add"][@"phone"] forKey:@"phone"];
-            blockSelf.has_add = responseDic[@"add"][@"has_add"];
-            blockSelf.introductionString = blockSelf.memberDetailDic[@"member_introduction"];
-            blockSelf.dataKeyArray = @[@[@"",@"default_commerce_name",@"phone",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_political_status",@"member_graduation_school",@"military_experience",@"member_hobby",@"detail_address"]];
+            [blockSelf.memberDetailDic setObject:[responseDic[@"add"][@"phone"] isKindOfClass:[NSNull class]]?@"":responseDic[@"add"][@"phone"] forKey:@"phone"];
+            blockSelf.has_add = [responseDic[@"add"][@"has_add"] boolValue];
+            blockSelf.introductionString = [blockSelf.memberDetailDic[@"member_introduction"] isKindOfClass:[NSNull class]]?@"":blockSelf.memberDetailDic[@"member_introduction"];
+            blockSelf.dataKeyArray = SHOW_WEB?@[@[@"",@"default_commerce_name",@"phone",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_political_status",@"member_graduation_school",@"military_experience",@"member_hobby",@"detail_address"]]:@[@[@"",@"default_commerce_name",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_graduation_school",@"member_hobby",@"detail_address"]];;
             [blockSelf.tableView reloadData];
         }else{
             [AlertView showYMAlertView:blockSelf.view andtitle: [NSString stringWithFormat:@"%@",responseDic[@"message"]]];
@@ -112,13 +112,13 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        return 4;
+        return SHOW_WEB?4: 3;
     }else if (section == 1){
         return 1;
     }else if (section == 2){
         return 1;
     }else if (section == 3){
-        return 5;
+        return SHOW_WEB?5:3;
     }else{
         return self.companyArray.count;
     }
@@ -152,11 +152,12 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             MemberDetailAvatarCell *avatarCell = [tableView dequeueReusableCellWithIdentifier:@"MemberDetailAvatarCell"];
-            [avatarCell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.memberDetailDic[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [avatarCell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,[self.memberDetailDic[@"member_avatar"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (error) {
                     [avatarCell.avatarImage setImage:[UIImage imageNamed:@"default_avatar"]];
                 }
             }];
+//            avatarCell.addFriendBtn.hidden = self.wayIn == nil ? NO:YES;
             avatarCell.jobLabel.text = @"总经理";
             avatarCell.namelabe.text = self.memberDetailDic[@"member_name"];
             avatarCell.companyName.text = [self.memberDetailDic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"enterprise_name"];
@@ -221,11 +222,13 @@
         NSArray *titleArray = self.dataTitleArray[indexPath.section];
         NSArray *keyArray = self.dataKeyArray[indexPath.section];
         cell.titleLabel.text  = titleArray[indexPath.row];
+        NSLog(@"%ld",indexPath.row);
         cell.contentLabel.text = [self.memberDetailDic[keyArray[indexPath.row]] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[keyArray[indexPath.row]];
         return cell;
     }else{
         CompanyListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CompanyListCell"];
         cell.selectDefualtBtn.hidden = YES;
+         NSLog(@"%ld",indexPath.row);
         NSDictionary *dic = self.companyArray[indexPath.row];
         [cell.companyImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,dic[@"enterprise_logo"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (error) {

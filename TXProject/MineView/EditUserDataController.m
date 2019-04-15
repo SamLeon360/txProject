@@ -10,8 +10,11 @@
 #import "NewEditAlertView.h"
 #import "TXWebViewController.h"
 #import "ZLPhotoActionSheet.h"
+#import "ProDateView.h"
 #import "SHEditCommidityCameraController.h"
+#import "MineCompanyListController.h"
 @interface EditUserDataController ()<SHEditCommidityCameraDelegate>
+@property (nonatomic) ProDateView *proDatePickView;
     @property (weak, nonatomic) IBOutlet UIImageView *avatarImage;
     @property (weak, nonatomic) IBOutlet UITextField *nameTF;
     @property (weak, nonatomic) IBOutlet UIButton *manBtn;
@@ -32,13 +35,23 @@
     @property (weak, nonatomic) IBOutlet UITextField *commerceTF;
     @property (weak, nonatomic) IBOutlet UITableViewCell *commerceCell;
     @property (nonatomic) NSMutableDictionary *editUserData;
-    
+@property (weak, nonatomic) IBOutlet UITableViewCell *birthdayCell;
+
 @end
 
 @implementation EditUserDataController
     {
          NewEditAlertView *alertView;
     }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.commerceTF.text = USER_SINGLE.default_company_dic[@"enterprise_name"];
+    [self.commerceCell bk_whenTapped:^{
+        MineCompanyListController *vc = [[UIStoryboard storyboardWithName:@"CompanyView" bundle:nil] instantiateViewControllerWithIdentifier:@"MineCompanyListController"];
+        vc.memberId = USER_SINGLE.member_id;
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.editUserData = [[NSMutableDictionary alloc] initWithCapacity:0];
@@ -61,7 +74,11 @@
         }
         
     }];
-    [self.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.editUserData[@"member_avatar"]]]];
+    [self.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.editUserData[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        if (error) {
+            [self.avatarImage setImage: [UIImage imageNamed:@"default_avatar"]];
+        }
+    }];
     if ([self.editUserData[@"member_sex"] integerValue] == 1) {
         [self.manBtn setBackgroundColor:[UIColor colorWithRGB:0x3e85fb] forState:UIControlStateNormal];
         [self.manBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -82,7 +99,7 @@
     self.emailTF.text = [self.editUserData[@"member_email"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_email"] ;
     self.addressTF.text = [self.editUserData[@"detail_address"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"detail_address"] ;
     self.zhengfuTF.text = [self.editUserData[@"member_political_status"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_political_status"];
-    self.commerceTF.text = USER_SINGLE.default_commerce_name;
+   
 //    [self.commerceCell bk_whenTapped:^{
 //        NSLog(@"%@",[NSString stringWithFormat:@"https://app.tianxun168.com/h5/#/member/business_card/%@/%@/",self.userDic[@"member_name"],USER_SINGLE.default_commerce_id]);
 //        if (self.commerceTF.text.length > 0) {
@@ -142,8 +159,7 @@
         [SVProgressHUD showProgress:progress];
     } success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue]== -1002) {
-             NOTIFY_POST(@"getNewMeMessage");
-            
+             NOTIFY_POST(@"getDataNetWork");
         }
         NSLog(@"%@",responseDic);
         [SVProgressHUD dismiss];
@@ -241,7 +257,7 @@
     [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_SAVE_USER_DATA headerParameters:headerDic bodyParameters:self.editUserData withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"更新成功"];
-            NOTIFY_POST(@"getNewMeMessage");
+            NOTIFY_POST(@"getDataNetWork");
         }
     } failure:^(NSError *error) {
         
@@ -260,4 +276,27 @@
     }];
 }
 
+-(ProDateView *)proDatePickView{
+    if (_proDatePickView == nil) {
+        _proDatePickView = [[NSBundle mainBundle] loadNibNamed:@"ProductAlert" owner:self options:nil][4];
+        _proDatePickView.frame = CGRectMake(0, 0 , ScreenW, ScreenH-68);
+        _proDatePickView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
+        [self.view addSubview:_proDatePickView];
+        [_proDatePickView setupDatePicker];
+        _proDatePickView.title.text = @"设置生日时间";
+        __block EditUserDataController *blockSelf = self;
+        _proDatePickView.selectStringCallBack = ^(NSString * _Nonnull str) {
+             
+            [blockSelf.editUserData setObject:str forKey:@"member_age"];
+            blockSelf.brithdayTF.text = str;
+            blockSelf.proDatePickView.hidden = YES;
+            [blockSelf.tableView reloadData];
+        };
+        
+        [_proDatePickView.closeView bk_whenTapped:^{
+            blockSelf.proDatePickView.hidden = YES;
+        }];
+    }
+    return _proDatePickView;
+}
 @end

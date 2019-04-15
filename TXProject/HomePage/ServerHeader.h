@@ -14,49 +14,58 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet SDCycleScrollView *cycleScrollview;
 /**
- 创业宝典
+ 融资信贷
  */
 @property (weak, nonatomic) IBOutlet UIView *treasureView;
 /**
- 创业辅导
+ 科技创新
  */
 @property (weak, nonatomic) IBOutlet UIView *coachView;
 /**
- 场所租赁
+ 健康体检
  */
 @property (weak, nonatomic) IBOutlet UIView *leaseView;
 /**
- 办公设施
+ 活动策划
  */
 @property (weak, nonatomic) IBOutlet UIView *facilitiesView;
 /**
- 工商注册
+ 高端定制
  */
 @property (weak, nonatomic) IBOutlet UIView *circlesView;
 /**
- 知识产品
+ 车辆保养
  */
 @property (weak, nonatomic) IBOutlet UIView *knowledgeView;
 /**
- 法律财税
+ 展会展览
  */
 @property (weak, nonatomic) IBOutlet UIView *lawView;
 /**
- 投融资
+ 住宿餐饮
  */
 @property (weak, nonatomic) IBOutlet UIView *financingView;
 /**
- 创业顾问
+ 涉外服务
  */
 @property (weak, nonatomic) IBOutlet UIView *adviserView;
+
+
 /**
- 查看更多
+ 项目申报
  */
-@property (weak, nonatomic) IBOutlet UIView *moreView;
+@property (weak, nonatomic) IBOutlet UIView *projectView;
 
+@property (weak, nonatomic) IBOutlet UIView *houseView;
 
-@property (weak, nonatomic) IBOutlet UIView *busnessOutView;
-@property (weak, nonatomic) IBOutlet UIView *tickectServerView;
+@property (weak, nonatomic) IBOutlet UIView *translateView;
+
+@property (weak, nonatomic) IBOutlet UIView *companyView;
+
+@property (weak, nonatomic) IBOutlet UIView *takePhotoView;
+
+@property (weak, nonatomic) IBOutlet UIView *carView;
+
 ///点我查看更多
 @property (weak, nonatomic) IBOutlet UILabel *clickCheckMoreView;
 

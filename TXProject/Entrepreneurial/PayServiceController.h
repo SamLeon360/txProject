@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSDictionary *paramDic;
 @property (nonatomic) NSString *typeString;
 @property (nonatomic) UIImage *uploadIamge;
+@property (nonatomic) NSDictionary *serviceDic;
 @end
 
 NS_ASSUME_NONNULL_END

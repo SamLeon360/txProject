@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "InvestmentListController.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ProjectTypeView : UIView
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *typeArray;
+@property (weak, nonatomic) IBOutlet UILabel *mainLabel;
 @property (nonatomic) InvestmentListController *listVc;
+@property (nonatomic) NSString *functionName;
 -(void)setupTableview;
 @end
 

@@ -28,6 +28,9 @@
     [self getCommerceArray];
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getDataArrayByMore)];
     self.tableView.mj_footer = footer;
+    [self.searchBtn bk_whenTapped:^{
+        [self getCommerceArray];
+    }];
 }
 -(void)getCommerceArray{
     __block NewsListController *blockSelf = self;
@@ -49,13 +52,18 @@
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",self.searchTF.text,@"deal_name",[NSString stringWithFormat:@"%ld",self.nPage],@"page",@"",@"ios",@"",@"id", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_GET_NEWS_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
+            [blockSelf.tableView.mj_footer endRefreshing];
             [blockSelf.newsListArray addObjectsFromArray:responseDic[@"data"]] ;
             [blockSelf.tableView reloadData];
-            
+            NSArray *arr = responseDic[@"data"];
+            if (arr.count <= 0) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
         }else{
             self.nPage --;
+            [blockSelf.tableView.mj_footer endRefreshing];
         }
-        [blockSelf.tableView.mj_footer endRefreshing];
+        
     } failure:^(NSError *error) {
         self.nPage -- ;
         [blockSelf.tableView.mj_footer endRefreshing];

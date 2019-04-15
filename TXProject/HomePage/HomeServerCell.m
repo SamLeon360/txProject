@@ -11,6 +11,7 @@
 #import "TXWebViewController.h"
 #import "CompanyListController.h"
 #import "SameCityCommerceController.h"
+#import "ProductionListController.h"
 @interface HomeServerCell()<UICollectionViewDelegate,UICollectionViewDataSource>
 @end
 @implementation HomeServerCell
@@ -21,10 +22,20 @@
 -(void)setupArray{
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    UICollectionViewFlowLayout *layout =[[UICollectionViewFlowLayout alloc] init];
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    layout.itemSize = CGSizeMake(ScreenW/3,125*kScale);
+    self.collectionView.collectionViewLayout = layout;
     self.collectionView.scrollEnabled = NO;
     [self.collectionView reloadData];
 }
 
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
 
 // 设置每个分区返回多少item
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -36,16 +47,16 @@
     return 1;
 }
 
-#pragma mark  定义每个UICollectionView的大小
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return  CGSizeMake(125*kScale,125*kScale);
-}
-#pragma mark  定义整个CollectionViewCell与整个View的间距
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(0, 0, 0, 0);//（上、左、下、右）
-}
+//#pragma mark  定义每个UICollectionView的大小
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return  CGSizeMake(125*kScale,125*kScale);
+//}
+//#pragma mark  定义整个CollectionViewCell与整个View的间距
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0, 0, 0, 0);//（上、左、下、右）
+//}
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (self.typeIndex == 0) {
@@ -64,7 +75,8 @@
         }
     }else if(self.typeIndex == 1){
         if (indexPath.row == 0 ) {
-            [self gotoWebView:list_product];
+            ProductionListController *vc = [[UIStoryboard storyboardWithName:@"Production" bundle:nil] instantiateViewControllerWithIdentifier:@"ProductionListController"];
+            [self.serverVC.navigationController pushViewController:vc animated:YES];
            
         }else{
             [self gotoWebView:list_service];

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MemberDetailController : UIViewController
 @property (nonatomic) NSDictionary *memberDic;
+@property (nonatomic) NSString *wayIn;
 @end
 
 NS_ASSUME_NONNULL_END
