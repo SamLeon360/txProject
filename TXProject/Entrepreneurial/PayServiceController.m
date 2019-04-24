@@ -47,7 +47,7 @@
         self.payWayView.hidden = NO;
       
     }];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadData) name:@"uploadDatga" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadData2) name:@"uploadDatga" object:nil];
 }
 -(void)wxpayFouction:(NSDictionary *)dic{
     [HTTPREQUEST_SINGLE postWithURLString:SH_CREAT_ORDER parameters:dic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
@@ -109,32 +109,11 @@
     randomNumber = [self md5:randomNumber];
     return randomNumber;
 }
--(void)uploadData {
-    [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:[self.typeString isEqualToString:@"创业宝典"]?SH_UPLOAD_SERVICE:SH_UPLOAD_ZONGHE parameters:self.paramDic withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyyMMddHHmmss";
-        NSString *imgName = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
-        NSString *fileName = [NSString stringWithFormat:@"%@_%@.jpg", @"commerce", imgName];
-        [formData appendPartWithFileData:UIImageJPEGRepresentation(self.uploadIamge, 0.6) name:@"service_img[]" fileName:fileName mimeType:@"image/jpeg"];
-    } progress:^(double progress) {
-        [SVProgressHUD showProgress:progress];
-    } success:^(NSDictionary *responseDic) {
-        NSLog(@"%@",responseDic);
-        if ([responseDic[@"code"] integerValue] == -1002) {
-            [AlertView showYMAlertView:self.view andtitle:@"申请成功"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDataArrayByRefresh" object:nil];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSArray *vcArray = self.navigationController.childViewControllers;
-                UIViewController *tempVC = vcArray[2];
-                [self.navigationController popToViewController:tempVC animated:YES];
-            });
-        }else{
-            [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
-        }
-        [SVProgressHUD dismiss];
-    } failure:^(NSError *error) {
-        [SVProgressHUD dismiss];
-    }];
+-(void)uploadData2 {
+    NSArray *vcArray = self.navigationController.childViewControllers;
+    UIViewController *vc = vcArray[vcArray.count - 3];
+    NOTIFY_POST(@"getDataArrayByRefresh");
+   [self.navigationController popToViewController:vc animated:YES];
     
 }
 

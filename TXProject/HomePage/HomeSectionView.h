@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeSectionView : UIView
 @property (weak, nonatomic) IBOutlet UILabel *checkLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
 @end
 

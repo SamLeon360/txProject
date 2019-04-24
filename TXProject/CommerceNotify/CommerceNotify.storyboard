@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -424,35 +424,39 @@
                                     <constraint firstAttribute="height" constant="1" id="Dea-7x-VVI"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YaQ-1w-b3y">
-                                <rect key="frame" x="15" y="135" width="345" height="532"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Label" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hci-UU-BA1">
+                                <rect key="frame" x="15" y="145" width="345" height="14.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="14.5" id="2gA-ts-2xF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="8kh-O0-YK5" firstAttribute="top" secondItem="ckg-97-pPA" secondAttribute="bottom" constant="20" id="7kj-BC-Kfe"/>
                             <constraint firstItem="j37-9H-cNS" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="9Xh-qC-36s"/>
-                            <constraint firstItem="YaQ-1w-b3y" firstAttribute="top" secondItem="8kh-O0-YK5" secondAttribute="bottom" constant="10" id="F3e-Io-CWA"/>
-                            <constraint firstItem="6ia-Rd-An0" firstAttribute="bottom" secondItem="YaQ-1w-b3y" secondAttribute="bottom" id="UsD-2p-KmW"/>
+                            <constraint firstItem="Hci-UU-BA1" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="9hK-uN-EFc"/>
                             <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="j37-9H-cNS" secondAttribute="trailing" constant="15" id="WRE-Yi-beJ"/>
                             <constraint firstItem="8kh-O0-YK5" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="Y1l-CU-nar"/>
-                            <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="YaQ-1w-b3y" secondAttribute="trailing" constant="15" id="ap9-md-HJz"/>
+                            <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="Hci-UU-BA1" secondAttribute="trailing" constant="15" id="gO4-2d-ieM"/>
                             <constraint firstItem="nqX-Wa-1RM" firstAttribute="top" secondItem="j37-9H-cNS" secondAttribute="bottom" constant="5" id="oXO-hi-Cvf"/>
                             <constraint firstItem="ckg-97-pPA" firstAttribute="centerX" secondItem="ztK-tp-ZN0" secondAttribute="centerX" id="shm-un-vlC"/>
+                            <constraint firstItem="Hci-UU-BA1" firstAttribute="top" secondItem="8kh-O0-YK5" secondAttribute="bottom" constant="20" id="tDw-sK-ZUk"/>
                             <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="8kh-O0-YK5" secondAttribute="trailing" constant="15" id="vs8-7s-WmD"/>
                             <constraint firstItem="j37-9H-cNS" firstAttribute="top" secondItem="6ia-Rd-An0" secondAttribute="top" constant="20" id="wWp-6l-WVT"/>
                             <constraint firstItem="nqX-Wa-1RM" firstAttribute="centerX" secondItem="ztK-tp-ZN0" secondAttribute="centerX" id="z2R-aP-Uas"/>
                             <constraint firstItem="ckg-97-pPA" firstAttribute="top" secondItem="nqX-Wa-1RM" secondAttribute="bottom" constant="5" id="zhH-ot-lBP"/>
-                            <constraint firstItem="YaQ-1w-b3y" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="zir-Y0-FAI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6ia-Rd-An0"/>
                     </view>
                     <connections>
+                        <outlet property="contentLabel" destination="Hci-UU-BA1" id="l46-Jo-BDQ"/>
                         <outlet property="onetitle" destination="j37-9H-cNS" id="0SX-io-w9F"/>
                         <outlet property="timeLabel" destination="ckg-97-pPA" id="g4C-B6-7vF"/>
                         <outlet property="twotitle" destination="nqX-Wa-1RM" id="vlP-oJ-QWr"/>
-                        <outlet property="webContentView" destination="YaQ-1w-b3y" id="Z7b-Zq-DrN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i7K-Rp-uF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -461,8 +465,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="black_right_anchor" width="27" height="47"/>
-        <image name="default_avatar" width="73.5" height="70.5"/>
+        <image name="black_right_anchor" width="13.5" height="23.5"/>
+        <image name="default_avatar" width="49" height="47"/>
         <image name="news_post_icon" width="63.666667938232422" height="65.333335876464844"/>
     </resources>
 </document>

@@ -21,7 +21,7 @@
     self.title =@"企业信息列表";
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-  
+    [[SDWebImageManager sharedManager].imageCache  cleanDisk];
     [self getCommerceData];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 1)];
     

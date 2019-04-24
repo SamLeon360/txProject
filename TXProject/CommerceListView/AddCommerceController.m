@@ -33,6 +33,8 @@
     self.hadIdcardBackImage = NO;
     self.title = @"加入社团";
     self.commerceNameLabel.text = self.commerceDic[@"commerce_name"];
+    self.remarkTF.layer.borderWidth = 1;
+    self.remarkTF.layer.borderColor = [UIColor colorWithRGB:0xf2f2f2].CGColor;
     ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
     
     //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改

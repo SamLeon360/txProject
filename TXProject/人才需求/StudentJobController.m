@@ -256,7 +256,11 @@
         _getAreaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
         [_getAreaView setupTableView];
         [_getAreaView.sureBtn bk_whenTapped:^{
-            self.selectAreaString = [NSString stringWithFormat:@"%@省|%@市",blockSelf.getAreaView.selectProvince,blockSelf.getAreaView.selecCity];
+            if (blockSelf.getAreaView.selecCity == nil) {
+                blockSelf.selectAreaString = [NSString stringWithFormat:@"%@省|",blockSelf.getAreaView.selectProvince];
+            }else{
+                blockSelf.selectAreaString = [NSString stringWithFormat:@"%@省|%@市|",blockSelf.getAreaView.selectProvince,blockSelf.getAreaView.selecCity];
+            }
             [blockSelf GetNetData];
             blockSelf.getAreaView.hidden = YES;
         }];

@@ -14,6 +14,7 @@
 #import "BottomView.h"
 #import "ProductionDetail/ProductionDetailController.h"
 #import "UploadProductionController.h"
+#import "ProListSearchController.h"
 @interface ProductionListController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTF;
@@ -23,11 +24,13 @@
 @property (nonatomic) BottomView *bottomBtn;
 @property (nonatomic) NSString *pxString;
 @property (nonatomic) NSString *typeString;
+@property (nonatomic) NSString *searchString;
 @property (nonatomic) NSMutableArray *productionArray;
 @property (nonatomic) ProductionPXView *pxView;
 @property (nonatomic) ProductionSelectView *selectView;
 @property (nonatomic) NSInteger nPage;
 @property (nonatomic) NSArray *typeArray;
+@property (weak, nonatomic) IBOutlet UIView *searchView;
 
 @end
 
@@ -41,6 +44,7 @@
     self.title = @"产品需求服务";
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    NOTIFY_ADD(GetProductionData, @"GetProductionData");
     [self GetProductionData];
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(GetProductionDataMore)];
     self.tableView.mj_footer = footer;
@@ -58,6 +62,14 @@
     }];
     [self.popView bk_whenTapped:^{
         [blockSelf.navigationController popViewControllerAnimated:YES];
+    }];
+    [self.searchView bk_whenTapped:^{
+        ProListSearchController *vc = [[UIStoryboard storyboardWithName:@"Production" bundle:nil] instantiateViewControllerWithIdentifier:@"ProListSearchController"];
+        vc.selectStringCallBack = ^(NSString *str) {
+            self.searchTF.text = str;
+            [self GetProductionData];
+        };
+        [blockSelf.navigationController pushViewController:vc animated:YES];
     }];
     [self.view addSubview:self.bottomBtn];
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 85)];
@@ -81,8 +93,13 @@
     cell.title.text = dic[@"product_name"];
     cell.type.text = self.typeArray[[dic[@"product_type"] integerValue]];
     cell.number.text = [NSString stringWithFormat:@"%@%@",[NSString stringWithFormat:@"%@",dic[@"need_number"]],dic[@"product_unit"]];
-    
-//    cell.proImage sd_setImageWithURL:[NSURL URLWithString:<#(nonnull NSString *)#>] completed:<#^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL)completedBlock#>
+    NSArray *picArray = [dic[@"avatar"] isKindOfClass:[NSNull class]]?@[]:dic[@"avatar"];
+    if (picArray.count > 0) {
+        [cell.proImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",AVATAR_HOST_URL,picArray.firstObject]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+        }];
+    }
+//
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

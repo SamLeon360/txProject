@@ -9,7 +9,8 @@
 #import "ProductionImageCell.h"
 #import "uploadProImageCell.h"
 #import <ZLPhotoActionSheet.h>
-@interface ProductionImageCell()<UICollectionViewDelegate,UICollectionViewDataSource>
+#import <PYPhotoBrowser/PYPhotoBrowser.h>
+@interface ProductionImageCell()<UICollectionViewDelegate,UICollectionViewDataSource,PYPhotoBrowseViewDelegate,PYPhotoBrowseViewDataSource>
 
 @end
 @implementation ProductionImageCell
@@ -46,12 +47,27 @@
     if (self.imageArray.count <= 5) {
         if (indexPath.row == 0) {
             [cell.imageCell setImage: [UIImage imageNamed:@"upload_image"]];
+            cell.delimageView.hidden = YES;
         }else{
+            cell.delimageView.hidden = NO;
             [cell.imageCell setImage:self.imageArray[indexPath.row-1]];
         }
     }else{
-        [cell.imageCell setImage:self.imageArray[indexPath.row - 1]];
+        [cell.imageCell setImage:self.imageArray[indexPath.row]];
+        cell.delimageView.hidden = NO;
+        
     }
+    [cell.delimageView bk_whenTapped:^{
+        NSIndexPath *indexP = [collectionView indexPathForCell:cell];
+        if (self.imageArray.count <= 5) {
+            [self.imageArray removeObjectAtIndex:indexP.row - 1];
+        }else{
+            [self.imageArray removeObjectAtIndex:indexP.row ];
+        }
+         self.selectArrayCallBack(self.imageArray);
+        [self.tableView reloadData];
+    }];
+  
     [cell makeCorner:5];
     return cell;
 }
@@ -60,7 +76,25 @@
     if (self.imageArray.count <= 5) {
         if (indexPath.row == 0) {
             [self openLocalPhoto];
+        }else{
+            PYPhotoBrowseView *browseView = [[PYPhotoBrowseView alloc] init];
+            
+            // 2.设置数据源和代理并实现数据源和代理方法
+            browseView.dataSource = self;
+            browseView.delegate = self;
+            browseView.images = self.imageArray;
+            browseView.currentIndex = indexPath.row - 1;
+            [browseView show];
         }
+    }else{
+        PYPhotoBrowseView *browseView = [[PYPhotoBrowseView alloc] init];
+        
+        // 2.设置数据源和代理并实现数据源和代理方法
+        browseView.dataSource = self;
+        browseView.delegate = self;
+        browseView.images = self.imageArray;
+        browseView.currentIndex = indexPath.row;
+        [browseView show];
     }
 }
 -(void)openLocalPhoto{

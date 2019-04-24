@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *twotitle;
 @property (weak, nonatomic) IBOutlet UIView *webContentView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (nonatomic) WKWebView* webView;
 @end
 
@@ -20,11 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, self.webContentView.frame.size.width,self.webContentView.frame.size.height)];
-    [self.webView setNavigationDelegate:self];
-    self.webView.clipsToBounds = YES;
-    self.webView.UIDelegate = self;
-    [self.webContentView addSubview:self.webView];
+//    self.webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, self.webContentView.frame.size.width,self.webContentView.frame.size.height)];
+//    [self.webView setNavigationDelegate:self];
+//    self.webView.clipsToBounds = YES;
+//    self.webView.UIDelegate = self;
+//    [self.webContentView addSubview:self.webView];
     [self getNewsData];
 }
 
@@ -37,8 +38,10 @@
             blockSelf.twotitle.text = blockSelf.notifyDic[@"news_headlines2"];
             blockSelf.timeLabel.text = [blockSelf.notifyDic[@"modify_time"] componentsSeparatedByString:@" "][0];
             blockSelf.title = @"社团新闻详情";
-          
-            [blockSelf.webView loadHTMLString:blockSelf.notifyDic[@"news_text"] baseURL:nil];
+            NSArray *arrDic = responseDic[@"data"];
+            NSDictionary *dic = arrDic.firstObject;
+            blockSelf.contentLabel.text =dic[@"news_text"];
+//            [blockSelf.webView loadHTMLString:blockSelf.notifyDic[@"news_text"] baseURL:nil];
         }
     } failure:^(NSError *error) {
         

@@ -25,6 +25,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource  = self;
 //    self.serverNameArray = SHOW_WEB?@[@"人脉社交",@"商务信息",@"文库",@"企业商务服务"]:@[@"人脉社交"];
+    
+    ///
     self.serverNameArray = @[@"人脉社交",@"商务信息"];//
     self.serverImageArray = @[@[@{@"image":@"ren_icon_1",@"title":@"同籍社团"},@{@"image":@"ren_icon_2",@"title":@"同城社团"}],@[@{@"image":@"chan_icon_1",@"title":@"产品需求信息"},@{@"image":@"chan_icon_2",@"title":@"服务需求信息"}]];
 //    self.serverImageArray =

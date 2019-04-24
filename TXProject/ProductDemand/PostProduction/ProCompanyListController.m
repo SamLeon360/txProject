@@ -15,7 +15,7 @@
 @property (nonatomic) NSMutableArray *companyList;
 @property (nonatomic) NSArray *typeArray;
 @property (nonatomic) BottomView *bottomBtn;
-
+@property (nonatomic) NSDictionary *selectCompanyDic;
 @end
 
 @implementation ProCompanyListController
@@ -67,9 +67,16 @@
     }
     [cell.selectIcon bk_whenTapped:^{
         NSIndexPath *indexP = [tableView indexPathForCell:cell];
-        [self ChangeCompanyDefault:@{@"enterprise_id":dic[@"enterprise_id"],@"handle_type":@"1"} :indexP.row];
-        self.selectNSDictionaryCallBack(dic);
-        [self.navigationController popViewControllerAnimated:YES];
+        self.selectCompanyDic = dic;
+        if (self.changeDefault) {
+            [self ChangeCompanyDefault:@{@"enterprise_id":dic[@"enterprise_id"],@"handle_type":@"1"} :indexP.row];
+        }else{
+            self.selectNSDictionaryCallBack(self.selectCompanyDic);
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        
+    
+       
     }];
     return cell;
 }

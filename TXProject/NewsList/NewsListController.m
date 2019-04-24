@@ -24,7 +24,7 @@
     [super viewDidLoad];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.title = @"新政新规";
+    self.title = @"商头条";
     [self getCommerceArray];
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getDataArrayByMore)];
     self.tableView.mj_footer = footer;

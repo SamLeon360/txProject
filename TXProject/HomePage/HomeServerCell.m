@@ -77,9 +77,9 @@
         if (indexPath.row == 0 ) {
             ProductionListController *vc = [[UIStoryboard storyboardWithName:@"Production" bundle:nil] instantiateViewControllerWithIdentifier:@"ProductionListController"];
             [self.serverVC.navigationController pushViewController:vc animated:YES];
-           
+//           [self gotoWebView:list_service];
         }else{
-            [self gotoWebView:list_service];
+            
        
         }
     }else if (self.typeIndex == 2){

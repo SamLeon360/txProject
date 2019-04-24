@@ -26,7 +26,8 @@ static AlertView * alertView;
         alertviewModel.alertLabel.textAlignment = NSTextAlignmentCenter;
         alertviewModel.alertLabel.frame = CGRectMake(0, 0,216*kScale, 49*kScale);
         alertviewModel.alertLabel.center = alertviewModel.center;
-        
+        alertviewModel.alertLabel.numberOfLines = 0;
+        alertviewModel.alertLabel.lineBreakMode = NSLineBreakByCharWrapping;
         [alertviewModel addSubview:alertviewModel.alertLabel];
         
         

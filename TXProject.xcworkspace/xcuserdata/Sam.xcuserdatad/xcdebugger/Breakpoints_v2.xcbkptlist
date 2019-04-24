@@ -9,13 +9,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TXProject/Entrepreneurial/PayServiceController.m"
-            timestampString = "576979177.4266"
+            filePath = "TXProject/LoginView/TXRegesiterController.m"
+            timestampString = "577241247.664039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "-payWithAppScheme:"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "-clickToRegister:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TXProject/EduProMix/Classes/Sections/ExpertTeam(&#x4e13;&#x5bb6;&#x56e2;&#x961f;)/ViewModel/ExpertTeamViewModel.m"
+            timestampString = "577618066.38126"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "-loadDataArrFromNetwork"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

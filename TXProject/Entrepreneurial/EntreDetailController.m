@@ -10,12 +10,15 @@
 #import "EntreOneCell.h"
 #import "EntreMessageCell.h"
 #import "EntreServiceAndCompanyCell.h"
+#import "OtherContactsController.h"
 #import "EntreCompanyMsgCell.h"
 @interface EntreDetailController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIView *chatView;
 @property (weak, nonatomic) IBOutlet UIView *callView;
+@property (weak, nonatomic) IBOutlet UIView *likeView;
+@property (weak, nonatomic) IBOutlet UIImageView *likeImage;
 @property (nonatomic) NSDictionary *detailDataDic;
 @property (nonatomic) NSDictionary *serviceTypeDic;
 @property (nonatomic) NSDictionary *entreTypeDic ;
@@ -45,13 +48,37 @@
         UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
         [blockSelf.view addSubview:callWebview];
     }];
+    
+}
+-(void)SetupLike{
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"score",self.dataDic[@"service_id"],@"score", nil];
+    [HTTPREQUEST_SINGLE postWithURLString:SH_LIKE_SERVICE parameters:param withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == -1002) {
+            [AlertView showYMAlertView:self.view andtitle:@"提交好评成功!"];
+            [self.likeImage setImage:[UIImage imageNamed:@"IOS_Fabulous_Blue"]];
+            NOTIFY_POST(@"getDataArrayByRefresh");
+        }
+    } failure:^(NSError *error) {
+        
+    }];
 }
 -(void)GetDetailData{
     __block EntreDetailController *blockSelf = self;
     NSDictionary *param = @{@"service_id":self.dataDic[@"service_id"],@"_search_type":@"2"};
     [HTTPREQUEST_SINGLE postWithURLString:[self.typeString isEqualToString:@"综合服务"]?SH_SERVICE_DETAIL:SH_ENTRE_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 3) {
-            blockSelf.detailDataDic = responseDic[@"data"][0];
+            NSDictionary *dic = responseDic[@"data"][0];
+            NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+            [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSNull class]]) {
+                    [newDic setObject:@"" forKey:key];
+                }else{
+                    [newDic setObject:obj forKey:key];
+                }
+            }];
+            NSDictionary *addDic = responseDic[@"add"];
+            [blockSelf.likeImage setImage: [addDic[@"has_scroce"] integerValue] == 0?[UIImage imageNamed:@"IOS_Fabulous_Gray"]:[UIImage imageNamed:@"IOS_Fabulous_Blue"]];
+            blockSelf.detailDataDic = newDic;
             blockSelf.contactName.text = blockSelf.detailDataDic[@"member_name"];
             [blockSelf.tableView reloadData];
         }
@@ -144,7 +171,14 @@
         cell.callBtn.layer.borderWidth = 1;
         cell.callBtn.layer.borderColor = [UIColor colorWithRGB:0x6C96C5].CGColor;
         [cell.callBtn makeCorner:5];
-        
+        cell.otherBtn.layer.borderWidth = 1;
+        cell.otherBtn.layer.borderColor = [UIColor colorWithRGB:0x6C96C5].CGColor;
+        [cell.otherBtn makeCorner:5];
+        [cell.otherBtn bk_whenTapped:^{
+            OtherContactsController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"OtherContactsController"];
+            vc.dataDic = self.detailDataDic;
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
         return cell;
     }else{
         EntreServiceAndCompanyCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EntreServiceAndCompanyCell"];

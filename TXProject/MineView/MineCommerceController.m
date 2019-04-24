@@ -68,13 +68,14 @@
         USER_SINGLE.commerceArray = newCommerceArray;
         if (dataArray.count > 0 ) {
             NSDictionary *dic = dataArray.firstObject;
-            if (USER_SINGLE.default_commerce_id == nil || [NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length == 0) {
+            if (USER_SINGLE.default_commerce_id == nil || [NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length == 0||USER_SINGLE.commerceDic == nil) {
                 USER_SINGLE.default_commerce_name = dic[@"commerce_name"];
                 USER_SINGLE.default_commerce_id = [NSString stringWithFormat:@"%ld",(long)[dic[@"commerce_id"] integerValue]];
+                USER_SINGLE.commerceDic = dic;
             }
             self.commerceName.text = USER_SINGLE.default_commerce_name;
             NSLog(@"%@",USER_SINGLE.commerceDic);
-           self.memberJob.text = [NSString stringWithFormat:@"个人职位：%@",self.commerceJobArray[[USER_SINGLE.commerceDic[@"member_post_in_commerce"] integerValue]-1]] ;
+           self.memberJob.text = [NSString stringWithFormat:@"个人职位：%@",self.commerceJobArray[[USER_SINGLE.commerceDic[@"member_post_in_commerce"] integerValue]-1]];
             
             [self getCommerceImage];
             [self.changeCommerce bk_whenTapped:^{

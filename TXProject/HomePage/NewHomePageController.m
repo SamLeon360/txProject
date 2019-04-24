@@ -24,6 +24,7 @@
 #import "SmallWXController.h"
 #import "UpdateAlertView.h"
 #import "StudentJobController.h"
+#import "EduHomeViewController.h"
 @interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource,RCIMUserInfoDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) HomeSectionView *sectionView;
@@ -259,6 +260,10 @@
             }];
             [cell.libraryView bk_whenTapped:^{
                 LibraryController *vc =[[UIStoryboard storyboardWithName:@"Library" bundle:nil] instantiateViewControllerWithIdentifier:@"LibraryController"];
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+            [cell.EduProView bk_whenTapped:^{
+                EduHomeViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"EduHomeViewController"];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
             return cell;

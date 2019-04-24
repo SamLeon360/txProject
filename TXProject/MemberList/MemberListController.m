@@ -56,6 +56,7 @@
     }];
     [self.searchBtn bk_whenTapped:^{
         [blockSelf getMemberListData];
+        [blockSelf.view endEditing:YES];
     }];
     self.searchView.layer.borderWidth = 1;
     self.searchView.layer.borderColor = [UIColor colorWithRGB:0xf2f2f2].CGColor;

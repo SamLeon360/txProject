@@ -18,6 +18,8 @@
 
 #define LOGIN_SEND_CODE @"account/sendSms"
 
+#define ACCOUT_CHANGE_PWD @"account/reset_password_by_id"
+
 #define REGISTER_USER @"account/phone_register"
 
 #define WEB_HOST_URL @"https://app.tianxun168.com/h5/ios_app.html#/"
@@ -159,5 +161,21 @@
 #define SH_PRODUCT_COMMENTS @"demand/listComments"
 #define SH_ADD_PRODUCTION @"demand/addUpdateProduct"
 
+
+
+#define SH_TUIJIAN_JOB @"common/list_demand_talent"
+#define SH_NEWS_POST_HOME @"common/list_demand_technology"
+
+#define SH_SCHOOL_DETAIL @"academy/detail_academy"
+#define SH_STUDENT_DETAIL @"student/detail_student"
+#define SH_TEACHER_DETAIL @"expert/detail_expert_info"
+
+
 #define SH_NEW_GET_AREA @"commerce_work/getRegion"
+
+
+#define SH_LIKE_SERVICE @"pioneer_park/pioneerParkRatingService"
+
+////产教融接口
+#define SH_LIST_STUDENT_EDU @"student/list_student"
 #endif /* APIDefine_h */

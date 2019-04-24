@@ -34,14 +34,29 @@
     self.tableView.dataSource = self;
     self.oneCheckMore = NO;
     self.twoCheckMore = NO;
-    [self.navigationController setNavigationBarHidden:NO];
+    self.contactBtn.tag = [self.dataDic[@"type"] integerValue];
+    if (self.contactBtn.tag == 1) {
+        [self.contactBtn setTitle:@"解除投资意向" forState:UIControlStateNormal];
+    }else{
+        [self.contactBtn setTitle:@"有投资意向，请与我联系" forState:UIControlStateNormal];
+    }
+   
     self.title = @"招商详情";
     self.projectTypeArray = @[ @"全部",@"园区建设",@"基础设施",@"农牧农副",@"工业制造",@"医药化工",@"文化旅游",@"能源矿产",@"金融投资",@"商贸物流",@"生物医药",@"现代服务业",@"大健康医药",@"健康养老",@"医疗服务业",@"科教文卫",@"科教文卫",@"高新科技",@"设施管理",@"其他"];
     self.messageArray = [NSMutableArray arrayWithCapacity:0];
     [self getInvestDetail];
+     [self.navigationController setNavigationBarHidden:NO animated:NO];
+}
+-(void)viewWillAppear:(BOOL)animated{
+     [self.navigationController setNavigationBarHidden:NO];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)getInvestDetail {
@@ -49,7 +64,16 @@
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.dataDic[@"projects_id"],@"projects_id",@"1",@"is_auth", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_INVESTMEMT_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 3) {
-            blockSelf.detailDataDic = responseDic[@"data"];
+            NSDictionary *dic = responseDic[@"data"];
+            NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+            [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSNull class]]) {
+                    [newDic setObject:@"" forKey:key];
+                }else{
+                    [newDic setObject:obj forKey:key];
+                }
+            }];
+            blockSelf.detailDataDic = newDic;
             blockSelf.tableView.tableHeaderView = blockSelf.headerView;
             [blockSelf.tableView reloadData];
             
@@ -77,7 +101,7 @@
     } failure:^(NSError *error) {
         
     }];//
-
+    
     [self.contactBtn bk_whenTapped:^{
         NSDictionary *paramDic = blockSelf.contactBtn.tag == 1?[[NSDictionary alloc] initWithObjectsAndKeys:self.dataDic[@"projects_name"],@"interested_name",self.dataDic[@"projects_id"],@"projects_id",@"1",@"type", nil]:[[NSDictionary alloc] initWithObjectsAndKeys:self.dataDic[@"projects_id"],@"projects_id",@"1",@"type", nil];
         [HTTPREQUEST_SINGLE postWithURLString:blockSelf.contactBtn.tag==1?SH_ADD_COLLECTION:SH_DELETE_COLLECTION parameters:paramDic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
@@ -90,6 +114,7 @@
                     blockSelf.contactBtn.tag = 1;
                     [blockSelf.contactBtn setTitle:@"有投资意向,请与我联系" forState:UIControlStateNormal];
                 }
+                NOTIFY_POST(@"getinvestmentArrayByRefresh");
             }
         } failure:^(NSError *error) {
             

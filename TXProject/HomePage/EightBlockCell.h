@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *zhaoshangView;
 @property (weak, nonatomic) IBOutlet UIView *peopleNeedView;
 @property (weak, nonatomic) IBOutlet UIView *libraryView;
+@property (weak, nonatomic) IBOutlet UIView *EduProView;
 
 @end
 

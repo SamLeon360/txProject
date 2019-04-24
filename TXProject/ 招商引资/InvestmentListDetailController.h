@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface InvestmentListDetailController : UIViewController
 @property(nonatomic) NSDictionary *dataDic;
+@property (nonatomic) NSInteger selectType;
 @end
 
 NS_ASSUME_NONNULL_END

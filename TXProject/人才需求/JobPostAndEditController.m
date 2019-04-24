@@ -93,6 +93,14 @@
     }];
 }
 -(void)uploadParam{
+    NSDictionary *dic = @{@"enterprise_name":@"请选择公司",@"job_name":@"请填写岗位名称",@"salary_min":@"请填写最低月薪",@"salary_max":@"请填写最高月薪",@"education":@"请选择学历要求",@"work_life":@"请填写工作年限",@"age_limit":@"请填写年龄要求",@"receive_fresh_graduate":@"请选择是否接受应届生",@"work_type":@"请选择工作方式",@"welfare":@"请选择工作福利",@"area":@"请选择工作地址",@"work_address":@"请填写详细地址",@"contacts_phone":@"请填写联系方式",@"job_type":@"请选择职位类型",@"job_description":@"请填写职位描述",@"start_time":@"请选择上架时间",@"end_time":@"请选择下架时间"};
+    
+    [self.dataDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[NSNull class]]||[NSString stringWithFormat:@"%@",obj].length <= 0) {
+            [AlertView showYMAlertView:self.view andtitle:dic[key]];
+            return ;
+        }
+    }];
     [HTTPREQUEST_SINGLE postWithURLString:SH_ADD_TALENT parameters:self.dataDic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"添加成功"];
@@ -267,12 +275,15 @@
     }
     else{
         NSArray *cellkeyArray = self.keyArray[indexPath.section];
-       
+        
         if ((indexPath.row == 1 && indexPath.section == 1)||(indexPath.row == 2 && indexPath.section == 1)) {
              cell.contentTF.keyboardType = UIKeyboardTypePhonePad;
             [self.dataDic setObject:[NSString stringWithFormat:@"%ld",(long)[cell.contentTF.text integerValue]] forKey:cellkeyArray[indexPath.row]];
         }else{
              cell.contentTF.keyboardType = UIKeyboardTypeDefault;
+            if (!cell.contentTF.hidden) {
+                return;
+            }
              [self.dataDic setObject:cell.contentTF.text forKey:cellkeyArray[indexPath.row]];
         }
     }

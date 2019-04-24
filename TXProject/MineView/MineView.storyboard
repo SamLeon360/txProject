@@ -835,6 +835,9 @@
                                 <state key="normal" title="确认">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="clickToSubmitPwd:" destination="JfO-ye-F99" eventType="touchUpInside" id="z0d-K3-g3Y"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -851,6 +854,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="WYE-7c-H1V"/>
                     </view>
+                    <connections>
+                        <outlet property="onePwdTF" destination="FgI-Go-PWw" id="EkR-od-vzD"/>
+                        <outlet property="twoPwdTF" destination="odw-G2-Rj2" id="5cj-U3-sld"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KO2-H9-RIq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

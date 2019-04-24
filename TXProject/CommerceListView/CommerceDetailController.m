@@ -32,7 +32,7 @@
     self.title = @"社团详情";
     self.sectionTitleArray = @[@"社团简介",@"社团主要负责人",@"秘书处介绍",@"入会条件",@"联系信息"];
     self.connectArray = @[@{@"会长：":@"commerce_president"},@{@"执行会长：":@"executive_president"},@{@"监事长：":@"supervisor"},@{@"秘书处：":@"commerce_secretary_general"}];
-    self.connectMessageArray = @[@{@"社团电话：":@"commerce_phone"},@{@"传真：":@"commerce_fax"},@{@"联系人：":@"contact"},@{@"联系人手机：":@"contact_phone"},@{@"电子邮箱：":@"email"},@{@"社团办公地址：":@"site"}];
+    self.connectMessageArray = @[@{@"社团电话：":@"commerce_phone"},@{@"传真：":@"commerce_fax"},@{@"联系人：":@"contact"},@{@"联系人手机：":@"contact_phone"},@{@"电子邮箱：":@"email"},@{@"社团办公地址：":@"office_address"}];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     NSString *commerceId = @"";
@@ -151,7 +151,23 @@
         NSDictionary *dic =  self.connectMessageArray[indexPath.row];
         cell.titleLabel.text = dic.allKeys[0];
         cell.cellContent.text = self.commerceDic[dic[dic.allKeys[0]]];
+        if ([cell.titleLabel.text isEqualToString:@"社团电话："]) {
+            [cell bk_whenTapped:^{
+                NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.commerceDic[@"commerce_phone"]];
+                UIWebView * callWebview = [[UIWebView alloc] init];
+                [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+                [self.view addSubview:callWebview];
+            }];
+        }else if ([cell.titleLabel.text isEqualToString:@"联系人手机："]){
+            [cell bk_whenTapped:^{
+                NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.commerceDic[@"contact_phone"]];
+                UIWebView * callWebview = [[UIWebView alloc] init];
+                [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+                [self.view addSubview:callWebview];
+            }];
+        }
     }
+   
     return cell;
 }
 

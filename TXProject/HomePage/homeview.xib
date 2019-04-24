@@ -126,6 +126,7 @@
             <viewLayoutGuide key="safeArea" id="MX7-1r-8fd"/>
             <connections>
                 <outlet property="checkLabel" destination="IcQ-Mo-cW4" id="MFT-3g-nAI"/>
+                <outlet property="titleLabel" destination="bNs-yG-6fG" id="5Jt-Of-BH3"/>
             </connections>
             <point key="canvasLocation" x="140" y="322"/>
         </view>

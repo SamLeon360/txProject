@@ -52,7 +52,7 @@
     }];
 }
 -(void)viewWillDisappear:(BOOL)animated{
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+//    [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)GetDetailData{
     NSDictionary *param = @{@"product_id":self.editDic[@"product_id"]};
@@ -67,8 +67,30 @@
     }];
 }
 -(void)uploadData{
+    if (self.imageArray.count <= 0) {
+        [AlertView showYMAlertView:self.view andtitle:@"请最少选择一张图片"];
+        return;
+    }
+    NSDictionary *keyAlertArray = @{@"product_name":@"请填写标题",@"product_type":@"请选择产品类型",@"need_number":@"请填写需求数量",@"product_unit":@"请填写单位",@"product_description":@"请填写产品描述",@"contacts_person":@"请填写联系人",@"contacts_phone":@"请填写联系方式",@"area":@"请填写所在区域",@"address":@"请填写详细地址",@"put_on_shelves_time":@"请选择上架时间",@"put_off_shelves_time":@"请选择下架时间",@"enterprise_id":@"请选择企业"};
+    __block UploadProductionController *blockSelf = self;
+    [keyAlertArray enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![blockSelf.dataDic.allKeys containsObject:key]||[blockSelf.dataDic[key] isKindOfClass:[NSNull class]]) {
+            [AlertView showYMAlertView:blockSelf.view andtitle:obj];
+            return ;
+        }
+    }];
+    if ([self.dataDic[@"need_number"] integerValue] == 0 ) {
+        [AlertView showYMAlertView:self.view andtitle:@"需求数量最少为1"];
+        return;
+    }
+    if ([self.dataDic[@"product_type"] integerValue] == 0) {
+        [AlertView showYMAlertView:self.view andtitle:@"请选择产品类型"];
+        return;
+    }
+ 
     [self.dataDic setObject:USER_SINGLE.default_commerce_id forKey:@"commerce_id"];
-    [self.dataDic removeObjectForKey:@"token"];
+//    [self.dataDic removeObjectForKey:@"token"];
+//    [self.dataDic setObject:USER_SINGLE.token forKey:@"token"];
     [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:SH_ADD_PRODUCTION parameters:self.dataDic withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for(NSInteger i = 0; i < self.imageArray.count; i++) {
 
@@ -80,13 +102,14 @@
             formatter.dateFormat = @"yyyyMMddHHmmss";
             NSString *str = [formatter stringFromDate:[NSDate date]];
             NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
-            [formData appendPartWithFileData:imageData name:@"avatar" fileName:fileName mimeType:@"image/jpeg"];
+            [formData appendPartWithFileData:imageData name:@"avatar[]" fileName:fileName mimeType:@"image/jpeg"];
         }
     } progress:^(double progress) {
         
     } success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"发布成功"];
+            NOTIFY_POST(@"GetProductionData");
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
             });
@@ -109,6 +132,7 @@
         ProductionImageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProductionImageCell"];
         cell.imageArray = [NSMutableArray arrayWithArray:self.imageArray];
         cell.uploadVC = self;
+        cell.tableView = self.tableView;
         [cell setupCollection];
         cell.selectArrayCallBack = ^(NSArray * _Nonnull imageArray) {
             blockSelf.imageArray = [NSMutableArray arrayWithArray:imageArray];
@@ -200,17 +224,30 @@
         return cell;
     }else{
         ProSelectCompanyCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProSelectCompanyCell"];
-        if (USER_SINGLE.default_company_dic != nil) {
+        if (USER_SINGLE.default_company_dic != nil&&self.companyDic==nil) {
             cell.companyLabel.text = USER_SINGLE.default_company_dic[@"enterprise_name"];
              [self.dataDic setObject:USER_SINGLE.default_company_dic[@"enterprise_id"] forKey:@"enterprise_id"];
+        }else{
+             cell.companyLabel.text = self.companyDic[@"enterprise_name"];
         }
         [cell.companyView bk_whenTapped:^{
             ProCompanyListController *vc = [[UIStoryboard storyboardWithName:@"Production" bundle:nil] instantiateViewControllerWithIdentifier:@"ProCompanyListController"];
+            vc.changeDefault = NO;
+            [blockSelf.navigationController setNavigationBarHidden:NO animated:NO];
             [blockSelf.navigationController pushViewController:vc animated:YES];
             __block UploadProductionController *blockblockSelf = self;
             vc.selectNSDictionaryCallBack = ^(NSDictionary * _Nonnull dic) {
-                blockblockSelf.companyDic = dic;
-                [blockblockSelf.dataDic setObject:dic[@"enterprise_id"] forKey:@"enterprise_id"];
+                NSMutableDictionary *tableDic = [NSMutableDictionary dictionaryWithCapacity:0];
+                [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[NSNull class]]) {
+                        [tableDic setObject:@"" forKey:key];
+                    }else{
+                        [tableDic setObject:obj forKey:key];
+                    }
+                }];
+                blockblockSelf.companyDic = tableDic;
+//                USER_SINGLE.default_company_dic = tableDic;
+                [blockblockSelf.dataDic setObject:tableDic[@"enterprise_id"] forKey:@"enterprise_id"];
                 [blockblockSelf.tableView reloadData];
             };
         }];

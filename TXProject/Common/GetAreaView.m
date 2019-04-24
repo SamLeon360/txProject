@@ -53,9 +53,11 @@
     if (tableView == self.provinceTable) {
          cell.cellString.text = self.areaDic.allKeys[indexPath.row];
         if ([self.selectProvince isEqualToString:cell.cellString.text]) {
-            cell.backgroundColor = [UIColor colorWithRGB:0xf2f2f2];
-        }else{
             cell.backgroundColor = [UIColor whiteColor];
+            cell.cellString.textColor = [UIColor colorWithRGB:0x0E56B8];
+        }else{
+            cell.backgroundColor = [UIColor colorWithRGB:0xF1F6FA];
+            cell.cellString.textColor = [UIColor blackColor];
         }
         [cell.cellString bk_whenTapped:^{
             NSIndexPath *indexP = [self.provinceTable indexPathForCell:cell];
@@ -76,9 +78,11 @@
             [self.provinceTable reloadData];
         }];
         if ([self.selecCity isEqualToString:cell.cellString.text]) {
-            cell.backgroundColor = [UIColor colorWithRGB:0xf2f2f2];
-        }else{
             cell.backgroundColor = [UIColor whiteColor];
+            cell.cellString.textColor = [UIColor colorWithRGB:0x0E56B8];
+        }else{
+            cell.backgroundColor = [UIColor colorWithRGB:0xF1F6FA];
+            cell.cellString.textColor = [UIColor blackColor];
         }
         return cell;
     }

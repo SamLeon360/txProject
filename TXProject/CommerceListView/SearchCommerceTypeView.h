@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *twoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *threeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *fourLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *allIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *oneIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *twoIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *threeIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *fourIcon;
 
 @end
 

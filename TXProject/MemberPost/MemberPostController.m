@@ -24,8 +24,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.imageArray = @[@"news",@"person",@"member_service",@"product",@"technology",@"comprehensive",@"Entrepreneurship"];
-    self.titleArray = @[@"发布新闻",@"发布人才需求",@"发布服务需求",@"发布产品需求",@"发布技术需求",@"发布综合服务",@"发布创业宝典"];
+    self.imageArray = @[@"news",@"person",@"member_service",@"product",@"technology",@"comprehensive",@"Entrepreneurship"];///
+    self.titleArray = @[@"发布新闻",@"发布人才需求",@"发布服务需求",@"发布技术需求",@"发布综合服务",@"发布产品需求",@"发布创业宝典"];///
     self.title = @"会员发布";
     self.urlArray  = @[[NSString stringWithFormat:@"%@list_m_news/0/1",WEB_HOST_URL],[NSString stringWithFormat:@"%@require_list_m_talent/1/%@/1///////1",WEB_HOST_URL,USER_SINGLE.default_commerce_id],[NSString stringWithFormat:@"%@require_list_m_service/1/%@/1////1",WEB_HOST_URL,USER_SINGLE.default_commerce_id],[NSString stringWithFormat:@"%@require_list_m_product/1/%@/1////1",WEB_HOST_URL,USER_SINGLE.default_commerce_id],[NSString stringWithFormat:@"%@require_list_m_technology/1/%@/1/////1",WEB_HOST_URL,USER_SINGLE.default_commerce_id],[NSString stringWithFormat:@"%@list_multi_services/1/1",WEB_HOST_URL],[NSString stringWithFormat:@"%@list_entrepreneurship/1/1",WEB_HOST_URL]];
     self.collectionView.delegate = self;
@@ -82,17 +82,18 @@
     }
     if (indexPath.row == 5) {
         AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
-        vc.typeString =@"综合服务";
+        vc.typeString =@"创业宝典";
         
         [self.navigationController pushViewController:vc animated:YES];
         return;
+        AddServiceFormController *vc1 = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
+        vc1.typeString =@"综合服务";
+        
+        [self.navigationController pushViewController:vc1 animated:YES];
+        return;
     }
     if (indexPath.row == 6) {
-        AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
-        vc.typeString =@"创业宝典";
-      
-        [self.navigationController pushViewController:vc animated:YES];
-        return;
+        
     }
     NSString *url = self.urlArray[indexPath.row];
     TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];

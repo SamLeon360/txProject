@@ -77,8 +77,9 @@
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",@"",@"allow_publish",USER_SINGLE.default_commerce_id,@"commerce_id",@"",@"education",@"",@"enterprise_id",@"",@"ios",@"",@"job_name",@"",@"job_type",[NSString stringWithFormat:@"%ld",self.nPage],@"page",@"",@"receive_fresh_graduate",@"",@"work_type",@"1",@"_search_type", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_OTHER_JOB parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
-            self.jobArray = [NSMutableArray arrayWithArray:responseDic[@"data"]];
+          
             NSArray *arr = responseDic[@"data"];
+            [self.jobArray addObjectsFromArray:arr];
             if (arr.count <= 0) {
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
             }else{

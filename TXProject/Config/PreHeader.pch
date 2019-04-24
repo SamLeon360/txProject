@@ -25,7 +25,7 @@
 #import "WXApi.h"
 //#import "BCDefine.h"
 
-//self
+#import "MJExtension.h"
 //#import "WebConfig.h"
 #import "CustomFountion.h"
 #import "UIImageView+CustomImageView.h"
@@ -60,8 +60,13 @@
 
 #import "CommerceAlertView.h"
 
+
+//Thomas Coder
+#import "TSRequestTool.h"
+#import "TSProgressHUD.h"
+#import "NSString+TSExtension.h"
+#import "NSDate+TSExtension.h"
 //Managers
 #import "RequestManager.h"
-//#import "LocationManager.h"
 
 #endif /* PreHeader_h */

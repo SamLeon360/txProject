@@ -22,7 +22,7 @@
 #endif
 // 如果需要使用 idfa 功能所需要引入的头文件（可选）
 #import <AdSupport/AdSupport.h>
-@interface AppDelegate ()<JPUSHRegisterDelegate>
+@interface AppDelegate ()<JPUSHRegisterDelegate,WXApiDelegate>
 
 @end
 
@@ -38,7 +38,7 @@
     IQKeyboardManager *keyboardManager = [IQKeyboardManager sharedManager]; // 获取类库的单例变量
     
     keyboardManager.enable = YES; // 控制整个功能是否启用
-    
+    [WXApiManager sharedManager].delegate = self;
     keyboardManager.shouldResignOnTouchOutside = YES; // 控制点击背景是否收起键盘
     
     keyboardManager.shouldToolbarUsesTextFieldTintColor = YES; // 控制键盘上的工具条文字颜色是否用户自定义
@@ -84,7 +84,13 @@
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
             NSLog(@"支付宝客户端支付结果result = %@",resultDic);
             if (resultDic && [resultDic objectForKey:@"resultStatus"] && ([[resultDic objectForKey:@"resultStatus"] intValue] == 9000)) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"uploadDatga" object:nil];
+                NSString *payType = [[NSUserDefaults standardUserDefaults] objectForKey:@"payType"];
+                if ([payType isEqualToString:@"xcx"]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"payType"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"xcxPay" object:nil];
+                }else{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"uploadDatga" object:nil];
+                }
                 // 发通知带出支付成功结果
 //                [[NSNotificationCenter defaultCenter] postNotificationName:ZLAliReturnSucceedPayNotification object:resultDic];
             } else {
@@ -94,7 +100,8 @@
             }
         }];
     }else{
-          return [WXApi handleOpenURL:url delegate:[WXApiManager sharedManager]];
+        
+          return [WXApi handleOpenURL:url delegate:self];
     }
     return YES;
 }
@@ -165,7 +172,42 @@
     [JPUSHService handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
 }
-    
+
+
+- (void)onResp:(BaseResp *)resp
+{
+    if ([resp isKindOfClass:[PayResp class]])
+    {
+        PayResp *response = (PayResp *)resp;
+        switch (response.errCode)
+        {
+            case WXSuccess:{
+                //服务器端查询支付通知或查询API返回的结果再提示成功
+                NSLog(@"支付成功");
+                NSString *payType = [[NSUserDefaults standardUserDefaults] objectForKey:@"payType"];
+                if ([payType isEqualToString:@"xcx"]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"payType"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"xcxPay" object:nil];
+                }else{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"uploadDatga" object:nil];
+                }
+            }break;
+            case WXErrCodeUserCancel:
+                //服务器端查询支付通知或查询API返回的结果再提示成功
+                //交易取消
+                
+                break;
+            default:
+                NSLog(@"支付失败， retcode=%d",resp.errCode);
+                
+                break;
+        }
+    }
+}
+//ios9以后的方法
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [WXApi handleOpenURL:url delegate:self];
+}
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     // Required, For systems with less than or equal to iOS 6

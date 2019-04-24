@@ -316,4 +316,11 @@
     return height;
     
 }
+
++(void)callPhone:(NSString *)phone andView:(UIView *)view{
+    NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",phone];
+    UIWebView * callWebview = [[UIWebView alloc] init];
+    [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+    [view addSubview:callWebview];
+}
 @end

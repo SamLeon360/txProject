@@ -44,7 +44,9 @@
     NewEditAlertView *alertView;
 }
 - (IBAction)clickToUpload:(id)sender {
-    [self uploadData];
+    [self uploadDataMore];
+}
+-(void)ClickToPay{
     NSString *urlString = [self.typeString isEqualToString:@"创业宝典"]?SH_CHECK_PAY_SERVICE:SH_CHECK_PAY_ZONGHE;
     [HTTPREQUEST_SINGLE postWithURLString:urlString parameters:@{@"service_type":[NSString stringWithFormat:@"%ld",(long)self.typeIndex]} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 0) {
@@ -57,7 +59,8 @@
                 VC.serviceDic =  @{@"service_type":[NSString stringWithFormat:@"%ld",(long)self.typeIndex]};
                 [self.navigationController pushViewController:VC animated:YES];
             }else{
-                [self uploadDataMore];
+                
+                [self.navigationController popViewControllerAnimated:YES];
             }
         }else{
             [AlertView showYMAlertView:self.view andtitle: responseDic[@"message"]];
@@ -66,11 +69,10 @@
         
     }];
     
-  
-    
-    
 }
--(void)uploadData{
+
+
+-(void)uploadDataMore {
     if (self.titleTF.text.length <= 0) {
         [AlertView showYMAlertView:self.view andtitle:@"请填写标题"];
         return;
@@ -91,6 +93,7 @@
         [AlertView showYMAlertView:self.view andtitle:@"请填写价格"];
         return;
     }
+    
     NSMutableDictionary *parDic = [[NSMutableDictionary alloc] initWithCapacity:0];
     [self.mineDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         [parDic setObject:obj forKey:key];
@@ -98,7 +101,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     NSString *add_time = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
-//    [NSString stringWithFormat:@"%ld",self.typeIndex],@"service_id"
+    //    [NSString stringWithFormat:@"%ld",self.typeIndex],@"service_id"
     NSMutableDictionary *param = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.titleTF.text,@"service_title",self.serviceTF.text,@"service_desc",add_time,@"add_time",self.contactNameTF.text,@"member_name",USER_SINGLE.default_commerce_id==nil?@"":USER_SINGLE.default_commerce_id,@"commerce_id",self.serviceId,@"service_type",self.companyTF.text,@"enterprise_name",self.contactPhoneTF.text,@"telephone",self.priceTF.text,@"fee_mode",self.emailTF.text,@"email",self.QQTF.text,@"qq",self.detailAddTF.text,@"address",self.companyAddTF.text,[self.typeString isEqualToString:@"创业宝典"]?@"area":@"search_area",self.companyIntrTF.text,@"enterprise_introduction",@"",@"honor_certificate",@"",@"qualification_certificate",@"",@"weixin",@"",@"fax",@"",@"majors",@"",@"graduate_institutions",USER_SINGLE.member_id,@"member_id",nil];
     [param enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         [parDic setObject:obj forKey:key];
@@ -109,10 +112,6 @@
     NSString *fee = self.priceTF.text;
     [parDic setObject:fee forKey:@"fee_mode"];
     self.paramDic = parDic;
-    
-}
-
--(void)uploadDataMore {
     [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:[self.typeString isEqualToString:@"创业宝典"]?SH_UPLOAD_SERVICE:SH_UPLOAD_ZONGHE parameters:self.paramDic withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyyMMddHHmmss";
@@ -125,12 +124,13 @@
         NSLog(@"%@",responseDic);
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"申请成功"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDataArrayByRefresh" object:nil];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSArray *vcArray = self.navigationController.childViewControllers;
-                UIViewController *tempVC = vcArray[2];
-                [self.navigationController popToViewController:tempVC animated:YES];
-            });
+            [self ClickToPay];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDataArrayByRefresh" object:nil];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                NSArray *vcArray = self.navigationController.childViewControllers;
+//                UIViewController *tempVC = vcArray[2];
+//                [self.navigationController popToViewController:tempVC animated:YES];
+//            });
         }else{
             [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
         }
@@ -166,7 +166,7 @@
     [self setupNewAlertView];
     [self getMineMessage];
     [self.uploadBtn makeCorner: 5];
-    NOTIFY_ADD(uploadData, @"uploadServiceData");
+    
  
     if ([self.typeString isEqualToString:@"创业宝典"]) {
         self.selectTypeData =  @{@"工商注册":@"1",@"财税服务":@"5",@"知识产权":@"8",@"资质办理":@"10",@"法律服务":@"18",@"人力社保":@"21",@"场地服务":@"25",@"创业辅导":@"27",@"投融资":@"29",@"图文视频":@"33",@"视觉设计":@"36",@"市场传播":@"37",@"消防环保":@"38",@"物流快递":@"39",@"创业信息":@"41"};

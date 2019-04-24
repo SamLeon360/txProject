@@ -51,7 +51,21 @@
     __block MemberDetailController *blockSelf = self;
     [HTTPREQUEST_SINGLE postWithURLString:SH_COMPANY_LIST parameters:@{@"member_id":self.memberDic[@"member_id"]} withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue]== 0) {
-            blockSelf.companyArray = responseDic[@"data"];
+            blockSelf.companyArray = [NSMutableArray arrayWithCapacity:0];
+            NSArray *arr = responseDic[@"data"];
+            for (NSDictionary *dic in arr) {
+                NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+                [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[NSNull class]]) {
+                        [newDic setObject:@"" forKey:key];
+                    }else{
+                        [newDic setObject:obj forKey:key];
+                    }
+                }];
+                
+                [blockSelf.companyArray addObject:newDic];
+            }
+            
             [blockSelf.tableView reloadData];
         }
     } failure:^(NSError *error) {
@@ -73,7 +87,16 @@
     __block MemberDetailController *blockSelf = self;
     [HTTPREQUEST_SINGLE postWithURLString:SH_MEMBER_DETAIL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
-            [blockSelf.memberDetailDic setDictionary:responseDic[@"data"]];
+            NSDictionary *dic = responseDic[@"data"];
+            NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+            [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSNull class]]) {
+                    [newDic setObject:@"" forKey:key];
+                }else{
+                    [newDic setObject:obj forKey:key];
+                }
+            }];
+            [blockSelf.memberDetailDic setDictionary:newDic];
             [blockSelf.memberDetailDic setObject:[responseDic[@"add"][@"phone"] isKindOfClass:[NSNull class]]?@"":responseDic[@"add"][@"phone"] forKey:@"phone"];
             blockSelf.has_add = [responseDic[@"add"][@"has_add"] boolValue];
             blockSelf.introductionString = [blockSelf.memberDetailDic[@"member_introduction"] isKindOfClass:[NSNull class]]?@"":blockSelf.memberDetailDic[@"member_introduction"];

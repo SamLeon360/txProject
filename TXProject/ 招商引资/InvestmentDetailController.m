@@ -24,6 +24,7 @@
     [self.oneLabel makeCorner:5];
     [self.twoLabel makeCorner:5];
     self.title = @"招商引资";
+   
     [self.oneView bk_whenTapped:^{
         InvestmentListController * vc = [[UIStoryboard storyboardWithName:@"Investment" bundle:nil] instantiateViewControllerWithIdentifier:@"InvestmentListController"];
         [self.navigationController pushViewController:vc animated:YES];
@@ -33,9 +34,12 @@
         vc.webUrl = @"https://app.tianxun168.com/h5/ios_app.html#/investment_guide_index/0///1";
         [self.navigationController pushViewController:vc animated:YES];
     }];
-    
+  
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+   
+}
 /*
 #pragma mark - Navigation
 

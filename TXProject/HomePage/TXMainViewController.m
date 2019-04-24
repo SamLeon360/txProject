@@ -20,7 +20,7 @@
 #import "UITabBar+DKSTabBar.h"
 #import "SearchCommerceController.h"
 #import "UploadCommerceControllerController.h"
-@interface TXMainViewController ()<UITabBarControllerDelegate,RCIMReceiveMessageDelegate>
+@interface TXMainViewController ()<UITabBarControllerDelegate,RCIMReceiveMessageDelegate,UINavigationControllerDelegate>
 @property (nonatomic) CommerceAlertView *comAlertView;
 @property (nonatomic) NSInteger tabIndex;
 @end
@@ -40,12 +40,11 @@
     }];
   
     [self setupSubviews];
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 20)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, ScreenH>=812 ? 48 : 20)];
     [view setBackgroundColor:[UIColor colorWithRGB:0x3e85fb]];
     [self.view addSubview:view];
     self.selectedIndex = 2;
     self.selectedIndex = 0;
-    
     self.delegate = self;
     self.navigationController.navigationBarHidden = YES;
     [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
@@ -56,6 +55,26 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
+}
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    //每次当navigation中的界面切换，设为空。本次赋值只在程序初始化时执行一次
+    static UIViewController *lastController = nil;
+    
+    //若上个view不为空
+    if (lastController != nil)
+    {
+        //若该实例实现了viewWillDisappear方法，则调用
+        if ([lastController respondsToSelector:@selector(viewWillDisappear:)])
+        {
+            [lastController viewWillDisappear:animated];
+        }
+    }
+    
+    //将当前要显示的view设置为lastController，在下次view切换调用本方法时，会执行viewWillDisappear
+    lastController = viewController;
+    
+    [viewController viewWillAppear:animated];
 }
 -(void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
      
@@ -78,7 +97,7 @@
     NSLog(@"---%@",USER_SINGLE.default_commerce_id);
   
     NewHomePageController *homeVC = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"NewHomePageController"];
-        
+
     [self addChildViewController:homeVC
                                image:[[UIImage imageNamed:@"shetuan_no_select"]scaleToSize:CGSizeMake(21, 20)]
                        selectedImage:[[UIImage imageNamed:@"shetuan_select"] scaleToSize:CGSizeMake(21, 20)]
@@ -131,6 +150,7 @@
     childViewController.tabBarItem.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     childViewController.tabBarItem.selectedImage = [selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     YKNavigationController *nav = [[YKNavigationController alloc]initWithRootViewController:childViewController];
+    nav.delegate = self;
     [childViewController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, -5)];
     childViewController.tabBarItem.imageInsets = UIEdgeInsetsMake(-3, 0, 0, 0);
     childViewController.tabBarItem.accessibilityFrame = CGRectZero;
@@ -156,6 +176,7 @@
     }
     if (tabSeledIndex == 1||tabSeledIndex == 2||tabSeledIndex == 3) {
         if ([USER_SINGLE.default_commerce_name isEqualToString:@""]) {
+            
              [[UIApplication sharedApplication].keyWindow addSubview:self.comAlertView];
         }
     }
@@ -188,6 +209,7 @@
             
         }];
         [_comAlertView bk_whenTapped:^{
+            blockSelf.selectedIndex = 0;
             [blockSelf.comAlertView removeFromSuperview];
         }];
     }

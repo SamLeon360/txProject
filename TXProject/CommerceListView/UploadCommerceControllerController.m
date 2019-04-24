@@ -11,7 +11,7 @@
 #import "UploadSelectTypeView.h"
 #import "ZLPhotoActionSheet.h"
 #import <IQKeyboardManager.h>
-@interface UploadCommerceControllerController ()<UIPickerViewDataSource,UIPickerViewDelegate>
+@interface UploadCommerceControllerController ()<UIPickerViewDataSource,UIPickerViewDelegate,UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *commerceNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *oneView;
 @property (weak, nonatomic) IBOutlet UIView *twoView;
@@ -63,12 +63,14 @@
     [[UIApplication sharedApplication].keyWindow  addSubview:self.areaPickerView];
     [[UIApplication sharedApplication].keyWindow  addSubview:self.selectTypeView];
     self.commerceAutoHeight.constant = 50;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"Login_Return_write"] scaleToSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(clickToBack)];
+    self.navigationItem.leftBarButtonItem = backItem;
 //    [[UIApplication sharedApplication].keyWindow  addSubview:self.areaPickerView];
     [self setupClickAction];
     [self getAreaData];
-//    if (self.editDic != nil) {
-//        
-//    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
     self.mainJobArray = @[@"包装印刷-包装",@"包装印刷-印刷",@"地产建材-地产开发",@"地产建材-建筑材料",@"地产建材-建筑监理及设计",@"法律咨询-法律咨询及服务",@"法律咨询-知识产权咨询及服务",@"纺织服饰-布匹",@"纺织服饰-服装",@"纺织服饰-箱包",@"工程贸易-工程施工",@"工程贸易-零售贸易",@"广告传媒-广告设计制作",@"广告传媒-文化传媒",@"广告传媒-新媒体广告",@"环保化工-环保检测治理",@"环保化工-生物化工",@"家电灯饰-灯饰配件",@"家电灯饰-灯饰照明",@"家电灯饰-家电配件",@"家电灯饰-家用电器",@"家具装饰-办公家具",@"家具装饰-家居用品",@"家具装饰-装饰工程",@"教育艺术-教育培训",@"教育艺术-文化艺术",@"金融财会-财会服务",@"金融财会-金融投资",@"酒店餐饮-餐饮服务",@"酒店餐饮-综合酒店",@"能源矿产-矿产开发",@"能源矿产-新能源产业",@"网络电子-电脑及配件",@"网络电子-软件工程",@"网络电子-网络技术",@"五金机械-机械装备",@"五金机械-模具铸造",@"五金机械-五金加工",@"物流运输-货物流通",@"物流运输-客运",@"医药保健-保健品",@"医药保健-医药销售",@"其他行业-其他行业",];
 }
 -(void)getCommerceDetail{
@@ -83,6 +85,33 @@
         
     }];
 }
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    //获取键盘的高度
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *value = [userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey];
+    CGRect keyboardRect = [value CGRectValue];
+    int height = keyboardRect.size.height;
+    self.tableView.contentOffset = CGPointMake(0,  height);
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    //获取键盘的高度
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *value = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [value CGRectValue];
+    int height = keyboardRect.size.height;
+    self.tableView.contentOffset = CGPointMake(0, 0);
+}
+-(void)clickToBack{
+     [self.areaPickerView removeFromSuperview];
+     [self.selectTypeView removeFromSuperview];
+    [self.pickSureBtn removeFromSuperview];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 -(void)setupDetailData{
     self.commerceNameLabel.text = self.detailCommerceDic[@"commerce_name"];
    
@@ -102,12 +131,16 @@
 
     [self.typeTF bk_whenTapped:^{
         blockSelf.selectTypeView.hidden = NO;
+        blockSelf.areaPickerView.hidden = YES;
+        blockSelf.pickSureBtn.hidden = YES;
     }];
     [self.selectTypeView.oneLabel bk_whenTapped:^{
         __block UploadCommerceControllerController *bblockSelf = self;
         blockSelf.selectType = 0;
         blockSelf.typeTF.text = blockSelf.selectTypeView.oneLabel.text;
         blockSelf.selectTypeView.hidden = YES;
+        blockSelf.areaPickerView.hidden = YES;
+        blockSelf.pickSureBtn.hidden = YES;
         blockSelf.changeLabel.text = @"主营业务 * :";
         blockSelf.changeCommerceLabel.text = @"请选择主营业务";
         blockSelf.selectMainJob = YES;
@@ -125,6 +158,8 @@
         blockSelf.typeTF.text = blockSelf.selectTypeView.twoLabel.text;
         blockSelf.selectTypeView.hidden = YES;
         blockSelf.commerceAutoHeight.constant = 50;
+        blockSelf.areaPickerView.hidden = YES;
+        blockSelf.pickSureBtn.hidden = YES;
     }];
     [self.selectTypeView.threeLabel bk_whenTapped:^{
         blockSelf.selectType = 2;
@@ -151,6 +186,7 @@
             bblockSelf.isprovince = YES;
             bblockSelf.pickSureBtn.hidden = NO;
             bblockSelf.isLocationProvince = NO;
+            bblockSelf.selectTypeView.hidden = YES;
         }];
         [blockSelf.changeCommerceCityLabel bk_whenTapped:^{
             if (bblockSelf.provinceTF.text.length > 0) {
@@ -159,6 +195,7 @@
                 bblockSelf.isprovince = NO;
                 bblockSelf.pickSureBtn.hidden = NO;
                 bblockSelf.isLocationCity = NO;
+                bblockSelf.selectTypeView.hidden = YES;
             }else{
                 return ;
             }
@@ -175,6 +212,7 @@
         blockSelf.isprovince = YES;
         blockSelf.pickSureBtn.hidden = NO;
         blockSelf.isLocationProvince = YES;
+        blockSelf.selectTypeView.hidden = YES;
     }];
     [self.cityTF bk_whenTapped:^{
         if (blockSelf.provinceTF.text.length > 0) {
@@ -183,11 +221,13 @@
             blockSelf.isprovince = NO;
             blockSelf.pickSureBtn.hidden = NO;
             blockSelf.isLocationCity = YES;
+            blockSelf.selectTypeView.hidden = YES;
         }else{
             return ;
         }
     }];
     [self.uploadImageView bk_whenTapped:^{
+        [blockSelf.view endEditing:YES];
         ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
         
         //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
@@ -304,7 +344,8 @@
                 [self.navigationController popViewControllerAnimated:YES];
             });
         }else{
-            [AlertView showYMAlertView:self.view andtitle:responseDic[@"messagep"]];
+            
+            [AlertView showYMAlertView:self.view andtitle:responseDic[@"message"]];
         }
         [SVProgressHUD dismiss];
     } failure:^(NSError *error) {

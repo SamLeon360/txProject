@@ -41,6 +41,8 @@
     self.selectTypeIndex = 0;
     self.selectType = 0;
     self.tableView.dataSource = self;
+    
+//    [self.navigationController addObserver:self forKeyPath:@"navigationBarHidden" options:NSKeyValueObservingOptionNew context:nil];
     self.projectType = @[  @"全部", @"园区建设", @"基础设施", @"农牧农副",
                            @"工业制造", @"医药化工", @"文化旅游", @"能源矿产",
                            @"金融投资", @"商贸物流", @"生物医药", @"现代服务业",
@@ -63,14 +65,15 @@
     NOTIFY_ADD(getinvestmentArrayByRefresh, @"getinvestmentArrayByRefresh");
     [self setupClickAction];
 }
+
 -(void)viewWillAppear:(BOOL)animated{
-    
+//    [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)viewDidLayoutSubviews{
-     [self.navigationController setNavigationBarHidden:YES animated:NO];
+//     [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)viewDidAppear:(BOOL)animated{
-  
+//  [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)setupClickAction{
     __block InvestmentListController *blockSelf = self;
@@ -102,14 +105,14 @@
         [blockSelf.haveMotionLabel setTextColor:[UIColor whiteColor]];
         [blockSelf.investmentLabel setTextColor:[UIColor colorWithRGB:0xFACB46]];
         blockSelf.selectType = 0;
-         [self.navigationController setNavigationBarHidden:YES animated:NO];
+//         [self.navigationController setNavigationBarHidden:YES animated:NO];
         [blockSelf getinvestmentArrayByRefresh];
     }];
     [self.haveMotionLabel bk_whenTapped:^{
         [blockSelf.investmentLabel setTextColor:[UIColor whiteColor]];
         [blockSelf.haveMotionLabel setTextColor:[UIColor colorWithRGB:0xFACB46]];
         blockSelf.selectType = 1;
-         [self.navigationController setNavigationBarHidden:YES animated:NO];
+//         [self.navigationController setNavigationBarHidden:YES animated:NO];
         [blockSelf getMotionArrayDataByRefresh];
     }];
     [self.projectSelectView.resetBtn bk_whenTapped:^{
@@ -193,6 +196,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     InvestmentListDetailController *vc = [[UIStoryboard storyboardWithName:@"Investment" bundle:nil] instantiateViewControllerWithIdentifier:@"InvestmentListDetailController"];
     vc.dataDic = self.investmentArray[indexPath.row];
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -246,5 +250,8 @@
     }
     return _projectSelectView;
 }
+//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
+//    [self.navigationController setNavigationBarHidden:YES animated:NO];
+//}
 
 @end

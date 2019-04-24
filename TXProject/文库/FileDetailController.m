@@ -190,7 +190,7 @@
         [_commentView.sureLabel bk_whenTapped:^{
             NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.dataDic[@"file_id"],@"file_id",self.commentView.contentTV.text,@"leave_message",self.scoreString,@"score", nil];
             [HTTPREQUEST_SINGLE postWithURLString:SH_REPAY_COMMENTS parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-                if ([responseDic[@"code"] integerValue]==1) {
+                if ([responseDic[@"code"] integerValue]== -1002) {
                     self.commentView.hidden = YES;
                     [self GetNetData];
                     

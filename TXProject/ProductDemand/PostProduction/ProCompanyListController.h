@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^SelectNSDictionaryCallBack)(NSDictionary *dic);
 @interface ProCompanyListController : UIViewController
 @property (nonatomic) SelectNSDictionaryCallBack selectNSDictionaryCallBack;
+@property (nonatomic) BOOL changeDefault;
 @end
 
 NS_ASSUME_NONNULL_END

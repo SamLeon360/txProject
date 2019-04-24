@@ -122,4 +122,7 @@
 + (NSString*)objectToJsonStr:(id)object;
 
 + (CGFloat)getHeightLineWithString:(NSString *)string withWidth:(CGFloat)width withFont:(UIFont *)font;
+
++(void)callPhone:(NSString *)phone andView:(UIView *)view;
+
 @end

@@ -8,6 +8,8 @@
 
 #import "SmallWXController.h"
 #import "WKWebViewJavascriptBridge.h"
+#import "PayServiceController.h"
+#import "SmallWxPayMoneyController.h"
 @interface SmallWXController ()<WKUIDelegate,WKNavigationDelegate>
 @property (weak, nonatomic) IBOutlet UIView *webContentView;
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
@@ -15,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *buyLabel;
 @property (nonatomic) UIButton *popBtn;
 @property (nonatomic) UIButton *reloadBtn;
+@property (nonatomic) NSDictionary *payDic;
 @end
 
 @implementation SmallWXController
@@ -24,7 +27,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.webContentView.frame.size.width, self.webContentView.frame.size.height)];
+    webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, self.webContentView.frame.size.height + 20)];
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
     webView.UIDelegate = self;
@@ -34,6 +37,29 @@
     self.title = @"免费制作小程序";
     [webView loadRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEB_HOST_URL,@"member/wxsmall_list/1"]]]];
     [wkwebJsBrideg registerHandler:@"getwxmoney" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSDictionary *dic = data;
+        self.payDic = dic;
+        if ([dic[@"money"] doubleValue] == 0  ) {
+            self.moneyLabel.text = @"面议";
+            self.buyLabel.text = @"联系客服";
+           
+        }else{
+            self.moneyLabel.text = [NSString stringWithFormat:@"%.2f",[dic[@"money"] doubleValue]];
+          
+        }
+        
+    }];
+    [self.buyLabel bk_whenTapped:^{
+        if ([self.moneyLabel.text isEqualToString:@"面议"]) {
+            NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",@"0760-88587021"];
+            UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            [self.view addSubview:callWebview];
+        }else{
+            SmallWxPayMoneyController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"SmallWxPayMoneyController"];
+            vc.payMoney = [self.payDic[@"money"] doubleValue];
+            vc.payDesc = @"购买小程序服务";
+            [self.navigationController pushViewController:vc animated:YES];
+        }
         
     }];
 }

@@ -90,7 +90,7 @@ self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColor
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.phoneTF.text,@"phone_number",self.nameTF.text,@"member_name",self.passwordTF.text,@"password",self.codeTF.text,@"verify_code", nil];
     [HTTPREQUEST_SINGLE postWithURLString:REGISTER_USER parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         NSDictionary *data = responseDic[@"data"];
-        if (data!=nil) {
+        if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"注册成功"];
             [USER_SINGLE setUserDataWithDic:data];
             [JPUSHService setAlias:USER_SINGLE.token completion:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {

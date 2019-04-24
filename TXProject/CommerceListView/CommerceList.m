@@ -45,7 +45,15 @@
     USER_SINGLE.default_role_type = dic[@"role_id"];
     USER_SINGLE.default_commerce_id = dic[@"commerce_id"];
     USER_SINGLE.default_commerce_name = dic[@"commerce_name"];
-    USER_SINGLE.commerceDic = dic;
+    NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithCapacity:0];
+    [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[NSNull class]]) {
+            [newDic setObject:@"" forKey:key];
+        }else{
+            [newDic setObject:obj forKey: key];
+        }
+    }];
+    USER_SINGLE.commerceDic = newDic;
     [self.mineVC updateDefaultCommerce];
 //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

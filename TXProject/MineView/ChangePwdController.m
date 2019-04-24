@@ -9,6 +9,8 @@
 #import "ChangePwdController.h"
 
 @interface ChangePwdController ()
+@property (weak, nonatomic) IBOutlet UITextField *onePwdTF;
+@property (weak, nonatomic) IBOutlet UITextField *twoPwdTF;
 
 @end
 
@@ -18,15 +20,16 @@
     [super viewDidLoad];
     
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)clickToSubmitPwd:(id)sender {
+    [HTTPREQUEST_SINGLE postWithURLString:ACCOUT_CHANGE_PWD parameters:@{@"password":self.onePwdTF.text} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+        if ([responseDic[@"code"] integerValue] == 3) {
+            [AlertView showYMAlertView:self.view andtitle:@"修改密码成功"];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
 }
-*/
+
 
 @end

@@ -30,7 +30,9 @@
 @property (strong,nonatomic) NSTimer *myTimer;
 @property (nonatomic) NSInteger resendTime;
 @property (nonatomic) BOOL sendCode;
+@property (nonatomic) NSString *verifycode;
 @property (nonatomic) CommerceList *commerceList ;
+@property (weak, nonatomic) IBOutlet UILabel *proviceLabel;
 
 @end
 
@@ -51,7 +53,9 @@
     self.sendCode = NO;
     [self setupClickAction];
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+}
 -(void)setupClickAction{
     
     self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
@@ -70,6 +74,7 @@
                 blockSelf.resendTime = 30;
                 blockSelf.sendCode = YES;
                 blockSelf.codeAlertView.hidden = NO;
+                blockSelf.verifycode = responseDic[@"data"][@"verify_code"];
                 [blockSelf.myTimer setFireDate:[NSDate distantPast]];
             }else{
                 [AlertView showYMAlertView:blockSelf.view andtitle:@"信息错误"];
@@ -91,6 +96,7 @@
             blockSelf.pwdTF.placeholder = @"请输入密码";
             blockSelf.changeTypeBtn.tag = 2;
             blockSelf.isRegister = 1;
+            [blockSelf.loginBtn setTitle:@"登录" forState:UIControlStateNormal];
         }else{
             [blockSelf.pwdIcon setImage:[UIImage imageNamed:@"login_pwd_icon"]];
             [blockSelf.getCodeBtn setBackgroundColor:[UIColor colorWithRGB:0xEFEFEF]];
@@ -101,7 +107,7 @@
             blockSelf.pwdIcon.tag = 3;
             blockSelf.changeTypeBtn.tag = 1;
             blockSelf.isRegister = 0;
-            
+            [blockSelf.loginBtn setTitle:@"登录/新用户注册" forState:UIControlStateNormal];
         }
     }];
     [self.pwdIcon bk_whenTapped:^{
@@ -121,6 +127,11 @@
     [self.popView bk_whenTapped:^{
         [self gotoMainView];
     }];
+    [self.proviceLabel bk_whenTapped:^{
+        TXWebViewController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+        vc.intype = privacy_policy;
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
 }
 - (IBAction)clickToLogin:(id)sender {
     if (self.accountTF.text.length <= 0 ) {
@@ -138,8 +149,11 @@
     }
     
     
-    
-    if (self.isRegister == 0) {
+    if (![self.pwdTF.text isEqualToString:self.verifycode]&&self.changeTypeBtn.tag == 1&&self.isRegister == 0 ) {
+        [AlertView showYMAlertView:self.view andtitle:@"请输入正确的验证码"];
+        return;
+    }
+    if (self.isRegister == 0 ) {
         TXFinishMessageController *vc = [[UIStoryboard storyboardWithName:@"Login" bundle:nil] instantiateViewControllerWithIdentifier:@"TXFinishMessageController"];
         vc.phoneNumber = self.accountTF.text;
         vc.codeString = self.pwdTF.text;

@@ -37,9 +37,13 @@
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getDataArrayByMore)];
     self.tableView.mj_footer = footer;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 1)];
+    self.tableView.mj_header = [MJRefreshHeader headerWithRefreshingBlock:^{
+        [self getDataArrayByRefresh];
+    }];
     __block EntrepernurialAllListController *blockSelf = self;
     [self.searchBtn bk_whenTapped:^{
         [blockSelf getDataArrayByRefresh];
+        [blockSelf.view endEditing:YES];
     }];
     [self.view addSubview:self.addDataBtn];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDataArrayByRefresh) name:@"getDataArrayByRefresh" object:nil];
@@ -145,11 +149,15 @@
 }
 -(UIButton *)addDataBtn{
     if (!_addDataBtn) {
-        _addDataBtn = [[UIButton alloc] initWithFrame:CGRectMake((ScreenW-85)/2, ScreenH-170, 85, 85 )];
+        _addDataBtn = [[UIButton alloc] initWithFrame:CGRectMake((ScreenW-192)/2, ScreenH-170, 192, 62 )];
         _addDataBtn.hidden = NO;
-        [_addDataBtn setImage:[UIImage imageNamed:@"add_data_btn"] forState:UIControlStateNormal];
+        [_addDataBtn setImage:[UIImage imageNamed:@"cy_zh_bottom_btn"] forState:UIControlStateNormal];
         __block EntrepernurialAllListController *blockSelf = self;
         [_addDataBtn bk_whenTapped:^{
+            if (USER_SINGLE.token.length <= 0) {
+                [AlertView showYMAlertView:self.view andtitle:@"请先登录!"];
+                return ;
+            }
             AddServiceFormController *vc = [[UIStoryboard storyboardWithName:@"Entrepreneurial" bundle:nil] instantiateViewControllerWithIdentifier:@"AddServiceFormController"];
             vc.typeString = self.serviceType ;
             vc.typeIndex = [blockSelf.titleDic[blockSelf.title] integerValue];
