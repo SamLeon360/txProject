@@ -79,6 +79,11 @@
             [self.avatarImage setImage: [UIImage imageNamed:@"default_avatar"]];
         }
     }];
+    if ([self.editUserData[@"show_phone"] integerValue]==1) {
+        [self clickYesBtn:self.yesBtn];
+    }else{
+        [self clickNoBtn:self.noBtn];
+    }
     if ([self.editUserData[@"member_sex"] integerValue] == 1) {
         [self.manBtn setBackgroundColor:[UIColor colorWithRGB:0x3e85fb] forState:UIControlStateNormal];
         [self.manBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -99,7 +104,7 @@
     self.emailTF.text = [self.editUserData[@"member_email"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_email"] ;
     self.addressTF.text = [self.editUserData[@"detail_address"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"detail_address"] ;
     self.zhengfuTF.text = [self.editUserData[@"member_political_status"] isKindOfClass:[NSNull class]]?@"":self.editUserData[@"member_political_status"];
-   
+    
 //    [self.commerceCell bk_whenTapped:^{
 //        NSLog(@"%@",[NSString stringWithFormat:@"https://app.tianxun168.com/h5/#/member/business_card/%@/%@/",self.userDic[@"member_name"],USER_SINGLE.default_commerce_id]);
 //        if (self.commerceTF.text.length > 0) {
@@ -218,7 +223,7 @@
     [self.noBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.yesBtn setBackgroundColor:[UIColor clearColor] forState:UIControlStateNormal];
     [self.yesBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.editUserData setObject:@"2" forKey:@"show_phone"];
+    [self.editUserData setObject:@"0" forKey:@"show_phone"];
 }
 - (IBAction)clickToSaveEditData:(id)sender {
   

@@ -16,6 +16,7 @@
 @property (nonatomic) NSArray *companyListArray;
 @property (nonatomic) NSArray *typeArray;
 @property (nonatomic) NSInteger nPage;
+@property (nonatomic) UIButton *addDataBtn;
 @end
 
 @implementation MineCompanyListController
@@ -24,10 +25,10 @@
     [super viewDidLoad];
     self.myTableView.delegate = self;
     self.myTableView.dataSource = self;
-    self.title = @"企业信息列表";
-    self.typeArray = @[@"全部", @"高新技术企业", @"科技型中小企业", @"规模以上企业", @"创新型企业", @"民营科技企业", @"大中型企业", @"其他"];
+    self.title = @"我的企业";
+    self.typeArray = @[@"全部",@"电子信息",@"装备制造",@"能源环保",@"生物技术与医药",@"新材料",@"现在农业",@"其他行业"];
     [self GetCompanyData];
-    [self addRightBtn];
+    [self.view addSubview:self.addDataBtn];
     self.myTableView.tableFooterView = [[UIView alloc] init];
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -72,11 +73,13 @@
     }];
     if ([USER_SINGLE.default_company_dic[@"enterprise_name"] isEqualToString:dic[@"enterprise_name"]]) {
         cell.defaultLabel.hidden = NO;
+        [cell.selectDefualtBtn setImage:[UIImage imageNamed:@"pro_sel_icon"] forState:UIControlStateNormal];
     }else{
         cell.defaultLabel.hidden = YES;
+        [cell.selectDefualtBtn setImage:[UIImage imageNamed:@"pro_no_select_company"] forState:UIControlStateNormal];
     }
     cell.companyNameLabel.text = [dic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":dic[@"enterprise_name"];
-    cell.companyTypeCell.text = self.typeArray[[dic[@"enterprise_type"] integerValue]];
+    cell.companyTypeCell.text = self.typeArray[[dic[@"domain"] integerValue] - 1];
     cell.companyAddressLabel.text = [dic[@"area"] isKindOfClass:[NSNull class]]?@"":dic[@"area"];
     [cell.selectDefualtBtn bk_whenTapped:^{
         [self ChangeCompanyDefault:@{@"enterprise_id":dic[@"enterprise_id"],@"handle_type":@"1"} andIndex:indexPath];
@@ -100,6 +103,7 @@
             }];
             USER_SINGLE.default_company_dic = dic;
             [AlertView showYMAlertView:self.view andtitle: responseDic[@"message"]];
+            [self.myTableView reloadData];
         }else{
             [AlertView showYMAlertView:self.view andtitle: @"绑定失败"];
         }
@@ -107,5 +111,25 @@
          [AlertView showYMAlertView:self.view andtitle: @"绑定失败"];
     }];
 }
-
+-(UIButton *)addDataBtn{
+    if (!_addDataBtn) {
+        _addDataBtn = [[UIButton alloc] initWithFrame:CGRectMake((ScreenW-192)/2, ScreenH-170, 192, 50 )];
+        [_addDataBtn makeCorner:25];
+        _addDataBtn.hidden = NO;
+        [_addDataBtn setTitle:@"创建企业" forState:UIControlStateNormal];
+        [_addDataBtn setBackgroundColor:[UIColor colorWithRGB:0x0E56B8] forState:UIControlStateNormal];
+//        [_addDataBtn setImage:[UIImage imageNamed:@"cy_zh_bottom_btn"] forState:UIControlStateNormal];
+        __block MineCompanyListController *blockSelf = self;
+        [_addDataBtn bk_whenTapped:^{
+            if (USER_SINGLE.token.length <= 0) {
+                [AlertView showYMAlertView:self.view andtitle:@"请先登录!"];
+                return ;
+            }
+            [blockSelf onClickedOKbtn];
+            
+            
+        }];
+    }
+    return _addDataBtn;
+}
 @end

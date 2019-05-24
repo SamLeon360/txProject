@@ -36,6 +36,12 @@
     self.title = @"我的企业";
     self.typeArray = @[@"全部", @"高新技术企业", @"科技型中小企业", @"规模以上企业", @"创新型企业", @"民营科技企业", @"大中型企业", @"其他"];
     [self GetCompanyData];
+  
+}
+-(void)viewWillAppear:(BOOL)animated{
+      [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+-(void)viewWillDisappear:(BOOL)animated{
     
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{

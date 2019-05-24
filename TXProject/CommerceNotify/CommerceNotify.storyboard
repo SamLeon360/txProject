@@ -315,10 +315,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J6F-3p-nRI">
-                                                    <rect key="frame" x="89" y="13" width="40" height="20"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="0zq-KK-qLV"/>
-                                                    </constraints>
+                                                    <rect key="frame" x="89" y="13" width="251" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -349,6 +346,7 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="J6F-3p-nRI" secondAttribute="trailing" constant="20" id="42A-eM-VlC"/>
                                                 <constraint firstItem="bNk-LR-FiI" firstAttribute="leading" secondItem="7ZF-Q0-PNB" secondAttribute="trailing" constant="10" id="CJJ-ZP-XH2"/>
                                                 <constraint firstAttribute="trailing" secondItem="pel-2q-MQa" secondAttribute="trailing" constant="15" id="CaS-W9-eTT"/>
                                                 <constraint firstItem="Kw9-Rj-7Rf" firstAttribute="leading" secondItem="7ZF-Q0-PNB" secondAttribute="trailing" constant="10" id="EYc-ha-wy7"/>
@@ -433,16 +431,24 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VlS-IQ-UHc">
+                                <rect key="frame" x="0.0" y="124" width="375" height="543"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="8kh-O0-YK5" firstAttribute="top" secondItem="ckg-97-pPA" secondAttribute="bottom" constant="20" id="7kj-BC-Kfe"/>
                             <constraint firstItem="j37-9H-cNS" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="9Xh-qC-36s"/>
                             <constraint firstItem="Hci-UU-BA1" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="9hK-uN-EFc"/>
+                            <constraint firstAttribute="trailing" secondItem="VlS-IQ-UHc" secondAttribute="trailing" id="F8G-S0-Dwr"/>
+                            <constraint firstItem="VlS-IQ-UHc" firstAttribute="top" secondItem="ckg-97-pPA" secondAttribute="bottom" constant="20" id="P2F-Z6-03O"/>
                             <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="j37-9H-cNS" secondAttribute="trailing" constant="15" id="WRE-Yi-beJ"/>
                             <constraint firstItem="8kh-O0-YK5" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" constant="15" id="Y1l-CU-nar"/>
                             <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="Hci-UU-BA1" secondAttribute="trailing" constant="15" id="gO4-2d-ieM"/>
+                            <constraint firstItem="VlS-IQ-UHc" firstAttribute="leading" secondItem="6ia-Rd-An0" secondAttribute="leading" id="ioh-ls-aQk"/>
                             <constraint firstItem="nqX-Wa-1RM" firstAttribute="top" secondItem="j37-9H-cNS" secondAttribute="bottom" constant="5" id="oXO-hi-Cvf"/>
+                            <constraint firstItem="6ia-Rd-An0" firstAttribute="bottom" secondItem="VlS-IQ-UHc" secondAttribute="bottom" id="sLS-Cf-sxz"/>
                             <constraint firstItem="ckg-97-pPA" firstAttribute="centerX" secondItem="ztK-tp-ZN0" secondAttribute="centerX" id="shm-un-vlC"/>
                             <constraint firstItem="Hci-UU-BA1" firstAttribute="top" secondItem="8kh-O0-YK5" secondAttribute="bottom" constant="20" id="tDw-sK-ZUk"/>
                             <constraint firstItem="6ia-Rd-An0" firstAttribute="trailing" secondItem="8kh-O0-YK5" secondAttribute="trailing" constant="15" id="vs8-7s-WmD"/>
@@ -457,11 +463,12 @@
                         <outlet property="onetitle" destination="j37-9H-cNS" id="0SX-io-w9F"/>
                         <outlet property="timeLabel" destination="ckg-97-pPA" id="g4C-B6-7vF"/>
                         <outlet property="twotitle" destination="nqX-Wa-1RM" id="vlP-oJ-QWr"/>
+                        <outlet property="webContentView" destination="VlS-IQ-UHc" id="a1E-i2-hYj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i7K-Rp-uF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="850" y="807"/>
+            <point key="canvasLocation" x="848.79999999999995" y="806.44677661169419"/>
         </scene>
     </scenes>
     <resources>

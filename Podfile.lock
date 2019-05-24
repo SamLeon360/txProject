@@ -40,10 +40,12 @@ PODS:
   - GVUserDefaults (1.0.2)
   - IMYWebView (0.8.1)
   - IQKeyboardManager (6.2.0)
+  - KVOController (1.2.0)
   - Masonry (1.0.2)
   - MBProgressHUD (0.9.2)
   - MJExtension (3.0.15.1)
   - MJRefresh (3.1.15.7)
+  - MMLayout (0.1.0)
   - mob_sharesdk (4.2.2):
     - mob_sharesdk/ShareSDK (= 4.2.2)
     - MOBFoundation
@@ -72,9 +74,6 @@ PODS:
     - RealReachability/Ping (= 1.3.0)
   - RealReachability/Connection (1.3.0)
   - RealReachability/Ping (1.3.0)
-  - RongCloudIM/IMKit (2.8.32):
-    - RongCloudIM/IMLib
-  - RongCloudIM/IMLib (2.8.32)
   - SDCycleScrollView (1.65):
     - SDWebImage (~> 3.7)
   - SDWebImage (3.8.2):
@@ -103,18 +102,18 @@ DEPENDENCIES:
   - GVUserDefaults (~> 1.0.1)
   - IMYWebView
   - IQKeyboardManager
+  - KVOController
   - Masonry (~> 1.0.1)
   - MBProgressHUD (~> 0.9.2)
   - MJExtension (~> 3.0.15.1)
   - MJRefresh
+  - MMLayout
   - mob_sharesdk
   - mob_sharesdk/ShareSDKPlatforms/QQ
   - mob_sharesdk/ShareSDKPlatforms/WeChatFull
   - PYPhotoBrowser (~> 1.3.1)
   - ReactiveCocoa (= 2.5)
   - RealReachability
-  - RongCloudIM/IMKit (~> 2.8.3)
-  - RongCloudIM/IMLib (~> 2.8.3)
   - SDCycleScrollView (= 1.65)
   - SDWebImage (~> 3.8.0)
   - SVProgressHUD
@@ -127,7 +126,7 @@ DEPENDENCIES:
   - ZLPhotoBrowser (= 2.7.3)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - AFNetworking
     - AlipaySDK-iOS
     - BlocksKit
@@ -139,16 +138,17 @@ SPEC REPOS:
     - GVUserDefaults
     - IMYWebView
     - IQKeyboardManager
+    - KVOController
     - Masonry
     - MBProgressHUD
     - MJExtension
     - MJRefresh
+    - MMLayout
     - mob_sharesdk
     - MOBFoundation
     - PYPhotoBrowser
     - ReactiveCocoa
     - RealReachability
-    - RongCloudIM
     - SDCycleScrollView
     - SDWebImage
     - SVProgressHUD
@@ -172,16 +172,17 @@ SPEC CHECKSUMS:
   GVUserDefaults: 52d48cf8ba578b40a1a76312b196dfc9134ba36a
   IMYWebView: a6a9a52718ba6a44fb927d65f6d60930a8218cea
   IQKeyboardManager: 6194101620b73af5e67900b8f89707a99de0b804
+  KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
   MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
+  MMLayout: 7caa6fe2ebfd018ec49ab3ac2409b454c3687995
   mob_sharesdk: e36e88015480f4d0c28e99ef8875ce1e10ca3a9e
   MOBFoundation: ce2ba976fd435b0cb06897466b2746e639895b7d
   PYPhotoBrowser: 46b5d9e92e67244e3575db55b485f318de8b2095
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   RealReachability: eae9c58d2db52fadd8e1cba4b5d4c028454fbc47
-  RongCloudIM: 48bfc2fcb8d7cae8ce1e19cb5fb26d6d90616375
   SDCycleScrollView: f72904c77698a7f93a41bcbbc2d78b073bf7326c
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
@@ -193,6 +194,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   ZLPhotoBrowser: 8a2c8402ac36c398f7729876fb9e5171f8efceff
 
-PODFILE CHECKSUM: 63ffcd7d1603337b69afcbf65bf9787fe4577b1c
+PODFILE CHECKSUM: 1b97285ef649307b79a049528280ffc3adde24b3
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.6.1

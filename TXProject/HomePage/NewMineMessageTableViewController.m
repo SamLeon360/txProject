@@ -31,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *memberCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *softCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *useCell;
+@property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *commerceCell;
 @property (weak, nonatomic) IBOutlet UIView *notifyView;
 @property (weak, nonatomic) IBOutlet UIView *friendView;
@@ -51,6 +52,7 @@
     [self getDataNetWork];
     NOTIFY_ADD(getDataNetWork, @"getDataNetWork");//
     NOTIFY_ADD(getNewMeMessage, @"getNewMeMessage");
+    NOTIFY_ADD(getCommerceMessage, @"getCommerceMessage");
     [self.commerceCell bk_whenTapped:^{
         if (self.commerceArray.count > 0) {
             MineCommerceController *vc = [[UIStoryboard storyboardWithName:@"MineView" bundle:nil] instantiateViewControllerWithIdentifier:@"MineCommerceController"];
@@ -148,8 +150,9 @@
             self.userDic = dic[@"data"];
             USER_SINGLE.member_name = self.userDic[@"member_name"];
             USER_SINGLE.member_id = [NSString stringWithFormat:@"%@",self.userDic[@"member_id"]];
+            self.introLabel.text = [self.userDic[@"member_introduction"] isKindOfClass:[NSNull class]]?@"":self.userDic[@"member_introduction"];
             self.userNameLabel.text = self.userDic[@"member_name"];
-//           self.userTypeLabel.text = [self.userDic[@"role_type"] integerValue] == 1?@"秘书处":@"会员";
+           self.userTypeLabel.text = [self.userDic[@"role_type"] integerValue] == 1?@"秘书处":@"会员";
             [self.userHeaderIamge sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.userDic[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (error) {
                     [self.userHeaderIamge setImage:[UIImage imageNamed:@"default_avatar"]];
@@ -181,8 +184,17 @@
                     self.userTypeLabel.text = self.commerceJobArray[[dic[@"member_post_in_commerce"] integerValue]- 1];
                 }
             }else{
-                self.commerceName.text = USER_SINGLE.default_commerce_name;
-                self.userTypeLabel.text = self.commerceJobArray[[USER_SINGLE.commerceDic[@"member_post_in_commerce"] integerValue]- 1];
+                
+                NSLog(@"%@",USER_SINGLE.commerceDic);
+                for (NSDictionary *dic  in self.commerceArray) {
+                    NSString *commerce_id = dic[@"commerce_id"];
+                    if ([commerce_id integerValue] == [USER_SINGLE.default_commerce_id integerValue]) {
+                        USER_SINGLE.default_commerce_name = dic[@"commerce_name"];
+                        self.commerceName.text = USER_SINGLE.default_commerce_name;
+                         self.userTypeLabel.text = self.commerceJobArray[[dic[@"member_post_in_commerce"] integerValue]- 1];
+                    }
+                }
+               
             }
 //            [self.myTableView reloadData];
         }else if([responseDic[@"code"] integerValue] == -1001){

@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1BC6C0D6C014ECE5EDE4D79B787343F2"
+               BlueprintIdentifier = "F652E8116E9B0E681D6FD01002B7ED33"
+               BuildableName = "libIMYWebView.a"
                BlueprintName = "IMYWebView"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "libIMYWebView.a">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

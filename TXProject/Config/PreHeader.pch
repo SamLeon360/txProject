@@ -11,10 +11,12 @@
 
 
 //FrameWorks
+
 #import <ReactiveCocoa.h>
+//#import <ReactiveObjC.h>
 #import "BlocksKit.h"
 #import "BlocksKit+UIKit.h"
-
+#import "AuthorityManage.h"
 
 #define MAS_SHORTHAND
 #define MAS_SHORTHAND_GLOBALS
@@ -45,7 +47,7 @@
 #import "AppDelegate.h"
 #import "TXMainViewController.h"
 
-#import <RongIMKit/RongIMKit.h>
+//#import <RongIMKit/RongIMKit.h>
 
 //Category
 #import "UIView+Extension.h"

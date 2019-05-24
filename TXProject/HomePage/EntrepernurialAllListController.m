@@ -52,7 +52,7 @@
 -(void)getDataArrayByRefresh{
     self.nPage = 1;
     __block EntrepernurialAllListController *blockSelf = self;
-    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)self.nPage],@"page",self.titleDic[self.typeString],@"service_type",@"",@"affiliated_area",@"2333",@"list_one",self.searchTF.text,@"member_name",@"2",@"_search_type", nil];
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)self.nPage],@"page",self.titleDic[self.typeString],@"service_type",@"",@"affiliated_area",@"2333",@"list_one",self.searchTF.text,@"member_name",@"0",@"is_auth",@"",@"ios",nil];
     [HTTPREQUEST_SINGLE postWithURLString:[self.serviceType isEqualToString:@"综合服务"]?SH_ZONGHE_ALL:  SH_BAODIAN_ALL parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             blockSelf.dataArray = [NSMutableArray arrayWithCapacity:0];

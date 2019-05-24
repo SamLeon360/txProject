@@ -10,6 +10,7 @@
 #import "ZLPhotoActionSheet.h"
 #import "SHEditCommidityCameraController.h"
 #import "NewEditAlertView.h"
+#import "ProDateView.h"
 @interface EditCompanyMessageController ()<UIPickerViewDataSource,UIPickerViewDelegate,SHEditCommidityCameraDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *companyLogoImage;
 @property (weak, nonatomic) IBOutlet UITextField *companyName;
@@ -17,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *companyCode;
 @property (weak, nonatomic) IBOutlet UITextField *registerMoney;
 @property (weak, nonatomic) IBOutlet UITextField *companyDate;
+@property (weak, nonatomic) IBOutlet UITableViewCell *companyDateCell;
 @property (weak, nonatomic) IBOutlet UITextField *companyArea;
 @property (weak, nonatomic) IBOutlet UITextField *companyAddress;
 @property (weak, nonatomic) IBOutlet UILabel *mainWork1;
@@ -48,6 +50,7 @@
 @property (nonatomic) UIPickerView *areaPickerView;
 @property (nonatomic) UIButton *pickSureBtn;
 @property (nonatomic) NSInteger selectIndex;
+@property (nonatomic) ProDateView *proDatePickView;
 @end
 
 @implementation EditCompanyMessageController
@@ -109,8 +112,17 @@
     [HTTPREQUEST_SINGLE postWithURLString:SH_UPDATE_COMPANY parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"操作成功"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
         }else{
-            [AlertView showYMAlertView:self.view andtitle:@"操作失败"];
+            id message = responseDic[@"message"];
+            if ([message isKindOfClass:[NSString  class]]) {
+                [AlertView showYMAlertView:self.view andtitle:responseDic[@"message"]];
+            }else{
+                [AlertView showYMAlertView:self.view andtitle:@"操作失败"];
+            }
+            
         }
     } failure:^(NSError *error) {
         [AlertView showYMAlertView:self.view andtitle:@"网络异常"];
@@ -131,7 +143,10 @@
         blockSelf.pickSureBtn.hidden = YES;
     }];
     [[UIApplication sharedApplication].keyWindow  addSubview:self.pickSureBtn];
-    
+    [self.companyDateCell bk_whenTapped:^{
+        self.proDatePickView.hidden = NO;
+        [[UIApplication sharedApplication].keyWindow addSubview:self.proDatePickView];
+    }];
     [self.companyLogoImage bk_whenTapped:^{
          [self showEditAlertView];
         //        ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
@@ -282,9 +297,9 @@
    
     self.companyArea.text = [self.detailDic[@"area"] isKindOfClass:[NSNull class]]?@"":self.detailDic[@"area"];
     self.companyAddress.text = [self.detailDic[@"address"] isKindOfClass:[NSNull class]]?@"":self.detailDic[@"address"];
-    self.mainWork1.text = self.mainWorkArray[[self.detailDic[@"business_scope"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"business_scope"]integerValue]];
-    self.mainWork2.text = self.mainWorkArray[[self.detailDic[@"business_scope1"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"business_scope1"]integerValue]];
-    self.mainWork3.text = self.mainWorkArray[[self.detailDic[@"business_scope2"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"business_scope2"]integerValue]];
+    self.mainWork1.text = self.mainWorkArray[[self.detailDic[@"business_scope"] isKindOfClass:[NSNull class]]?0:([self.detailDic[@"business_scope"]integerValue])==0?0:[self.detailDic[@"business_scope"]integerValue]-1];
+    self.mainWork2.text = self.mainWorkArray[[self.detailDic[@"business_scope1"] isKindOfClass:[NSNull class]]?0:([self.detailDic[@"business_scope1"]integerValue])==0?0:[self.detailDic[@"business_scope1"]integerValue]-1];
+    self.mainWork3.text = self.mainWorkArray[[self.detailDic[@"business_scope2"] isKindOfClass:[NSNull class]]?0:([self.detailDic[@"business_scope2"]integerValue])==0?0:[self.detailDic[@"business_scope2"]integerValue]-1];
     self.companyType.text = self.typeArray[[self.detailDic[@"entreprise_type"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"entreprise_type"] integerValue]];
     self.companyZZ.text = self.typeArray[[self.detailDic[@"entreprise_type"] isKindOfClass:[NSNull class]]?0:[self.detailDic[@"entreprise_type"] integerValue]];
     self.companySize.text =[self.detailDic[@"enterprise_scale"] isKindOfClass:[NSNull class]]?@"": [NSString stringWithFormat:@"%@",self.detailDic[@"enterprise_scale"]];
@@ -367,5 +382,28 @@
         [blockSelf hideEditAlertView];
     }];
     [[[UIApplication sharedApplication] keyWindow] addSubview:alertView];
+}
+
+-(ProDateView *)proDatePickView{
+    if (_proDatePickView == nil) {
+        _proDatePickView = [[NSBundle mainBundle] loadNibNamed:@"ProductAlert" owner:self options:nil][4];
+        _proDatePickView.frame = CGRectMake(0, 0 , ScreenW, ScreenH);
+        _proDatePickView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
+        
+        [_proDatePickView setupDatePicker];
+        __block EditCompanyMessageController *blockSelf = self;
+        _proDatePickView.selectStringCallBack = ^(NSString * _Nonnull str) {
+            blockSelf.proDatePickView.title.text = @"成立日期";
+            blockSelf.companyDate.text = str;
+            
+            [blockSelf.proDatePickView removeFromSuperview];
+            [blockSelf.tableView reloadData];
+        };
+        
+        [_proDatePickView.closeView bk_whenTapped:^{
+            [blockSelf.proDatePickView removeFromSuperview];
+        }];
+    }
+    return _proDatePickView;
 }
 @end

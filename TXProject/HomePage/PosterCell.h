@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PosterCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet SDCycleScrollView *cycleScrollView;
+@property (nonatomic) UIViewController *vController;
 @property (nonatomic) NSArray *posterArray;
+@property (nonatomic) NSArray *scrollArray;
 -(void)setupCycleScrollview;
 @end
 

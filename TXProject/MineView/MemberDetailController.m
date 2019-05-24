@@ -12,7 +12,7 @@
 #import "CompanyListCell.h"
 #import "MemberIntroduceCell.h"
 #import "MemberHeaderSection.h"
-
+#import "ChatViewController.h"
 @interface MemberDetailController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *chatView;
@@ -34,17 +34,29 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.title = self.wayIn == nil ? @"会员风采" : self.memberDic[@"member_name"];
-    self.dataTitleArray = SHOW_WEB ? @[@[@"",@"商会",@"手机",@"籍贯"],@[@"他的动态"],@[@""],@[@"政治面貌",@"毕业院校",@"从军经历",@"特长爱好",@"个人收件地址"]]: @[@[@"",@"商会",@"籍贯"],@[@"他的动态"],@[@""],@[@"毕业院校",@"特长爱好",@"个人收件地址"]];
+    self.dataTitleArray = SHOW_WEB ? @[@[@"",@"商会",@"手机",@"籍贯",@"邮箱"],@[@"他的动态"],@[@""],@[@"政治面貌",@"毕业院校",@"从军经历",@"特长爱好",@"收件地址"]]: @[@[@"",@"商会",@"籍贯",@"邮箱"],@[@"他的动态"],@[@""],@[@"毕业院校",@"特长爱好",@"收件地址"]];
     self.companyTypeArray = @[@"全部",@"电子信息",@"装备制造", @"能源环保",@"生物技术与医药",@"新材料",@"现代农药", @"其他"];
     [self GetCompanyData];
     [self getMemberData];
     __block MemberDetailController *blockSelf = self;
     [self.chatView bk_whenTapped:^{
-        RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
-        conversationVC.conversationType = ConversationType_PRIVATE;
-        conversationVC.targetId = [NSString stringWithFormat:@"%@",blockSelf.memberDic[@"member_id"]];
-        conversationVC.title = blockSelf.memberDic[@"member_name"];
-        [blockSelf.navigationController pushViewController:conversationVC animated:YES];
+//        RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
+//        conversationVC.conversationType = ConversationType_PRIVATE;
+//        conversationVC.targetId = [NSString stringWithFormat:@"%@",blockSelf.memberDic[@"member_id"]];
+//        conversationVC.title = blockSelf.memberDic[@"member_name"];
+//        [blockSelf.navigationController pushViewController:conversationVC animated:YES];
+        ChatViewController *chat = [[ChatViewController alloc] init];
+        TConversationCellData *data = [[TConversationCellData alloc] init];
+        //会话ID
+        data.convId =  [NSString stringWithFormat:@"%@",blockSelf.memberDetailDic[@"member_phone"]];
+       
+        //会话类型
+        data.convType = TConv_Type_C2C;
+        //会话title
+        data.title = blockSelf.memberDetailDic[@"member_name"];
+        //
+        chat.conversation = data;
+        [self.navigationController pushViewController:chat animated:YES];
     }];
 }
 -(void)GetCompanyData{
@@ -100,7 +112,7 @@
             [blockSelf.memberDetailDic setObject:[responseDic[@"add"][@"phone"] isKindOfClass:[NSNull class]]?@"":responseDic[@"add"][@"phone"] forKey:@"phone"];
             blockSelf.has_add = [responseDic[@"add"][@"has_add"] boolValue];
             blockSelf.introductionString = [blockSelf.memberDetailDic[@"member_introduction"] isKindOfClass:[NSNull class]]?@"":blockSelf.memberDetailDic[@"member_introduction"];
-            blockSelf.dataKeyArray = SHOW_WEB?@[@[@"",@"default_commerce_name",@"phone",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_political_status",@"member_graduation_school",@"military_experience",@"member_hobby",@"detail_address"]]:@[@[@"",@"default_commerce_name",@"member_native_place"],@[@""],@[@"member_introduction"],@[@"member_graduation_school",@"member_hobby",@"detail_address"]];;
+            blockSelf.dataKeyArray = SHOW_WEB?@[@[@"",@"default_commerce_name",@"phone",@"member_native_place",@"member_email"],@[@""],@[@"member_introduction"],@[@"member_political_status",@"member_graduation_school",@"military_experience",@"member_hobby",@"detail_address"]]:@[@[@"",@"default_commerce_name",@"member_native_place",@"member_email"],@[@""],@[@"member_introduction"],@[@"member_graduation_school",@"member_hobby",@"detail_address"]];;
             [blockSelf.tableView reloadData];
         }else{
             [AlertView showYMAlertView:blockSelf.view andtitle: [NSString stringWithFormat:@"%@",responseDic[@"message"]]];
@@ -118,6 +130,17 @@
             return 45;
         }
     }else if (indexPath.section == 1||indexPath.section == 3){
+        if (indexPath.section == 3) {
+            if (indexPath.row == 4) {
+                if ([self getHeightLineWithString:[self.memberDetailDic[@"detail_address"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"detail_address"] withWidth:129 withFont:[UIFont systemFontOfSize:14]] < 45) {
+                    return 45;
+                }else{
+                    return [self getHeightLineWithString:[self.memberDetailDic[@"detail_address"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"detail_address"] withWidth:129 withFont:[UIFont systemFontOfSize:14]];
+                }
+            }else{
+                return 45;
+            }
+        }
         return 45;
     }else if (indexPath.section == 2){
         return [self getHeightLineWithString:[self.introductionString isKindOfClass:[NSNull class]]?@"":self.introductionString withWidth:ScreenW-25 withFont:[UIFont systemFontOfSize:14]]+20;
@@ -135,7 +158,7 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        return SHOW_WEB?4: 3;
+        return 5;
     }else if (section == 1){
         return 1;
     }else if (section == 2){
@@ -181,7 +204,14 @@
                 }
             }];
 //            avatarCell.addFriendBtn.hidden = self.wayIn == nil ? NO:YES;
-            avatarCell.jobLabel.text = @"总经理";
+            NSArray *jobArray =  @[ @"会长",@"执行会长",@"常务副会长",@"副会长",@"常务理事",@"理事",@"监事长",@"副监事长",@"监事",@"名誉会长",@"荣誉会长",@"创会会长",@"顾问",@"秘书长",@"执行秘书长",@"专职秘书长",@"副秘书长",@"干事",@"办公室主任",@"文员",@"部长",@"会员",@"创会会长"];
+//            NSInteger jobIndex = self.memberDic[@"member_post_in_commerce"]
+            if ([self.memberDic.allKeys containsObject:@"member_post_in_commerce"]) {
+                 avatarCell.jobLabel.text = jobArray[[self.memberDic[@"member_post_in_commerce"] isKindOfClass:[NSNull class]]?0:[self.memberDic[@"member_post_in_commerce"] integerValue] -1];
+            }else{
+                avatarCell.jobLabel.hidden = YES;
+            }
+           
             avatarCell.namelabe.text = self.memberDetailDic[@"member_name"];
             avatarCell.companyName.text = [self.memberDetailDic[@"enterprise_name"] isKindOfClass:[NSNull class]]?@"":self.memberDetailDic[@"enterprise_name"];
             if (self.has_add) {
@@ -215,6 +245,7 @@
             return avatarCell;
         }else {
             MemberOtherMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MemberOtherMessageCell"];
+            cell.leftImage.hidden = YES;
             NSArray *keyArray = self.dataKeyArray[indexPath.section];
             NSArray *titleArray = self.dataTitleArray[indexPath.section];
             cell.titleLabel.text = titleArray[indexPath.row];
@@ -241,6 +272,12 @@
         return cell;
     }else if (indexPath.section == 3){
         MemberOtherMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MemberOtherMessageCell"];
+        
+        if (indexPath.row == 4) {
+            cell.leftImage.hidden = NO;
+        }else{
+            cell.leftImage.hidden = YES;
+        }
          cell.commerceJobLabel.hidden = YES;
         NSArray *titleArray = self.dataTitleArray[indexPath.section];
         NSArray *keyArray = self.dataKeyArray[indexPath.section];

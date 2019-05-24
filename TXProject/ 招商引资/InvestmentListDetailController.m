@@ -141,7 +141,12 @@
         }
         return 210;
     }else if (indexPath.row == 2){
-        return 500;
+        if ([CustomFountion getHeightLineWithString:[NSString stringWithFormat:@"%@ %@",[self.detailDataDic[@"projects_venue"] stringByReplacingOccurrencesOfString:@"|" withString:@""],self.detailDataDic[@"projects_venue2"]] withWidth:215*kScale withFont:[UIFont systemFontOfSize:14]] <50) {
+            return 500;
+        }else{
+            return 450 + [CustomFountion getHeightLineWithString:[NSString stringWithFormat:@"%@ %@",[self.detailDataDic[@"projects_venue"] stringByReplacingOccurrencesOfString:@"|" withString:@""],self.detailDataDic[@"projects_venue2"]] withWidth:215*kScale withFont:[UIFont systemFontOfSize:14]];
+        }
+        
     }else{
         return 44;
     }

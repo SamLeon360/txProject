@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "69AD4CBF4F2FC72F1E9FBC4AF91CE5BC"
+               BlueprintIdentifier = "9AA77D751BC1C8CACF0A7FAAF1A953B7"
+               BuildableName = "libEBForeNotification.a"
                BlueprintName = "EBForeNotification"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "libEBForeNotification.a">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

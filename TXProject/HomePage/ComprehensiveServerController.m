@@ -13,10 +13,11 @@
 #import "TXWebViewController.h"
 #import "EntrepernurialAllListController.h"
 #import "EntreCheckMoreController.h"
-@interface ComprehensiveServerController ()<UITableViewDataSource,UITableViewDelegate>
+@interface ComprehensiveServerController ()<UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate>
 @property (nonatomic) NSInteger nPage;
 @property (nonatomic) NSMutableArray *hottopicArray;
 @property (nonatomic) NSMutableArray *advertImageArray;
+@property (nonatomic) NSMutableArray *cycleImageArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) ServerHeader *entreHeader;
 
@@ -29,6 +30,7 @@
     [super viewDidLoad];
     self.title = @"综合服务";
     [self.tableView registerNib:[UINib nibWithNibName:@"HottopicCell" bundle:nil] forCellReuseIdentifier:@"HottopicCell"];
+    self.cycleImageArray = [NSMutableArray arrayWithCapacity:0];
     self.nPage = 1;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -98,19 +100,22 @@
 }
 -(void)getAdvertImage{
     __block ComprehensiveServerController *blockSelf = self;
-    [HTTPREQUEST_SINGLE getWithURLString:GROUND_SCROLL_IMAGE parameters:nil withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-        if ([responseDic[@"code"] integerValue] == 0) {
-            NSString *imgURLString = responseDic[@"data"][@"service_img"];
-            NSArray *imageurlArray = [imgURLString componentsSeparatedByString:@"|"];
-            blockSelf.advertImageArray = [NSMutableArray arrayWithCapacity:0];
-            for (int i = 0; i <= imageurlArray.count - 1; i ++) {
-                NSString *imageString = [NSString stringWithFormat:@"%@%@",@"https://app.tianxun168.com",imageurlArray[i]];
-                [blockSelf.advertImageArray addObject:imageString];
-            }
-           
-            [blockSelf.tableView reloadData];
+  
+    NSString *url = @"https://app.tianxun168.com/h5_v3/index.php?s=/api/Ads/index&position=3";
+    [TSRequestTool POST:url parameters:nil headers:nil progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSArray *arr = responseObject[@"data"];
+        [blockSelf.cycleImageArray addObjectsFromArray:arr];
+        NSMutableArray *imageArr = [NSMutableArray arrayWithCapacity:0];
+        for (int i = 0 ; i < blockSelf.cycleImageArray.count; i++) {
+            NSDictionary *dic = blockSelf.cycleImageArray[i];
+            [imageArr addObject: dic[@"image"][@"file_path"]];
         }
-    } failure:^(NSError *error) {
+        self.advertImageArray = imageArr;
+        self.tableView.tableHeaderView = self.entreHeader;
+        [blockSelf.tableView reloadData];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
     }];
 }
@@ -154,6 +159,15 @@
     vc.title = title;
     [self.navigationController pushViewController:vc animated:YES];
 }
+-(void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
+    NSDictionary *dic = self.cycleImageArray[index];
+    NSString *url = dic[@"url"];
+    if (url.length > 0 ) {
+        TXWebViewController *webVC =  [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+        webVC.webUrl  = url;
+        [self.navigationController pushViewController:webVC animated:YES];
+    }
+}
 -(ServerHeader *)entreHeader{
     
     _entreHeader = [[NSBundle mainBundle] loadNibNamed:@"Entrepreneurial" owner:self options:nil][1];
@@ -161,6 +175,7 @@
     _entreHeader.cycleScrollview.showPageControl = YES;
     [_entreHeader.cycleScrollview makeCorner:10];
     _entreHeader.frame = CGRectMake(0, 0, ScreenW, 580*kScale);
+    _entreHeader.cycleScrollview.delegate = self;
     __block ComprehensiveServerController *blockSelf = self;
     [_entreHeader.treasureView bk_whenTapped:^{
  

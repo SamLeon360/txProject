@@ -12,6 +12,7 @@
 #import "TXLoginNavControllerViewController.h"
 #import "Appdelegate.h"
 #import "MemberDetailController.h"
+#import "ChatViewController.h"
 @interface TXWebViewController ()<WKUIDelegate,WKNavigationDelegate>
 @property (nonatomic,strong) UIProgressView *progressView;
 @property (nonatomic) UIButton *reloadBtn;
@@ -29,11 +30,11 @@
     [super viewDidLoad];
     __block TXWebViewController *blockSelf = self;
     if (self.dataDic!=nil) {
-         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 130, ScreenW, ScreenH+20)];
+         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 130, ScreenW, ScreenH+150)];
     }else{
         self.titleHead.hidden = YES;
         self.timeLabel.hidden = YES;
-         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 60, ScreenW, ScreenH-20)];
+         webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 60, ScreenW, ScreenH-80)];
     }
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
@@ -57,7 +58,7 @@
     [webView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (self.dataDic != nil) {
             make.right.left.bottom.equalTo(0);
-            make.top.equalTo(130);
+            make.top.equalTo(150);
         }else{
             make.right.left.bottom.equalTo(0);
             make.top.equalTo(20);
@@ -365,11 +366,18 @@
     [wkwebJsBrideg registerHandler:@"clickToChat" handler:^(id data, WVJBResponseCallback responseCallback) {
 //        RCConversationModel *model = data;
         [self.navigationController setNavigationBarHidden:NO];
-        RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
-        conversationVC.conversationType = ConversationType_PRIVATE;
-        conversationVC.targetId = [NSString stringWithFormat:@"%@",data[@"member_id"]];
-        conversationVC.title = data[@"member_name"];
-        [self.navigationController pushViewController:conversationVC animated:YES];
+
+        
+        ChatViewController *chat = [[ChatViewController alloc] init];
+        TConversationCellData *data1 = [[TConversationCellData alloc] init];
+        //会话ID
+        data1.convId =  [NSString stringWithFormat:@"%@",data[@"member_phone"]];
+        //会话类型
+        data1.convType = TConv_Type_C2C;
+        //会话title
+        data1.title = data[@"member_name"];
+        chat.conversation = data1;
+        [self.navigationController pushViewController:chat animated:YES];
     }];
     [wkwebJsBrideg registerHandler:@"setData" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSDictionary *dataDic = data;

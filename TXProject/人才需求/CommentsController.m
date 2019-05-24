@@ -63,7 +63,7 @@
         }
     }];
     cell.comment.text = dic[@"content"];
-    cell.time.text = [dic[@"create_time"] componentsSeparatedByString:@" "].firstObject;
+    cell.time.text = [NSString stringWithFormat:@"%@",dic[@"create_time"]] ;
     return cell;
 }
 -(void)GetCommentData {

@@ -23,10 +23,6 @@ typedef NS_ENUM(NSUInteger, ZLImageEditType) {
 - (instancetype)initWithEditType:(ZLImageEditType)type
                            image:(UIImage *)image
                    configuration:(ZLPhotoConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
-- (void)switchTool:(ZLImageEditType)type;
-- (void)switchCircleAndGridLayerShowStatus:(BOOL)show;
-- (void)clipBtn_click;
-- (void)showBottomView:(BOOL)show;
 
 @property (nonatomic, strong) UIImage *editImage;
 

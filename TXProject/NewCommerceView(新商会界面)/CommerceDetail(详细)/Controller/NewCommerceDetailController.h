@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) BOOL commerceCheckMore;
 @property (nonatomic,assign) BOOL secretariatCheckMore;
 @property (nonatomic,assign) BOOL cooditionCheckMore;
+@property (nonatomic , strong) NSString *comeType;
 -(void)reloadTableView;
 -(void)reloadCommerceCell;
 -(void)reloadSecretCell;

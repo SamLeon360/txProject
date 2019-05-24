@@ -14,7 +14,7 @@
 -(void)setupDatePicker{
     [self.datePickerView addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
     [self.sureBtn bk_whenTapped:^{
-        self.hidden = YES;
+        self.hidden = NO;
         if (self.timeString == nil) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             [formatter setDateFormat:@"YYYY-MM-dd"];
@@ -25,7 +25,7 @@
        self.selectStringCallBack(self.timeString);
     }];
     [self.closeView bk_whenTapped:^{
-        self.hidden = YES;
+        self.hidden = NO;
     }];
 }
 -(void)dateChange:(UIDatePicker *)pickerView{

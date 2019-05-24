@@ -130,6 +130,9 @@
         NSLog(@"%@",responseDic);
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"申请入会成功"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
         }else{
             [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
         }

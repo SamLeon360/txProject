@@ -52,7 +52,7 @@
     }];
 }
 -(void)viewWillDisappear:(BOOL)animated{
-//    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 -(void)GetDetailData{
     NSDictionary *param = @{@"product_id":self.editDic[@"product_id"]};

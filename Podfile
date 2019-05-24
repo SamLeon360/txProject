@@ -33,14 +33,13 @@ pod 'mob_sharesdk/ShareSDKPlatforms/QQ'
 pod 'mob_sharesdk/ShareSDKPlatforms/WeChatFull'
 pod 'AlipaySDK-iOS'
 
-pod 'RongCloudIM/IMLib', '~> 2.8.3'
-pod 'RongCloudIM/IMKit', '~> 2.8.3'  
+#pod 'RongCloudIM/IMLib', '~> 2.8.3'
+#pod 'RongCloudIM/IMKit', '~> 2.8.3'  
 
 pod 'TXScrollLabelView'
 pod 'ZLPhotoBrowser','2.7.3'
 
 pod 'Bugly'
-
-
-
+pod 'MMLayout'
+pod 'KVOController'
 end

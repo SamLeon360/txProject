@@ -27,7 +27,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, self.webContentView.frame.size.height + 20)];
+    webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, (self.webContentView.frame.size.height + 20)*kScale)];
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
     webView.UIDelegate = self;
@@ -63,7 +63,10 @@
         
     }];
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+}
 -(void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error{
     [AlertView showYMAlertView:self.view andtitle:@"网络异常，请检查网络"];
     self.reloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];

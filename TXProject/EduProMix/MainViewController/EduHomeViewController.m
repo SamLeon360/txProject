@@ -52,7 +52,7 @@
     self.workTypeArray =  @[@"全部",@"电子信息",@"装备制造", @"能源环保",@"生物技术与医药",@"新材料",@"现代农药", @"其他"];
     
     [self GetTJJob];
-    [self GetNewPost];
+//    [self GetNewPost];
    
 }
 
@@ -75,10 +75,11 @@
 //}
 - (void)GetTJJob {
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",@"",@"education",@"",@"graduation_time",@"",@"major",@"",@"sex",@"",@"student_name",@"1",@"page", nil];
+//    NSString *url = @"";
     [HTTPREQUEST_SINGLE postWithURLString:SH_LIST_STUDENT_EDU parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             self.dataArray = responseDic[@"data"];
-            [self.tableView reloadData];
+            [self GetNewPost];
         }
     } failure:^(NSError *error) {
         [AlertView showYMAlertView:self.view andtitle:@"网络异常，请检查网络"];
@@ -133,7 +134,7 @@
     cell.sex.text = [NSString getSexWithSexData:[NSString stringWithFormat:@"%ld",[dic[@"sex"] isKindOfClass:[NSNull class]]?3:[dic[@"sex"] integerValue]]];
     [cell.sex makeCorner:cell.sex.frame.size.height/2];
     cell.academy.text = [dic[@"academy_name"] isKindOfClass:[NSNull class] ]?@"":dic[@"academy_name"];
-    cell.time.text = dic[@"graduation_time"];
+    cell.time.text = [dic[@"graduation_time"] isKindOfClass:[NSNull class]]?@"":dic[@"graduation_time"];
     cell.major.text = [NSString getProfessionalField:[dic[@"major"] isKindOfClass:[NSNull class]]?0:[dic[@"major"] integerValue]];
     [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[dic[@"photo"] isKindOfClass:[NSNull class]]?@"":dic[@"photo"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         if (error) {

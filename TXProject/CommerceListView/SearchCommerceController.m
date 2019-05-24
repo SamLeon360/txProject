@@ -94,12 +94,14 @@
 }
 -(void)getCommerceArray{
     __block SearchCommerceController *blockSelf = self;
+    self.nPage = 1;
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.selectAreaString,@"affiliated_area",self.searchTF.text,@"commerce_name",self.selCommerceType,@"commerce_type",@"1",@"page",@"",@"ios", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_HOME_COMMERCES parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             blockSelf.commerceArray = [NSMutableArray arrayWithCapacity:0];
             blockSelf.commerceArray = responseDic[@"data"];
             [blockSelf.tableView reloadData];
+            [blockSelf.tableView setScrollsToTop:YES];
         }
     } failure:^(NSError *error) {
         

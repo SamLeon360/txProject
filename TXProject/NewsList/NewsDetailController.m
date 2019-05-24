@@ -11,6 +11,7 @@
 @interface NewsDetailController ()<WKUIDelegate,WKNavigationDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *otherLabel;
+@property (weak, nonatomic) IBOutlet UIView *webContentView;
 
 
 @end
@@ -25,11 +26,11 @@
     if ( self.typeIndex == 0) {
         self.title = @"新政新规详情";
     }
-     webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 90, ScreenW, ScreenH-90)];
+     webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, ScreenW, self.webContentView.frame.size.height)];
     [webView setNavigationDelegate:self];
     webView.clipsToBounds = YES;
     webView.UIDelegate = self;
-    [self.view addSubview:webView];
+    [self.webContentView addSubview:webView];
     wkwebJsBrideg = [WKWebViewJavascriptBridge bridgeForWebView:webView];
     [wkwebJsBrideg setWebViewDelegate:self];
     [self getWebData];

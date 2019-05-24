@@ -11,8 +11,11 @@
 #import <IQKeyboardManager.h>
 #import "PayServiceController.h"
 #import "NewEditAlertView.h"
+#import "uploadProImageCell.h"
 #import "SHEditCommidityCameraController.h"
-@interface AddServiceFormController ()<UIPickerViewDataSource,UIPickerViewDelegate,SHEditCommidityCameraDelegate>
+#import <PYPhotoBrowser/PYPhotoBrowser.h>
+#import "ProductionImageCell.h"
+@interface AddServiceFormController ()<UIPickerViewDataSource,UIPickerViewDelegate,SHEditCommidityCameraDelegate,UICollectionViewDelegate,UICollectionViewDataSource,PYPhotoBrowseViewDelegate,PYPhotoBrowseViewDataSource>
 @property (weak, nonatomic) IBOutlet UIImageView *uploadIamge;
 @property (weak, nonatomic) IBOutlet UITextField *titleTF;
 @property (weak, nonatomic) IBOutlet UITextView *serviceTF;
@@ -34,9 +37,14 @@
 @property (nonatomic) NSDictionary *mineDic;
 @property (nonatomic) NSDictionary *paramDic;
 @property (weak, nonatomic) IBOutlet UIView *facePriceView;
+@property (weak, nonatomic) IBOutlet UICollectionView *imageCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *selImage;
+@property (nonatomic,strong) NSMutableArray *uploadImageArray;
 @property (nonatomic) UIView *typeBgView;
 @property (nonatomic) ZLPhotoActionSheet *ac ;
+@property (nonatomic) BOOL companyImage;
+@property (weak, nonatomic) IBOutlet UIImageView *companyImageView;
+
 @end
 
 @implementation AddServiceFormController
@@ -73,6 +81,10 @@
 
 
 -(void)uploadDataMore {
+    if (self.uploadImageArray.count <= 0) {
+        [AlertView showYMAlertView:self.view andtitle:@"请上传图片"];
+        return;
+    }
     if (self.titleTF.text.length <= 0) {
         [AlertView showYMAlertView:self.view andtitle:@"请填写标题"];
         return;
@@ -112,12 +124,31 @@
     NSString *fee = self.priceTF.text;
     [parDic setObject:fee forKey:@"fee_mode"];
     self.paramDic = parDic;
-    [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:[self.typeString isEqualToString:@"创业宝典"]?SH_UPLOAD_SERVICE:SH_UPLOAD_ZONGHE parameters:self.paramDic withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyyMMddHHmmss";
-        NSString *imgName = [NSString stringWithFormat:@"%@",[formatter stringFromDate:[NSDate date]]];
-        NSString *fileName = [NSString stringWithFormat:@"%@_%@.jpg", @"commerce", imgName];
-        [formData appendPartWithFileData:UIImageJPEGRepresentation(self.uploadIamge.image, 0.6) name:@"service_img[]" fileName:fileName mimeType:@"image/jpeg"];
+    [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:[self.typeString isEqualToString:@"创业宝典"]?@"pioneer_park/addUpdatePioneerParkNew":@"service/addUpdateIntegrateServiceNew" parameters:self.paramDic withHub:YES constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        for(NSInteger i = 0; i < self.uploadImageArray.count; i++) {
+            
+            
+            NSData * imageData = UIImageJPEGRepresentation([self.uploadImageArray objectAtIndex: i], 0.5);
+            // 上传的参数名
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+            NSString *str = [formatter stringFromDate:[NSDate date]];
+            NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
+            [formData appendPartWithFileData:imageData name:@"service_img[]" fileName:fileName mimeType:@"image/jpeg"];
+        }
+        if (self.companyImage) {
+            NSData * imageData = UIImageJPEGRepresentation(self.companyImageView.image, 0.5);
+            // 上传的参数名
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+            NSString *str = [formatter stringFromDate:[NSDate date]];
+            NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
+            [formData appendPartWithFileData:imageData name:@"enterprise_logo[]" fileName:fileName mimeType:@"image/jpeg"];
+        }
+        
+        
     } progress:^(double progress) {
         [SVProgressHUD showProgress:progress];
     } success:^(NSDictionary *responseDic) {
@@ -125,14 +156,24 @@
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"申请成功"];
             [self ClickToPay];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDataArrayByRefresh" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDataArrayByRefresh" object:nil];
 //            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //                NSArray *vcArray = self.navigationController.childViewControllers;
 //                UIViewController *tempVC = vcArray[2];
 //                [self.navigationController popToViewController:tempVC animated:YES];
 //            });
         }else{
-            [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
+            id message = responseDic[@"message"];
+            if ([message isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dic = message;
+              [AlertView showYMAlertView:self.view andtitle:dic.allValues.firstObject];
+            }else if ([message isKindOfClass:[NSString class]]){
+                [AlertView showYMAlertView:self.view andtitle:message];
+            }
+            else{
+                [AlertView showYMAlertView:self.view andtitle:@"资料填写错误"];
+            }
+            
         }
         [SVProgressHUD dismiss];
     } failure:^(NSError *error) {
@@ -163,10 +204,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"入驻平台申请";
+    self.imageCollectionView.delegate = self;
+    self.imageCollectionView.dataSource = self;
     [self setupNewAlertView];
     [self getMineMessage];
     [self.uploadBtn makeCorner: 5];
-    
+    self.companyImage = NO;
  
     if ([self.typeString isEqualToString:@"创业宝典"]) {
         self.selectTypeData =  @{@"工商注册":@"1",@"财税服务":@"5",@"知识产权":@"8",@"资质办理":@"10",@"法律服务":@"18",@"人力社保":@"21",@"场地服务":@"25",@"创业辅导":@"27",@"投融资":@"29",@"图文视频":@"33",@"视觉设计":@"36",@"市场传播":@"37",@"消防环保":@"38",@"物流快递":@"39",@"创业信息":@"41"};
@@ -214,6 +257,7 @@
     self.areaPickerView.delegate = self;
     self.areaPickerView.dataSource = self;
     [[UIApplication sharedApplication].keyWindow addSubview:self.typeBgView];
+    self.uploadImageArray = [NSMutableArray arrayWithCapacity:0];
     [self.typeBgView bk_whenTapped:^{
         [self.typeBgView removeFromSuperview];
     }];
@@ -230,6 +274,10 @@
     [self.typeBgView addSubview:self.pickSureBtn];
     [self.uploadIamge bk_whenTapped:^{
          [blockSelf showEditAlertView];
+    }];
+    [self.companyImageView bk_whenTapped:^{
+       
+        [blockSelf showEditAlertView];
     }];
     self.serviceId = self.selectTypeData[self.serviceType.text];
 //    [self.serviceType bk_whenTapped:^{
@@ -271,7 +319,11 @@
     if (array.count == 0) {
         return;
     }
-    [self.uploadIamge setImage:array[0]];
+    self.companyImage = YES;
+    [self.companyImageView setImage: array[0] ];
+    
+    
+    
 //    [self upavatar];
 }
 
@@ -280,7 +332,7 @@
  */
 -(void)clickToTakePhoto{
     [self hideEditAlertView];
-    SHEditCommidityCameraController *cameraVC = [[SHEditCommidityCameraController alloc] initWithArray:nil maxPhotoNum:1];
+    SHEditCommidityCameraController *cameraVC = [[SHEditCommidityCameraController alloc] initWithArray:nil maxPhotoNum:self.companyImage?1: 5-self.uploadImageArray.count];
     cameraVC.delegate = self;
     
     [self.navigationController pushViewController:cameraVC animated:YES];
@@ -311,8 +363,8 @@
     __block AddServiceFormController *blockself = self;
     //选择回调
     [ac setSelectImageBlock:^(NSArray<UIImage *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
-        [blockself.uploadIamge setImage:images[0]];
-        //        [blockself upavatar];
+         blockself.companyImage = YES;
+        [blockself.companyImageView setImage:images.firstObject];
         
     }];
     
@@ -350,6 +402,106 @@
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     NSString *title = self.selectTypeData.allKeys[row];
     return title;
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (self.uploadImageArray.count < 5) {
+        return self.uploadImageArray.count +1;
+    }
+    if (self.uploadImageArray.count == 5) {
+        return 5;
+    }
+    return self.uploadImageArray.count == 0?1:self.uploadImageArray.count;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(115 , 115);
+}
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    uploadProImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"uploadProImageCell" forIndexPath:indexPath];
+    if (self.uploadImageArray.count < 5) {
+        if (indexPath.row == 0) {
+            [cell.imageCell setImage: [UIImage imageNamed:@"upload_image"]];
+            cell.delimageView.hidden = YES;
+        }else{
+            cell.delimageView.hidden = NO;
+            [cell.imageCell setImage:self.uploadImageArray[indexPath.row-1]];
+        }
+    }else{
+        [cell.imageCell setImage:self.uploadImageArray[indexPath.row]];
+        cell.delimageView.hidden = NO;
+        
+    }
+    [cell.delimageView bk_whenTapped:^{
+        NSIndexPath *indexP = [collectionView indexPathForCell:cell];
+        if (self.uploadImageArray.count <= 4) {
+            [self.uploadImageArray removeObjectAtIndex:indexP.row - 1];
+        }else{
+            [self.uploadImageArray removeObjectAtIndex:indexP.row ];
+        }
+//        self.selectArrayCallBack(self.uploadImageArray);
+        [self.imageCollectionView reloadData];
+    }];
+    
+    [cell makeCorner:5];
+    return cell;
+}
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.uploadImageArray.count < 5) {
+        if (indexPath.row == 0) {
+            [self openLocalPhoto];
+        }else{
+            PYPhotoBrowseView *browseView = [[PYPhotoBrowseView alloc] init];
+            
+            // 2.设置数据源和代理并实现数据源和代理方法
+            browseView.dataSource = self;
+            browseView.delegate = self;
+            browseView.images = self.uploadImageArray;
+            browseView.currentIndex = indexPath.row - 1;
+            [browseView show];
+        }
+    }else{
+        PYPhotoBrowseView *browseView = [[PYPhotoBrowseView alloc] init];
+        
+        // 2.设置数据源和代理并实现数据源和代理方法
+        browseView.dataSource = self;
+        browseView.delegate = self;
+        browseView.images = self.uploadImageArray;
+        browseView.currentIndex = indexPath.row;
+        [browseView show];
+    }
+}
+-(void)openLocalPhoto{
+    ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
+    
+    //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
+    ac.configuration.maxSelectCount = 5 - self.uploadImageArray.count;
+    ac.configuration.maxPreviewCount = 10;
+    ac.configuration.allowMixSelect = NO;
+    ac.configuration.allowSelectGif = NO;
+    ac.configuration.allowSelectVideo = NO;
+    ac.configuration.clipRatios = @[GetClipRatio(1, 1)];
+    //如调用的方法无sender参数，则该参数必传
+    ac.sender = self;
+    __block AddServiceFormController *blockSelf= self;
+    //选择回调
+    [ac setSelectImageBlock:^(NSArray<UIImage *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
+        [blockSelf.uploadImageArray addObjectsFromArray:images];
+//        blockSelf.selectArrayCallBack(blockSelf.imageArray);
+        [blockSelf.imageCollectionView reloadData];
+    }];
+    
+    //调用相册
+    [ac showPreviewAnimated:YES];
+    
+    //预览网络图片
+    //    [ac previewPhotos:arrNetImages index:0 hideToolBar:YES complete:^(NSArray * _Nonnull photos) {
+    //        //your codes
+    //    }];
 }
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
      NSString *title = self.selectTypeData.allKeys[row];

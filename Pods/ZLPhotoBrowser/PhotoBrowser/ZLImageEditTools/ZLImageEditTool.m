@@ -75,9 +75,7 @@
     [[GPUImageContext sharedImageProcessingContext].framebufferCache purgeAllUnassignedFramebuffers];
 //    NSLog(@"---- %s", __FUNCTION__);
 }
--(void)showBottomView:(BOOL)show{
-    self.bottomView.hidden = !show;
-}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     return [self initWithEditType:ZLImageEditTypeDraw |
@@ -107,7 +105,6 @@
         _configuration = configuration;
         self.editImage = image;
         [self setupUI];
-        
     }
     return self;
 }
@@ -176,7 +173,6 @@
     if (hideClipRatioView) {
         _rotateRatioBtn.hidden = YES;
         _clipMenu.hidden = YES;
-        
     } else {
         _rotateRatioBtn.superview.frame = CGRectMake(kViewWidth-70-inset.right, menuMaxY-80, 70, 80);
         _clipMenu.frame = CGRectMake(inset.left, menuMaxY-80, kViewWidth-70-inset.left-inset.right, 80);

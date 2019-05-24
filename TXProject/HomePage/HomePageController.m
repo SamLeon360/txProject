@@ -21,10 +21,13 @@
 #import "CommerceNotifyController.h"
 #import "MemberPostController.h"
 #import "CommerceNewsController.h"
+#import "ShareAlertView.h"
+#import <ShareSDK/ShareSDK.h>
 #import "CommerceWorkController.h"
-@interface HomePageController ()<UICollectionViewDelegate,UICollectionViewDataSource,RCIMUserInfoDataSource>
+@interface HomePageController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray *adervtImageArray;
+@property (nonatomic,strong) ShareAlertView *shareAlertView;
 @end
 
 @implementation HomePageController
@@ -52,17 +55,17 @@
         NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.member_id,@"member_id",USER_SINGLE.token,@"token",USER_SINGLE.role_type,@"RoleType", nil];
         [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_GET_IM_TOKEN headerParameters:dic bodyParameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
             if ([responseDic[@"code"] integerValue] == 200) {
-                [[RCIM sharedRCIM] connectWithToken:responseDic[@"token"]     success:^(NSString *userId) {
-                     [[RCIM sharedRCIM] setUserInfoDataSource:self];
-                    NSLog(@"登陆成功。当前登录的用户ID：%@", userId);
-                } error:^(RCConnectErrorCode status) {
-//                    NSLog(@"登陆的错误码为:%d", status);
-                } tokenIncorrect:^{
-                    //token过期或者不正确。
-                    //如果设置了token有效期并且token过期，请重新请求您的服务器获取新的token
-                    //如果没有设置token有效期却提示token错误，请检查您客户端和服务器的appkey是否匹配，还有检查您获取token的流程。
-                    NSLog(@"token错误");
-                }];
+//                [[RCIM sharedRCIM] connectWithToken:responseDic[@"token"]     success:^(NSString *userId) {
+//                     [[RCIM sharedRCIM] setUserInfoDataSource:self];
+//                    NSLog(@"登陆成功。当前登录的用户ID：%@", userId);
+//                } error:^(RCConnectErrorCode status) {
+////                    NSLog(@"登陆的错误码为:%d", status);
+//                } tokenIncorrect:^{
+//                    //token过期或者不正确。
+//                    //如果设置了token有效期并且token过期，请重新请求您的服务器获取新的token
+//                    //如果没有设置token有效期却提示token错误，请检查您客户端和服务器的appkey是否匹配，还有检查您获取token的流程。
+//                    NSLog(@"token错误");
+//                }];
             }
             NSLog(@"%@",responseDic);
         } failure:^(NSError *error) {
@@ -226,6 +229,5 @@
         }
     }
 }
-
 
 @end

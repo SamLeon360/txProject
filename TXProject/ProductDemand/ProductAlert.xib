@@ -104,7 +104,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="137.59999999999999" y="148.87556221889056"/>
         </view>
-        <view contentMode="scaleToFill" id="rJg-wt-zPC">
+        <view contentMode="scaleToFill" id="rJg-wt-zPC" customClass="ShareAlertView">
             <rect key="frame" x="0.0" y="0.0" width="414" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -133,7 +133,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Umv-pe-izh">
                             <rect key="frame" x="162.5" y="0.0" width="60" height="118"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mib-FV-2ba">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wechat_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Mib-FV-2ba">
                                     <rect key="frame" x="0.0" y="12" width="60" height="60"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="60" id="RIF-7q-L4l"/>
@@ -160,7 +160,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BG2-iF-Eg1">
                             <rect key="frame" x="44.5" y="0.0" width="60" height="118"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cGa-rN-yYe">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wechat_cycle" translatesAutoresizingMaskIntoConstraints="NO" id="cGa-rN-yYe">
                                     <rect key="frame" x="0.0" y="12" width="60" height="60"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="60" id="AxS-TU-SJV"/>
@@ -184,7 +184,7 @@
                                 <constraint firstAttribute="width" constant="60" id="xNJ-Mh-xQm"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aa9-l1-YCh">
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aa9-l1-YCh">
                             <rect key="frame" x="280.5" y="0.0" width="60" height="118"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Pp-2M-DYa">
@@ -226,17 +226,31 @@
                         <constraint firstAttribute="bottom" secondItem="BG2-iF-Eg1" secondAttribute="bottom" id="s9U-Je-lDF"/>
                     </constraints>
                 </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="share_home_image" translatesAutoresizingMaskIntoConstraints="NO" id="RxG-9T-zBc">
+                    <rect key="frame" x="20" y="20" width="374" height="397"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="RxG-9T-zBc" firstAttribute="leading" secondItem="rJg-wt-zPC" secondAttribute="leading" constant="20" id="3MU-0r-ZrR"/>
                 <constraint firstAttribute="trailing" secondItem="XUS-5g-ahv" secondAttribute="trailing" constant="14" id="Inv-MK-yVP"/>
                 <constraint firstAttribute="bottom" secondItem="lLn-3h-255" secondAttribute="bottom" constant="38" id="LEl-bC-677"/>
+                <constraint firstAttribute="trailing" secondItem="RxG-9T-zBc" secondAttribute="trailing" constant="20" id="Tgo-SC-OqD"/>
                 <constraint firstItem="lLn-3h-255" firstAttribute="top" secondItem="XUS-5g-ahv" secondAttribute="bottom" constant="22" id="YKy-k5-0uD"/>
                 <constraint firstItem="XUS-5g-ahv" firstAttribute="leading" secondItem="rJg-wt-zPC" secondAttribute="leading" constant="15" id="aH9-Yb-rn0"/>
+                <constraint firstItem="RxG-9T-zBc" firstAttribute="top" secondItem="rJg-wt-zPC" secondAttribute="top" constant="20" id="dY4-0K-cZT"/>
                 <constraint firstAttribute="trailing" secondItem="lLn-3h-255" secondAttribute="trailing" constant="14" id="hgP-ZM-5cv"/>
                 <constraint firstItem="lLn-3h-255" firstAttribute="leading" secondItem="rJg-wt-zPC" secondAttribute="leading" constant="15" id="jYV-Oa-p1c"/>
+                <constraint firstItem="XUS-5g-ahv" firstAttribute="top" secondItem="RxG-9T-zBc" secondAttribute="bottom" constant="20" id="kTl-TB-hNI"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="cancelView" destination="lLn-3h-255" id="jbU-MZ-K4G"/>
+                <outlet property="cycleView" destination="BG2-iF-Eg1" id="j2A-yM-Aic"/>
+                <outlet property="mainView" destination="XUS-5g-ahv" id="NDi-h0-cCv"/>
+                <outlet property="shareImage" destination="RxG-9T-zBc" id="p1g-IG-JaM"/>
+                <outlet property="wechatView" destination="Umv-pe-izh" id="2Ad-S3-7IZ"/>
+            </connections>
             <point key="canvasLocation" x="937.60000000000002" y="148.87556221889056"/>
         </view>
         <view contentMode="scaleToFill" id="Tap-TI-tIb">
@@ -617,7 +631,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nRa-my-v86">
                             <rect key="frame" x="0.0" y="0.0" width="329" height="45"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pro_type_close" translatesAutoresizingMaskIntoConstraints="NO" id="1F3-GG-HnE">
+                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pro_type_close" translatesAutoresizingMaskIntoConstraints="NO" id="1F3-GG-HnE">
                                     <rect key="frame" x="13" y="15" width="22" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="22" id="9bs-sQ-2co"/>
@@ -997,5 +1011,8 @@
         <image name="pro_refresh_icon" width="40" height="40"/>
         <image name="pro_sel_icon" width="69.333335876464844" height="69.333335876464844"/>
         <image name="pro_type_close" width="65.666664123535156" height="65.666664123535156"/>
+        <image name="share_home_image" width="414.33334350585938" height="736.33331298828125"/>
+        <image name="wechat_cycle" width="60.666667938232422" height="60.666667938232422"/>
+        <image name="wechat_icon" width="60.666667938232422" height="60.666667938232422"/>
     </resources>
 </document>

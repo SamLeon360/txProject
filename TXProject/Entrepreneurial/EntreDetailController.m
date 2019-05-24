@@ -11,6 +11,7 @@
 #import "EntreMessageCell.h"
 #import "EntreServiceAndCompanyCell.h"
 #import "OtherContactsController.h"
+#import "ChatViewController.h"
 #import "EntreCompanyMsgCell.h"
 @interface EntreDetailController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -37,29 +38,46 @@
     [self GetDetailData];
     __block EntreDetailController *blockSelf = self;
     [self.chatView bk_whenTapped:^{
-        RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
-        conversationVC.conversationType = ConversationType_PRIVATE;
-        conversationVC.targetId = [NSString stringWithFormat:@"%@",blockSelf.detailDataDic[@"member_id"]];
-        conversationVC.title = blockSelf.detailDataDic[@"member_name"];
-        [blockSelf.navigationController pushViewController:conversationVC animated:YES];
+//        RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
+//        conversationVC.conversationType = ConversationType_PRIVATE;
+//        conversationVC.targetId = [NSString stringWithFormat:@"%@",blockSelf.detailDataDic[@"member_id"]];
+//        conversationVC.title = blockSelf.detailDataDic[@"member_name"];
+//        [blockSelf.navigationController pushViewController:conversationVC animated:YES];
+        ChatViewController *chat = [[ChatViewController alloc] init];
+        TConversationCellData *data = [[TConversationCellData alloc] init];
+        //会话ID
+        data.convId =  [NSString stringWithFormat:@"%@",blockSelf.detailDataDic[@"member_phone"]];
+        //会话类型
+        data.convType = TConv_Type_C2C;
+        //会话title
+        data.title =blockSelf.detailDataDic[@"member_name"];
+        chat.conversation = data;
+        [self.navigationController pushViewController:chat animated:YES];
     }];
     [self.callView bk_whenTapped:^{
         NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",blockSelf.detailDataDic[@"telephone"]];
         UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
         [blockSelf.view addSubview:callWebview];
     }];
+    [self.likeView bk_whenTapped:^{
+        [blockSelf SetupLike];
+    }];
     
 }
 -(void)SetupLike{
-    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"score",self.dataDic[@"service_id"],@"score", nil];
+    NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"score",self.dataDic[@"service_id"],@"service_id", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_LIKE_SERVICE parameters:param withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"提交好评成功!"];
             [self.likeImage setImage:[UIImage imageNamed:@"IOS_Fabulous_Blue"]];
             NOTIFY_POST(@"getDataArrayByRefresh");
+        }else{
+            if ([responseDic[@"message"] isKindOfClass:[NSString class]]) {
+                [AlertView showYMAlertView:self.view andtitle:responseDic[@"message"]];
+            }
         }
     } failure:^(NSError *error) {
-        
+        [AlertView showYMAlertView:self.view andtitle:@"网络异常，请检查网络"];
     }];
 }
 -(void)GetDetailData{
@@ -129,11 +147,15 @@
         cell.contentLabel.text = self.detailDataDic[@"member_name"];
         [cell.cellImage setImage:[UIImage imageNamed:@"IOS_Phone_Blue"]];
         cell.cellImage.hidden = NO;
+        [cell bk_removeAllBlockObservers];
         [cell bk_whenTapped:^{
+            NSIndexPath *indexP = [self.tableView indexPathForCell:cell];
+            if (indexP.row == 0) {
             NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"telephone"]];
             UIWebView * callWebview = [[UIWebView alloc] init];
             [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
             [self.view addSubview:callWebview];
+            }
         }];
         return cell;
     }else if (indexPath.row == 3){
@@ -154,19 +176,22 @@
         cell.contentLabel.text = self.detailDataDic[@"address"];
         [cell.cellImage setImage:[UIImage imageNamed:@"IOS_Place"]];
         cell.cellImage.hidden = NO;
+        [cell bk_removeAllBlockObservers];
         return cell;
     }else if(indexPath.row == 6){
         EntreCompanyMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EntreCompanyMsgCell"];
-        [cell.companyImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.detailDataDic[@"member_avatar"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [cell.companyImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",AVATAR_HOST_URL,self.detailDataDic[@"enterprise_logo"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (error) {
-                [cell.companyImage setImage:[UIImage imageNamed:@"default_avatar"]];
+                [cell.companyImage setImage:[UIImage imageNamed:@"new_company_icon"]];
             }
         }];
         cell.companyName.text = self.detailDataDic[@"enterprise_name"];
         [cell.callBtn bk_whenTapped:^{
-            NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"telephone"]];
-            UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
-            [self.view addSubview:callWebview];
+           
+                NSMutableString* str=[[NSMutableString alloc] initWithFormat:@"tel:%@",self.detailDataDic[@"telephone"]];
+                UIWebView * callWebview = [[UIWebView alloc] init];[callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+                [self.view addSubview:callWebview];
+            
         }];
         cell.callBtn.layer.borderWidth = 1;
         cell.callBtn.layer.borderColor = [UIColor colorWithRGB:0x6C96C5].CGColor;

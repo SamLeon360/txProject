@@ -14,10 +14,11 @@
 #import "ChuangyeAllListController.h"
 #import "EntrepernurialAllListController.h"
 #import "EntreCheckMoreController.h"
-@interface EntreprenurialController ()<UITableViewDataSource,UITableViewDelegate>
+@interface EntreprenurialController ()<UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate>
 @property (nonatomic) NSInteger nPage;
 @property (nonatomic) NSMutableArray *hottopicArray;
 @property (nonatomic) NSMutableArray *advertImageArray;
+@property (nonatomic) NSMutableArray *cycleImageArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) Entrepreneurial *entreHeader;
 @end
@@ -91,23 +92,34 @@
 }
 -(void)getAdvertImage{
     __block EntreprenurialController *blockSelf = self;
-    [HTTPREQUEST_SINGLE getWithURLString:GROUND_SCROLL_IMAGE parameters:nil withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-        if ([responseDic[@"code"] integerValue] == 0) {
-            NSString *imgURLString = responseDic[@"data"][@"entrepreneurship_img"];
-            NSArray *imageurlArray = [imgURLString componentsSeparatedByString:@"|"];
-            blockSelf.advertImageArray = [NSMutableArray arrayWithCapacity:0];
-            for (int i = 0; i <= imageurlArray.count - 1; i ++) {
-                NSString *imageString = [NSString stringWithFormat:@"%@%@",@"https://app.tianxun168.com",imageurlArray[i]];
-                [blockSelf.advertImageArray addObject:imageString];
-            }
-             self.tableView.tableHeaderView = self.entreHeader;
-            [blockSelf.tableView reloadData];
+    self.cycleImageArray = [NSMutableArray arrayWithCapacity:0];
+    NSString *url = @"https://app.tianxun168.com/h5_v3/index.php?s=/api/Ads/index&position=2";
+    [TSRequestTool POST:url parameters:nil headers:nil progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSArray *arr = responseObject[@"data"];
+        [blockSelf.cycleImageArray addObjectsFromArray:arr];
+        NSMutableArray *imageArr = [NSMutableArray arrayWithCapacity:0];
+        for (int i = 0 ; i < blockSelf.cycleImageArray.count; i++) {
+            NSDictionary *dic = blockSelf.cycleImageArray[i];
+            [imageArr addObject: dic[@"image"][@"file_path"]];
         }
-    } failure:^(NSError *error) {
+        self.advertImageArray = imageArr;
+        self.tableView.tableHeaderView = self.entreHeader;
+        [blockSelf.tableView reloadData];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
     }];
 }
-
+-(void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
+    NSDictionary *dic = self.cycleImageArray[index];
+    NSString *url = dic[@"url"];
+    if (url.length > 0 ) {
+        TXWebViewController *webVC =  [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+        webVC.webUrl  = url;
+        [self.navigationController pushViewController:webVC animated:YES];
+    }
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0.1;
 }
@@ -151,6 +163,7 @@
         _entreHeader.cycleScrollview.imageURLStringsGroup = self.advertImageArray;
         _entreHeader.cycleScrollview.showPageControl = YES;
         [_entreHeader.cycleScrollview makeCorner:10];
+        _entreHeader.cycleScrollview.delegate = self;
         _entreHeader.frame = CGRectMake(0, 0, ScreenW, 513*kScale);
         __block EntreprenurialController *blockSelf = self;
     

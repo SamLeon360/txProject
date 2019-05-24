@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewCommerceDetailController">
             <connections>
                 <outlet property="addCommerceLabel" destination="J5y-Q3-83N" id="vEx-TU-efW"/>
+                <outlet property="autoHeight" destination="uvH-sH-6WC" id="5lA-kD-xmC"/>
                 <outlet property="tableView" destination="riz-7S-gxp" id="RCK-Dy-egS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

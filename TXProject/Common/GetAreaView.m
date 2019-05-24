@@ -62,6 +62,7 @@
         [cell.cellString bk_whenTapped:^{
             NSIndexPath *indexP = [self.provinceTable indexPathForCell:cell];
               self.selectProvince = self.areaDic.allKeys[indexP.row];
+            self.selecCity = nil;
             [self.cityTable reloadData];
             [self.provinceTable reloadData];
         }];

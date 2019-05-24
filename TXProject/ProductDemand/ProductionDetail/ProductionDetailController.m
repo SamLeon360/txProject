@@ -12,7 +12,7 @@
 #import "ProductionDescCell.h"
 #import "ProCompanyCell.h"
 #import "ProReplyCell.h"
-
+#import "ChatViewController.h"
 
 @interface ProductionDetailController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -88,11 +88,18 @@
                 [blockblockSelf.view addSubview:callWebview];
             }];
             [blockSelf.chatViewq bk_whenTapped:^{
-                RCConversationViewController *conversationVC = [[RCConversationViewController alloc]init];
-                conversationVC.conversationType = ConversationType_PRIVATE;
-                conversationVC.targetId = [NSString stringWithFormat:@"%@",blockblockSelf.productDic[@"member_id"]];
-                conversationVC.title = blockblockSelf.productDic[@"member_name"];
-                [blockSelf.navigationController pushViewController:conversationVC animated:YES];
+                [self.navigationController setNavigationBarHidden:NO animated:YES];
+                ChatViewController *chat = [[ChatViewController alloc] init];
+                TConversationCellData *data = [[TConversationCellData alloc] init];
+                //会话ID
+                data.convId =  [NSString stringWithFormat:@"%@",blockblockSelf.productDic[@"member_id"]];
+                //会话类型
+                data.convType = TConv_Type_C2C;
+                //会话title
+                data.title = blockblockSelf.productDic[@"member_name"];
+                chat.conversation = data;
+                [self.navigationController pushViewController:chat animated:YES];
+
             }];
             [blockSelf editCompany];
             

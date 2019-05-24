@@ -44,6 +44,7 @@
     self.tableView.mj_footer = footer;
     __block LibraryListController *blockSelf = self;
     [self.libType bk_whenTapped:^{
+        [[UIApplication sharedApplication].keyWindow addSubview:blockSelf.libTypeView];
         blockSelf.libTypeView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             blockSelf.libTypeView.frame = CGRectMake(blockSelf.libTypeView.frame.origin.x, blockSelf.libTypeView.frame.origin.y, ScreenW, blockSelf.tableView.frame.size.height);
@@ -53,6 +54,7 @@
         }];
     }];
     [self.libGeshi bk_whenTapped:^{
+        [[UIApplication sharedApplication].keyWindow addSubview:blockSelf.libGeshiView];
         blockSelf.libGeshiView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             blockSelf.libGeshiView.frame = CGRectMake(blockSelf.libGeshiView.frame.origin.x, blockSelf.libGeshiView.frame.origin.y, ScreenW, blockSelf.tableView.frame.size.height);
@@ -65,9 +67,28 @@
     [self.searchBtn bk_whenTapped:^{
         [blockSelf getNetData];
     }];
+    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    leftBtn.frame = CGRectMake(0, 0, 25,25);
+    [leftBtn setBackgroundImage:[[UIImage imageNamed:@"IOS_Return"] scaleToSize:CGSizeMake(25, 25)] forState:UIControlStateNormal];
+    [leftBtn addTarget:self action:@selector(popView) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem * leftBarBtn = [[UIBarButtonItem alloc]initWithCustomView:leftBtn];;
+    //创建UIBarButtonSystemItemFixedSpace
+    UIBarButtonItem * spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    //将宽度设为负值
+    spaceItem.width = -15;
+    //将两个BarButtonItem都返回给NavigationItem
+    self.navigationItem.leftBarButtonItems = @[spaceItem,leftBarBtn];
+ 
+}
+-(void)popView{
+    [self.libTypeView removeFromSuperview];
+    [self.libGeshiView removeFromSuperview];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 -(void)getNetData{
     self.nPage = 1;
+    [self.libTypeView removeFromSuperview];
+    [self.libGeshiView removeFromSuperview];
     __block LibraryListController *blockSelf = self;
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:self.libGeshiIndex,@"file_extension",self.searchTF.text,@"file_name",self.libTypeIndex,@"file_type",@"",@"ios",self.libraryVCType,@"library_type",@"-1",@"member_id",@"1",@"page",@"0",@"_search_type", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_FILE_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
@@ -79,6 +100,12 @@
     } failure:^(NSError *error) {
         
     }];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    
 }
 -(void)getNetDataMore{
     __block LibraryListController *blockSelf = self;
@@ -154,11 +181,12 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 143;
 }
+
 -(ProjectTypeView *)libTypeView{
     if (_libTypeView == nil) {
         _libTypeView = [[NSBundle mainBundle] loadNibNamed:@"InvestmentView" owner:self options:nil][0];
-        _libTypeView.frame = CGRectMake(0, 90, self.tableView.frame.size.width, self.tableView.frame.size.height);
-        [[UIApplication sharedApplication].keyWindow addSubview:_libTypeView];
+        _libTypeView.frame = CGRectMake(0, 110, self.tableView.frame.size.width, self.tableView.frame.size.height);
+        
         _libTypeView.hidden = YES;
         _libTypeView.typeArray = @[@"全部",@"策划方案",@"发言稿",@"管理制度",@"常用表格",@"其他"];
         _libTypeView.mainLabel.text = @"文件类型";
@@ -171,8 +199,8 @@
 -(ProjectTypeView *)libGeshiView{
     if (_libGeshiView == nil) {
         _libGeshiView = [[NSBundle mainBundle] loadNibNamed:@"InvestmentView" owner:self options:nil][0];
-        _libGeshiView.frame = CGRectMake(0, 90, self.tableView.frame.size.width, self.tableView.frame.size.height);
-        [[UIApplication sharedApplication].keyWindow addSubview:_libGeshiView];
+        _libGeshiView.frame = CGRectMake(0, 110, self.tableView.frame.size.width, self.tableView.frame.size.height);
+        
         _libGeshiView.hidden = YES;
         _libGeshiView.typeArray = @[@"全部",@"doc",@"ppt",@"xls",@"txt"];
         _libGeshiView.mainLabel.text = @"文件格式";

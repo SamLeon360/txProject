@@ -49,11 +49,13 @@
     self.TokenFrom = [dic[@"TokenFrom"] isKindOfClass:[NSNull class]]?@"":dic[@"TokenFrom"];
     self.default_commerce_id = [dic[@"default_commerce_id"] isKindOfClass:[NSNull class]] ?@"":[NSString stringWithFormat:@"%@",dic[@"default_commerce_id"]];
     self.default_commerce_name = [dic[@"default_commerce_name"] isKindOfClass:[NSNull class]] ?@"":dic[@"default_commerce_name"];
+    self.member_name = [dic[@"member_name"] isKindOfClass:[NSNull class]]?@"":dic[@"member_name"];
     self.default_role_type = [dic[@"default_role_type"] isKindOfClass:[NSNull class]] ?@"":[NSString stringWithFormat:@"%@",dic[@"default_role_type"]];
     self.exp = [dic[@"exp"] isKindOfClass:[NSNull class]] ?@"":[NSString stringWithFormat:@"%@",dic[@"exp"]];
     self.member_id = [dic[@"member_id"] isKindOfClass:[NSNull class]] ?@"": [NSString stringWithFormat:@"%@",dic[@"member_id"]];
     self.role_type = [dic[@"role_type"] isKindOfClass:[NSNull class]]? @"":[NSString stringWithFormat:@"%@",dic[@"role_type"]];
     self.isSecretary = [dic[@"role_type"] isKindOfClass:[NSNull class]]||[dic[@"role_type"] integerValue]!=1?@"false":@"true";
+    
     self.token = [dic[@"token"] isKindOfClass:[NSNull class]]?@"":[NSString stringWithFormat:@"%@",dic[@"token"]];
     if ([dic.allKeys containsObject:@"commerceDic"]) {
         self.commerceDic = dic[@"commerceDic"];

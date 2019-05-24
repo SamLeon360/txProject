@@ -11,6 +11,7 @@
 #import "CommerceDetailController.h"
 #import "MemberListController.h"
 #import "CommerceNotifyController.h"
+#import "NewCommerceDetailController.h"
 #import "CommerceList.h"
 #import "CommerceNewsController.h"
 #import "MemberPostController.h"
@@ -38,6 +39,7 @@
       self.commerceJobArray = @[ @"会长",@"执行会长",@"常务副会长",@"副会长",@"常务理事",@"理事",@"监事长",@"副监事长",@"监事",@"名誉会长",@"荣誉会长",@"创会会长",@"顾问",@"秘书长",@"执行秘书长",@"专职秘书长",@"副秘书长",@"干事",@"办公室主任",@"文员",@"部长",@"会员",@"创会会长"];
     [self getCommerceListData];
     [self setupClickAction];
+    NOTIFY_ADD(getCommerceListData, @"getCommerceListData");
 }
 -(void)updateDefaultCommerce {
    
@@ -100,6 +102,8 @@
         if ([responseDic[@"code"] integerValue] == 0) {
             NSString *imgURLString = responseDic[@"data"][@"u_recycle_img"];
             if ( [imgURLString isKindOfClass:[NSNull class]]) {
+                self.contentImage.imageURLStringsGroup = nil;
+                
                 return ;
             }
             NSArray *imageurlArray = [imgURLString componentsSeparatedByString:@"|"];
@@ -108,14 +112,13 @@
                 NSString *imageString = [NSString stringWithFormat:@"%@%@",@"https://app.tianxun168.com",imageurlArray[i]];
                 [adervtImageArray addObject:imageString];
             }
-            self.contentImage.pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
-            self.contentImage.imageURLStringsGroup = adervtImageArray;
+             self.contentImage.pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
             self.contentImage.showPageControl = YES;
             [self.contentImage setAutoScrollTimeInterval:5];
             self.contentImage.autoScroll = adervtImageArray.count >1?YES:NO;
             self.contentImage.pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
             
-            
+            self.contentImage.imageURLStringsGroup = adervtImageArray;
         }
         
     } failure:^(NSError *error) {
@@ -143,8 +146,9 @@
     __block MineCommerceController *blockSelf = self;
     
     [self.introduceView bk_whenTapped:^{
-        CommerceDetailController *vc = [[UIStoryboard storyboardWithName:@"CommerceView" bundle:nil] instantiateViewControllerWithIdentifier:@"CommerceDetailController"];
+        NewCommerceDetailController *vc = [[NewCommerceDetailController alloc] initWithNibName:@"NewCommerceDetailController" bundle:nil];
         vc.commerceId = USER_SINGLE.default_commerce_id;
+        vc.comeType = @"mine";
         [blockSelf.navigationController pushViewController:vc animated:YES];
     }];
     [self.memberView bk_whenTapped:^{

@@ -21,11 +21,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, self.webContentView.frame.size.width,self.webContentView.frame.size.height)];
-//    [self.webView setNavigationDelegate:self];
-//    self.webView.clipsToBounds = YES;
-//    self.webView.UIDelegate = self;
-//    [self.webContentView addSubview:self.webView];
+    self.webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, self.webContentView.frame.size.width,self.webContentView.frame.size.height)];
+    [self.webView setNavigationDelegate:self];
+    self.webView.clipsToBounds = YES;
+    self.webView.UIDelegate = self;
+    [self.webContentView addSubview:self.webView];
+    [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(0);
+    }];
     [self getNewsData];
 }
 
@@ -40,8 +43,9 @@
             blockSelf.title = @"社团新闻详情";
             NSArray *arrDic = responseDic[@"data"];
             NSDictionary *dic = arrDic.firstObject;
-            blockSelf.contentLabel.text =dic[@"news_text"];
-//            [blockSelf.webView loadHTMLString:blockSelf.notifyDic[@"news_text"] baseURL:nil];
+//            blockSelf.contentLabel.text =dic[@"news_text"];
+            [blockSelf.webView loadHTMLString:dic[@"news_text"] baseURL:nil];
+            [blockSelf.webView reload];
         }
     } failure:^(NSError *error) {
         

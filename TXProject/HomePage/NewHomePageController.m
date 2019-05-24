@@ -23,14 +23,21 @@
 #import "SmallWXCell.h"
 #import "SmallWXController.h"
 #import "UpdateAlertView.h"
+#import <ShareSDK/ShareSDK.h>
 #import "StudentJobController.h"
 #import "EduHomeViewController.h"
-@interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource,RCIMUserInfoDataSource>
+#import "ShareAlertView.h"
+#import "TUIKit.h"
+
+#import "TIMManager.h"
+@interface NewHomePageController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) HomeSectionView *sectionView;
 @property (nonatomic) UpdateAlertView *updateAlertView;
 @property (nonatomic) NSArray *commerceArray;
 @property (nonatomic) NSArray *poseterArray;
+@property (nonatomic) ShareAlertView *shareAlertView;
+@property (nonatomic) NSMutableArray *cycleImageArray;
 
 @end
 
@@ -40,33 +47,64 @@
     [super viewDidLoad];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.title = @"天寻科技";
+    self.navigationItem.title = @"首页";
+    self.cycleImageArray = [NSMutableArray arrayWithCapacity:0];
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRGB:0x3e85fb];
     self.navigationController.navigationBar.titleTextAttributes= @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]};
+    [self setupItems];
     [self getCommerceList];
     [self getCycleImageArray];
     [self getVersion];
     if (USER_SINGLE.token.length > 0) {
-        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.member_id,@"member_id",USER_SINGLE.token,@"token",USER_SINGLE.role_type,@"RoleType", nil];
-        [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_GET_IM_TOKEN headerParameters:dic bodyParameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
-            if ([responseDic[@"code"] integerValue] == 200) {
-                [[RCIM sharedRCIM] connectWithToken:responseDic[@"token"]     success:^(NSString *userId) {
-                    [[RCIM sharedRCIM] setUserInfoDataSource:self];
-                    NSLog(@"登陆成功。当前登录的用户ID：%@", userId);
-                } error:^(RCConnectErrorCode status) {
-                    //                    NSLog(@"登陆的错误码为:%d", status);
-                } tokenIncorrect:^{
-                    //token过期或者不正确。
-                    //如果设置了token有效期并且token过期，请重新请求您的服务器获取新的token
-                    //如果没有设置token有效期却提示token错误，请检查您客户端和服务器的appkey是否匹配，还有检查您获取token的流程。
-                    NSLog(@"token错误");
-                }];
-            }
-            NSLog(@"%@",responseDic);
-        } failure:^(NSError *error) {
-            NSLog(@"%@",error);
+//        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:USER_SINGLE.member_id,@"member_id",USER_SINGLE.token,@"token",USER_SINGLE.role_type,@"RoleType", nil];
+        
+        NSString *url =[NSString stringWithFormat: @"https://app.tianxun168.com/h5_v3/index.php?s=/api/Im/getSig&mobile=%@",USER_SINGLE.phone];
+        [TSRequestTool GET:url parameters:nil headers:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+            
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+          
+            TUIKitConfig *config = [TUIKitConfig defaultConfig];
+            [[TUIKit sharedInstance] initKit:1400209730 accountType:@"36862" withConfig:config];
+            [[TUIKit sharedInstance] loginKit:USER_SINGLE.phone userSig:responseObject[@"data"] succ:^{
+                NSLog(@"成功");
+            } fail:^(int code, NSString *msg) {
+                NSLog(@"%@",msg);
+            }];
+//            TIMLoginParam * login_param = [[TIMLoginParam alloc ]     init];
+//            login_param.identifier = USER_SINGLE.member_name;
+//            login_param.userSig = responseObject[@"data"];
+//          login_param.appidAt3rd = @"36862";
+//            [[TIMManager sharedInstance] login:login_param succ:^{
+//                NSLog(@"成功");
+//            }fail:^(int code,NSString *msg) {
+//                NSLog(@"%@",msg);
+//            }];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             
         }];
+//        [HTTPREQUEST_SINGLE postWithURLStringHeaderAndBody:SH_GET_IM_TOKEN headerParameters:dic bodyParameters:nil withHub:NO withCache:NO success:^(NSDictionary *responseDic) {
+//            if ([responseDic[@"code"] integerValue] == 200) {
+        
+        
+                
+               
+//                [[RCIM sharedRCIM] connectWithToken:responseDic[@"token"]     success:^(NSString *userId) {
+//                    [[RCIM sharedRCIM] setUserInfoDataSource:self];
+//                    NSLog(@"登陆成功。当前登录的用户ID：%@", userId);
+//                } error:^(RCConnectErrorCode status) {
+//                    //                    NSLog(@"登陆的错误码为:%d", status);
+//                } tokenIncorrect:^{
+//                    //token过期或者不正确。
+//                    //如果设置了token有效期并且token过期，请重新请求您的服务器获取新的token
+//                    //如果没有设置token有效期却提示token错误，请检查您客户端和服务器的appkey是否匹配，还有检查您获取token的流程。
+//                    NSLog(@"token错误");
+//                }];
+//            }
+//            NSLog(@"%@",responseDic);
+//        } failure:^(NSError *error) {
+//            NSLog(@"%@",error);
+//
+//        }];
     }
     
 }
@@ -145,19 +183,23 @@
 }
 -(void)getCycleImageArray{
     __block NewHomePageController *blockSelf = self;
-    [HTTPREQUEST_SINGLE getWithURLString:GROUND_SCROLL_IMAGE parameters:nil withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-        NSString *imgURLString = responseDic[@"data"][@"square_img"];
-        NSArray *imageurlArray = [imgURLString componentsSeparatedByString:@"|"];
-        NSMutableArray * imageURLArray = [NSMutableArray arrayWithCapacity:0];
-        for (int i = 0; i <= imageurlArray.count - 1; i ++) {
-            NSString *imageString = [NSString stringWithFormat:@"%@%@",@"https://app.tianxun168.com",imageurlArray[i]];
-            [imageURLArray addObject:imageString];
+    NSString *url = @"https://app.tianxun168.com/h5_v3/index.php?s=/api/Ads/index&position=4";
+    [TSRequestTool POST:url parameters:nil headers:nil progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSArray *arr = responseObject[@"data"];
+        [blockSelf.cycleImageArray addObjectsFromArray:arr];
+        NSMutableArray *imageArr = [NSMutableArray arrayWithCapacity:0];
+        for (int i = 0 ; i < blockSelf.cycleImageArray.count; i++) {
+            NSDictionary *dic = blockSelf.cycleImageArray[i];
+            [imageArr addObject: dic[@"image"][@"file_path"]];
         }
-        blockSelf.poseterArray = imageURLArray;
-        [blockSelf.tableView reloadData];
-    } failure:^(NSError *error) {
+        self.poseterArray = imageArr;
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
     }];
+    
+   
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSDictionary *dic = self.commerceArray[indexPath.row];
@@ -228,6 +270,8 @@
         case 0:{
             PosterCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"PosterCell"];
             cell.posterArray = self.poseterArray;
+            cell.vController = self;
+            cell.scrollArray = self.cycleImageArray;
             [cell setupCycleScrollview];
             return cell;
         }break;
@@ -349,5 +393,72 @@
         [[UIApplication sharedApplication].keyWindow addSubview:_updateAlertView];
     }
     return _updateAlertView;
+}
+-(void)setupItems{
+    UIBarButtonItem *item1 = [self itemWithImageName:@"home_kefu_icon" highImageName:@"home_kefu_icon" target:self action:@selector(callKefu)];
+    UIBarButtonItem *item2 = [self itemWithImageName:@"home_share_icon" highImageName:@"home_share_icon" target:self action:@selector(shareURL)];
+      self.navigationItem.rightBarButtonItems  = @[item2,  item1];
+}
+-(void)callKefu{
+    [CustomFountion callPhone:@"0760-88587021" andView:self.view];
+}
+-(void)shareURL{
+    self.shareAlertView.hidden = NO;
+}
+
+-(UIBarButtonItem *)itemWithImageName:(NSString *)ImageName highImageName:(NSString *)highImageName target:(id)target action:(SEL)action
+ {
+     //自定义UIView
+     UIButton *btn=[[UIButton alloc]init];
+
+     //设置按钮的背景图片（默认/高亮）
+     [btn setBackgroundImage:[UIImage imageNamed:ImageName] forState:UIControlStateNormal];
+//     [btn setBackgroundImage:[UIImage imageNamed:highImageName] forState:UIControlStateHighlighted];
+     //设置按钮的尺寸和图片一样大，使用了UIImage的分类
+     btn.size=btn.currentBackgroundImage.size;
+     [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+
+     return [[UIBarButtonItem alloc]initWithCustomView:btn];
+
+ }
+
+-(ShareAlertView *)shareAlertView{
+    if (_shareAlertView == nil) {
+        _shareAlertView = [[NSBundle mainBundle] loadNibNamed:@"ProductAlert" owner:self options:nil][1];
+        _shareAlertView.frame = CGRectMake(0, 0, ScreenW, ScreenH);
+        _shareAlertView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        [[UIApplication sharedApplication].keyWindow addSubview:_shareAlertView];
+        [_shareAlertView.mainView makeCorner:5];
+        [_shareAlertView.cancelView makeCorner:5];
+        _shareAlertView.hidden = YES;
+        __block NewHomePageController *blockSelf = self;
+        [_shareAlertView.cancelView bk_whenTapped:^{
+            blockSelf.shareAlertView.hidden = YES;
+        }];
+        [_shareAlertView.cycleView bk_whenTapped:^{
+            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+        
+            [shareParams SSDKSetupShareParamsByText:@""
+                                             images:self->_shareAlertView.shareImage.image
+                                                url:[NSURL URLWithString:@""]
+                                              title:@"天寻商盟" type:SSDKContentTypeImage];
+            [ShareSDK share:SSDKPlatformSubTypeWechatTimeline parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
+                
+            }];
+        }];
+        [_shareAlertView.wechatView bk_whenTapped:^{
+            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+           
+            [shareParams SSDKSetupShareParamsByText:@""
+                                             images:self->_shareAlertView.shareImage.image
+                                                url:[NSURL URLWithString:@""]
+                                              title:@"天寻商盟"
+                                        type:SSDKContentTypeImage];
+            [ShareSDK share:SSDKPlatformSubTypeWechatSession parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
+                
+            }];
+        }];
+    }
+    return _shareAlertView;
 }
 @end

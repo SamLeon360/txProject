@@ -20,7 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.typeIndex==1?@"创头条":@"行业热点";
+    self.title = self.typeIndex==1?@"创业热门话题":@"行业热门话题";
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self GetDataNet];

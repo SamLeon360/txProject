@@ -21,14 +21,19 @@
     
 }
 - (IBAction)clickToSubmitPwd:(id)sender {
-    [HTTPREQUEST_SINGLE postWithURLString:ACCOUT_CHANGE_PWD parameters:@{@"password":self.onePwdTF.text} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
-        if ([responseDic[@"code"] integerValue] == 3) {
-            [AlertView showYMAlertView:self.view andtitle:@"修改密码成功"];
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    } failure:^(NSError *error) {
-        
-    }];
+    if (![self.onePwdTF.text isEqualToString:self.twoPwdTF.text]) {
+        [AlertView showYMAlertView:self.view andtitle:@"密码不一致"];
+    }else{
+        [HTTPREQUEST_SINGLE postWithURLString:ACCOUT_CHANGE_PWD parameters:@{@"password":self.onePwdTF.text} withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
+            if ([responseDic[@"code"] integerValue] == 3) {
+                [AlertView showYMAlertView:self.view andtitle:@"修改密码成功"];
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+    }
+  
 }
 
 

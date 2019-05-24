@@ -80,6 +80,15 @@
         if ([responseDic[@"code"] integerValue] == 1) {
             NSArray *arr = responseDic[@"data"];
             blockSelf.detailCommerceDic = arr.firstObject;
+        }else{
+            id message = responseDic[@"message"];
+            if ([message isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dic = message;
+                [AlertView showYMAlertView:self.view andtitle: dic.allValues.firstObject];
+            }
+            if ([message isKindOfClass:[NSString class]]) {
+                [AlertView showYMAlertView:self.view andtitle:message];
+            }
         }
     } failure:^(NSError *error) {
         
@@ -215,7 +224,7 @@
         blockSelf.selectTypeView.hidden = YES;
     }];
     [self.cityTF bk_whenTapped:^{
-        if (blockSelf.provinceTF.text.length > 0) {
+        if (blockSelf.provinceTF.text.length > 1) {
             blockSelf.areaPickerView.hidden = NO;
             [blockSelf getAreaData];
             blockSelf.isprovince = NO;
@@ -318,7 +327,6 @@
 }
 - (IBAction)clickToUpload:(id)sender {
     NSDictionary *param;
-   
         if (self.selectType == 3) {
             param = [[NSDictionary alloc] initWithObjectsAndKeys:self.commerceNameLabel.text,@"commerce_name",[NSString stringWithFormat:@"%ld",self.selectType+1],@"commerce_type",[NSString stringWithFormat:@"%@省|%@市",self.provinceTF.text,self.cityTF.text],@"commerce_location_real",self.cityTF.text,@"commerce_location",self.contactNameLabel.text,@"contact",self.contactPhoneTF.text,@"contact_phone",self.contactEmailTF.text,@"email",self.remarkTF.text,@"remark",self.changeCommerceLabel.text,@"commerce_belong_membership",[NSString stringWithFormat:@"%@省|%@市",self.changeCommerceLabel.text,self.changeCommerceCityLabel.text],@"commerce_belong_membership_real",@"",@"main_business", nil];
         }else if (self.selectType == 1){
@@ -345,7 +353,7 @@
             });
         }else{
             
-            [AlertView showYMAlertView:self.view andtitle:responseDic[@"message"]];
+            [AlertView showYMAlertView:self.view andtitle:@"申请失败"];
         }
         [SVProgressHUD dismiss];
     } failure:^(NSError *error) {

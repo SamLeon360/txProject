@@ -33,7 +33,7 @@
     return 1;
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (self.imageArray.count <= 5) {
+    if (self.imageArray.count < 5) {
         return self.imageArray.count +1;
     }
     return self.imageArray.count == 0?1:self.imageArray.count;
@@ -44,7 +44,7 @@
 }
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     uploadProImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"uploadProImageCell" forIndexPath:indexPath];
-    if (self.imageArray.count <= 5) {
+    if (self.imageArray.count < 5) {
         if (indexPath.row == 0) {
             [cell.imageCell setImage: [UIImage imageNamed:@"upload_image"]];
             cell.delimageView.hidden = YES;
@@ -59,7 +59,7 @@
     }
     [cell.delimageView bk_whenTapped:^{
         NSIndexPath *indexP = [collectionView indexPathForCell:cell];
-        if (self.imageArray.count <= 5) {
+        if (self.imageArray.count < 5) {
             [self.imageArray removeObjectAtIndex:indexP.row - 1];
         }else{
             [self.imageArray removeObjectAtIndex:indexP.row ];
@@ -73,7 +73,7 @@
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.imageArray.count <= 5) {
+    if (self.imageArray.count < 5) {
         if (indexPath.row == 0) {
             [self openLocalPhoto];
         }else{
@@ -101,7 +101,7 @@
     ZLPhotoActionSheet *ac = [[ZLPhotoActionSheet alloc] init];
     
     //相册参数配置，configuration有默认值，可直接使用并对其属性进行修改
-    ac.configuration.maxSelectCount = 6 - self.imageArray.count;
+    ac.configuration.maxSelectCount = 5 - self.imageArray.count;
     ac.configuration.maxPreviewCount = 10;
     ac.configuration.allowMixSelect = NO;
     ac.configuration.allowSelectGif = NO;

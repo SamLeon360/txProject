@@ -31,6 +31,7 @@
     self.tableView.dataSource = self;
     self.listType = 1;
     self.typeArray = @[@"全部", @"组件零部件",@"文化教育创意",@"酒店旅游餐饮",@"食品饮料",@"医疗保健",@"家电家居",@"冶金能源环保",@"化学化工",@"汽车工业",@"其他"];
+    self.title = @"产品需求信息";
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(GetProductionDataMore)];
     self.tableView.mj_footer = footer;
     self.tableView.tableFooterView = [[UIView alloc] init];

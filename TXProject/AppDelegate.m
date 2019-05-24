@@ -10,6 +10,9 @@
 #import "YKNavigationController.h"
 #import "TXMainViewController.h"
 #import "IQKeyboardManager.h"
+#import "TUIKit.h"
+#import "THeader.h"
+#import "ImSDK.h"
 #import <AlipaySDK/AlipaySDK.h>
 // 引入 JPush 功能所需头文件
 #import "JPUSHService.h"
@@ -18,11 +21,11 @@
 #import "WXApiManager.h"
 #import <Bugly/Bugly.h>
 #import <UserNotifications/UserNotifications.h>
-
+#import <UMCommon/UMCommon.h>
 #endif
 // 如果需要使用 idfa 功能所需要引入的头文件（可选）
 #import <AdSupport/AdSupport.h>
-@interface AppDelegate ()<JPUSHRegisterDelegate,WXApiDelegate>
+@interface AppDelegate ()<JPUSHRegisterDelegate,WXApiDelegate,TIMUserStatusListener>
 
 @end
 
@@ -32,11 +35,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     TXMainViewController *nav = [[TXMainViewController alloc] init];
-    [Bugly startWithAppId:@"4f13968d8b"];
+    [Bugly startWithAppId:@"37032f9217"];
     [WXApi registerApp:@"wx4e51fc420c875542"];
     self.window.rootViewController = nav;
     IQKeyboardManager *keyboardManager = [IQKeyboardManager sharedManager]; // 获取类库的单例变量
-    
+   
     keyboardManager.enable = YES; // 控制整个功能是否启用
     [WXApiManager sharedManager].delegate = self;
     keyboardManager.shouldResignOnTouchOutside = YES; // 控制点击背景是否收起键盘
@@ -62,6 +65,9 @@
         // NSSet<UIUserNotificationCategory *> *categories for iOS8 and iOS9
     }
     [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    [ShareSDK registPlatforms:^(SSDKRegister *platformsRegister) {
+        
+    }];
     NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     
     // Required
@@ -72,12 +78,38 @@
                           channel:nil
                  apsForProduction:YES
             advertisingIdentifier:advertisingId];
-    [[RCIM sharedRCIM] initWithAppKey:@"e5t4ouvpe6zoa"];
+//    [[RCIM sharedRCIM] initWithAppKey:@"e5t4ouvpe6zoa"];
+   [UMConfigure initWithAppkey:@"5cd230cc570df3d504000899" channel:@"App Store"];
+    TIMManager *manager = [TIMManager sharedInstance];
+    TIMSdkConfig *sdkConfig = [[TIMSdkConfig alloc]init];
+    sdkConfig.sdkAppId = 1400209730;
+    sdkConfig.accountType = @"36862";
+    [manager initSdk:sdkConfig];
+    TIMUserConfig *user = [[TIMUserConfig alloc]init];
+    user.userStatusListener = self;
+    [manager setUserConfig:user];
+    [self initShareService];
    
-    
     return YES;
 }
 
+-(void)initShareService {
+    /**初始化ShareSDK应用
+     @param activePlatforms
+     使用的分享平台集合
+     @param importHandler (onImport)
+     导入回调处理，当某个平台的功能需要依赖原平台提供的SDK支持时，需要在此方法中对原平台SDK进行导入操作
+     @param configurationHandler (onConfiguration)
+     配置回调处理，在此方法中根据设置的platformType来填充应用配置信息
+     */
+    [ShareSDK registPlatforms:^(SSDKRegister *platformsRegister) {
+        //QQ
+//        [platformsRegister setupQQWithAppId:@"100371282" appkey:@"aed9b0303e3ed1e27bae87c33761161d"];
+
+        //微信
+        [platformsRegister setupWeChatWithAppId:@"wx4e51fc420c875542" appSecret:@"c2cc6cba83a6f173c8a1e2bb452ea1c5"];
+    }];
+}
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
     if ([url.host isEqualToString:@"safepay"]) {
         //跳转支付宝钱包进行支付，处理支付结果

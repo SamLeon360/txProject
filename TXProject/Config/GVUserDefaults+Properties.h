@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger,YKUserStatusType){
 @property (nonatomic, assign) NSString *token;
 @property (nonatomic, assign) NSString *lastTimeShowHUD;
 @property (nonatomic, assign) NSString *isSecretary;
+@property (nonatomic, assign) NSString *phone;
 @property (nonatomic,assign) NSDictionary *commerceDic;
 @property (nonatomic,assign) NSDictionary *userData;
 @property (nonatomic,assign) NSArray *commerceArray;

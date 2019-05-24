@@ -32,6 +32,9 @@
         self.comMsgLabel.text = self.model.commerce_introduction;
         self.checkMoreLabel.text = !self.vc.commerceCheckMore?@"查看更多":@"收起";
         [self.checkMoreView bk_whenTapped:^{
+            if ( indexPath.section == 1) {
+                
+           
             if (!blockSelf.vc.commerceCheckMore) {
                 blockSelf.checkMoreLabel.text = @"收起";
                 blockSelf.vc.commerceCheckMore = YES;
@@ -40,11 +43,13 @@
                 blockSelf.vc.commerceCheckMore = NO;
             }
             [blockSelf.vc reloadTableView];
+            }
         }];
     }else if (indexPath.section == 3){
         self.comMsgLabel.text = self.model.secretariat_introduction;
         self.checkMoreLabel.text = !self.vc.secretariatCheckMore?@"查看更多":@"收起";
         [self.checkMoreView bk_whenTapped:^{
+             if ( indexPath.section == 3) {
             if (!blockSelf.vc.secretariatCheckMore) {
                 blockSelf.checkMoreLabel.text = @"收起";
                 blockSelf.vc.secretariatCheckMore = YES;
@@ -53,11 +58,13 @@
                  blockSelf.vc.secretariatCheckMore = NO;
             }
             [blockSelf.vc reloadTableView];
+             }
         }];
     }else if (indexPath.section == 4){
         self.comMsgLabel.text = self.model.membership_conditions;
         self.checkMoreLabel.text = !self.vc.cooditionCheckMore?@"查看更多":@"收起";
         [self.checkMoreView bk_whenTapped:^{
+          if ( indexPath.section == 4) {
             if (!blockSelf.vc.cooditionCheckMore) {
                 blockSelf.checkMoreLabel.text = @"收起";
                 blockSelf.vc.cooditionCheckMore = YES;
@@ -66,6 +73,7 @@
                 blockSelf.vc.cooditionCheckMore = NO;
             }
             [blockSelf.vc reloadTableView];
+          }
         }];
     }
    

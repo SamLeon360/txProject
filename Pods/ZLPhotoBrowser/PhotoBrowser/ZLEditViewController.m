@@ -56,6 +56,7 @@
     [super viewDidLayoutSubviews];
     _editTool.frame = self.view.bounds;
 }
+
 - (void)setupUI
 {
     self.view.backgroundColor = [UIColor blackColor];
@@ -88,12 +89,6 @@
             zl_strongify(weakSelf);
             [strongSelf->_indicator stopAnimating];
             strongSelf->_editTool.editImage = image;
-           ZLPhotoConfiguration *configuration = [(ZLImageNavigationController *)self.navigationController configuration];
-            if (configuration.hideClipRatiosToolBar) {
-                [strongSelf->_editTool clipBtn_click];
-                [strongSelf->_editTool showBottomView:NO];
-            }
-            
         }
     }];
 }
@@ -122,10 +117,7 @@
         zl_strongify(weakSelf);
         [strongSelf saveImage:image];
     };
-    
-    
     [self.view addSubview:_editTool];
-   
 }
 
 - (void)saveImage:(UIImage *)image

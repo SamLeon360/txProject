@@ -176,6 +176,7 @@
         if ([responseDic[@"code"] integerValue] == 200) {
             NSDictionary *dic = responseDic[@"data"];
             [USER_SINGLE setUserDataWithDic:dic];
+            USER_SINGLE.phone = self.accountTF.text;
             [[NSUserDefaults standardUserDefaults] setObject:dic[@"token"] forKey:@"token"];
             __block NewTXLoginController *blockblockSelf = blockSelf;
             NSString *default_commerce_id = [NSString stringWithFormat:@"%@",USER_SINGLE.default_commerce_id];
@@ -214,7 +215,15 @@
                             NSString *commerceId = [NSString stringWithFormat:@"%@",commerceDic[@"commerce_id"]];
                             if ([commerceId isEqualToString:default_commerce_id]) {
                                 commerceIng = YES;
-                                USER_SINGLE.commerceDic = commerceDic;
+                                NSMutableDictionary *newCommerceObj = [NSMutableDictionary dictionaryWithCapacity:0];
+                                [commerceDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                                    if ([obj isKindOfClass:[NSNull class]]) {
+                                        [newCommerceObj setObject:@"" forKey:key];
+                                    }else{
+                                        [newCommerceObj setObject:obj forKey:key];
+                                    }
+                                }];
+                                USER_SINGLE.commerceDic = newCommerceObj;
                                 break;
                             }
                         }

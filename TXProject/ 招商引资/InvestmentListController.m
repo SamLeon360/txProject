@@ -67,7 +67,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-//    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 -(void)viewDidLayoutSubviews{
 //     [self.navigationController setNavigationBarHidden:YES animated:NO];
@@ -88,6 +88,7 @@
         }];
     }];
     [self.selectView bk_whenTapped:^{
+        self.projectSelectView.hidden = NO;
         __block InvestmentListController *blockBlockSelf = blockSelf;
         [UIView animateWithDuration:0.3 animations:^{
             if (blockBlockSelf.projectSelectView.frame.size.height <= 0) {
@@ -120,6 +121,11 @@
         blockSelf.projectSelectView.maxPriceTF.text = @"";
     }];
     [self.projectSelectView.searchBtn bk_whenTapped:^{
+        __block InvestmentListController *blockBlockSelf = blockSelf;
+        [UIView animateWithDuration:0.3 animations:^{
+              blockBlockSelf.projectSelectView.frame = CGRectMake(blockBlockSelf.tableView.frame.origin.x, blockBlockSelf.tableView.frame.origin.y, blockBlockSelf.tableView.frame.size.width, 0);
+        }];
+    
         [blockSelf getinvestmentArrayByRefresh];
         blockSelf.projectSelectView.hidden = YES;
     }];
@@ -143,6 +149,7 @@
 }
 -(void)getinvestmentArrayByRefresh{
     self.nPage = 1;
+    self.jobTypeView.text = self.selectTypeIndex==0?@"行业类别":self.projectType[self.selectTypeIndex];
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",self.projectSelectView.maxPriceTF.text,@"max_price",self.projectSelectView.minPriceTF.text,@"min_price",[NSString stringWithFormat:@"%ld",(long)self. nPage],@"page",@"",@"projects_order",[NSString stringWithFormat:@"%@",self.selectTypeIndex==0?@"":[NSString stringWithFormat:@"%ld",self.selectTypeIndex]],@"projects_type", nil];
     [HTTPREQUEST_SINGLE postWithURLString:SH_INVESTMENT_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {

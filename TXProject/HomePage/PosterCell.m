@@ -7,6 +7,7 @@
 //
 
 #import "PosterCell.h"
+#import "TXWebViewController.h"
 @interface PosterCell()<SDCycleScrollViewDelegate>
 @end
 @implementation PosterCell
@@ -31,6 +32,15 @@
     self.cycleScrollView.delegate = self;
     
     
+}
+-(void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
+    NSDictionary *dic = self.scrollArray[index];
+    NSString *url = dic[@"url"];
+    if (url.length > 0) {
+        TXWebViewController *webVC =  [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
+        webVC.webUrl  = url;
+        [self.vController.navigationController pushViewController:webVC animated:YES];
+    }
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

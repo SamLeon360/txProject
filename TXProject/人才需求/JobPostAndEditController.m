@@ -31,6 +31,7 @@
 @property (nonatomic) NSArray *welfareArray;
 @property (nonatomic) GetAreaView *getAreaView;
 @property (nonatomic) NSString *selectAreaString;
+@property (nonatomic) BOOL paramsOk;
 @end
 
 @implementation JobPostAndEditController
@@ -52,7 +53,7 @@
     self.welfareArray = @[@"包吃",@"饭补",@"话补",@"房补",@"年底双薪",@"周末双休",@"加班补助",@"交通补助"];
     self.jobTypeArray = @[@"IT通信电子",@"财务金融",@"房产/建筑建设/物业",@"服务业",@"管理/人力资源/行政",@"广告/市场/媒体/艺术",@"汽车/工程机械",@"消费品生产/物流",@"销售/客户/导购",@"医药/化工/能源/环保",@"资讯/法律/教育/翻译",@"农牧业",@"其他"];
     self.cellTitleArray = @[@[@"公司选择："],@[@"岗位名称：",@"最低月薪：",@"最高月薪：",@"学历要求：",@"工作年限：",@"年龄要求：",@"接受应届生：",@"工作方式：",@"工作福利：",@"工作地址：",@"详细地址：",@"联系方式：",@"职位类型：",@""],@[@"上架时间：",@"下架时间：",@""]];
-    self.placeholderArray = @[@[@""],@[@"请输入岗位名称",@"输入整数数字 如:6000",@"输入整数数字 如:4000",@"",@"输入整数数字 如:1",@"请用文字描述 如:18周岁以上",@"",@"",@"",@"",@"请输入详细地址",@"填写手机或固话",@"",@""],@[@"",@"",@""]];
+    self.placeholderArray = @[@[@""],@[@"请输入岗位名称",@"输入整数数字 如:4000",@"输入整数数字 如:6000",@"",@"输入整数数字 如:1",@"请用文字描述 如:18周岁以上",@"",@"",@"",@"",@"请输入详细地址",@"填写手机或固话",@"",@""],@[@"",@"",@""]];
     self.keyArray = @[@[@"enterprise_name"],@[@"job_name",@"salary_min",@"salary_max",@"education",@"work_life",@"age_limit",@"receive_fresh_graduate",@"work_type",@"welfare",@"area",@"work_address",@"contacts_phone",@"job_type",@"job_description"],@[@"start_time",@"end_time"]];
     
     [self.tableView reloadData];
@@ -93,14 +94,19 @@
     }];
 }
 -(void)uploadParam{
+     self.paramsOk = YES;
     NSDictionary *dic = @{@"enterprise_name":@"请选择公司",@"job_name":@"请填写岗位名称",@"salary_min":@"请填写最低月薪",@"salary_max":@"请填写最高月薪",@"education":@"请选择学历要求",@"work_life":@"请填写工作年限",@"age_limit":@"请填写年龄要求",@"receive_fresh_graduate":@"请选择是否接受应届生",@"work_type":@"请选择工作方式",@"welfare":@"请选择工作福利",@"area":@"请选择工作地址",@"work_address":@"请填写详细地址",@"contacts_phone":@"请填写联系方式",@"job_type":@"请选择职位类型",@"job_description":@"请填写职位描述",@"start_time":@"请选择上架时间",@"end_time":@"请选择下架时间"};
     
     [self.dataDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[NSNull class]]||[NSString stringWithFormat:@"%@",obj].length <= 0) {
             [AlertView showYMAlertView:self.view andtitle:dic[key]];
+            self.paramsOk = NO;
             return ;
         }
     }];
+    if (!self.paramsOk) {
+        return;
+    }
     [HTTPREQUEST_SINGLE postWithURLString:SH_ADD_TALENT parameters:self.dataDic withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == -1002) {
             [AlertView showYMAlertView:self.view andtitle:@"添加成功"];

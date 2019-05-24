@@ -35,11 +35,13 @@
 -(void)getCommerceArray{
     __block NewsListController *blockSelf = self;
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"affiliated_area",self.searchTF.text,@"deal_name",@"1",@"page",@"",@"ios",@"",@"id", nil];
+    self.nPage = 1;
     [HTTPREQUEST_SINGLE postWithURLString:SH_GET_NEWS_LIST parameters:param withHub:YES withCache:NO success:^(NSDictionary *responseDic) {
         if ([responseDic[@"code"] integerValue] == 1) {
             blockSelf.newsListArray = [NSMutableArray arrayWithCapacity:0];
             blockSelf.newsListArray = responseDic[@"data"];
             [blockSelf.tableView reloadData];
+            [blockSelf.tableView setScrollsToTop:YES];
         }
     } failure:^(NSError *error) {
         

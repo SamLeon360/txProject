@@ -14,13 +14,14 @@
 #import "TXGroundController.h"
 #import "TXWebViewController.h"
 #import "MineViewController.h"
-#import "TXChatListController.h"
+
 #import "NewMineMessageTableViewController.h"
 #import "NewHomePageController.h"
 #import "UITabBar+DKSTabBar.h"
+#import "ConversationController.h"
 #import "SearchCommerceController.h"
 #import "UploadCommerceControllerController.h"
-@interface TXMainViewController ()<UITabBarControllerDelegate,RCIMReceiveMessageDelegate,UINavigationControllerDelegate>
+@interface TXMainViewController ()<UITabBarControllerDelegate,UINavigationControllerDelegate>
 @property (nonatomic) CommerceAlertView *comAlertView;
 @property (nonatomic) NSInteger tabIndex;
 @end
@@ -51,7 +52,7 @@
     [UITabBar appearance].translucent = NO;
     self.tabBarItem.imageInsets=UIEdgeInsetsMake(6, 0, 0, 0);
     self.tabBar.opaque = YES;
-    [RCIM sharedRCIM].receiveMessageDelegate = self;
+//    [RCIM sharedRCIM].receiveMessageDelegate = self;
 }
 -(void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
@@ -76,21 +77,21 @@
     
     [viewController viewWillAppear:animated];
 }
--(void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
-     
-    int totalUnreadCount = [[RCIMClient sharedRCIMClient] getTotalUnreadCount];
-    if (totalUnreadCount > 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-             [self.tabBar showBadgeIndex:1];
-        });
-    }else{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tabBar hideBadgeIndex:1];
-        });
-        
-    }
-    
-}
+//-(void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
+//     
+//    int totalUnreadCount = [[RCIMClient sharedRCIMClient] getTotalUnreadCount];
+//    if (totalUnreadCount > 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//             [self.tabBar showBadgeIndex:1];
+//        });
+//    }else{
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.tabBar hideBadgeIndex:1];
+//        });
+//        
+//    }
+//    
+//}
 - (void)setupSubviews
 {
     //主页
@@ -99,24 +100,20 @@
     NewHomePageController *homeVC = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"NewHomePageController"];
 
     [self addChildViewController:homeVC
-                               image:[[UIImage imageNamed:@"shetuan_no_select"]scaleToSize:CGSizeMake(21, 20)]
-                       selectedImage:[[UIImage imageNamed:@"shetuan_select"] scaleToSize:CGSizeMake(21, 20)]
-                               title:@"广场"];
+                               image:[UIImage imageNamed:@"shetuan_no_select"]
+                       selectedImage:[UIImage imageNamed:@"shetuan_select"]
+                               title:@"首页"];
     
     HomeServerController *vc = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"HomeServerController"];
     if ([NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length > 0) {
         [self addChildViewController:vc
-                               image:[[UIImage imageNamed:@"server_no_select"] scaleToSize:CGSizeMake(19, 20)]
-                       selectedImage:[[UIImage imageNamed:@"server_select"] scaleToSize:CGSizeMake(19, 20)]
+                               image:[UIImage imageNamed:@"server_no_select"]
+                       selectedImage:[UIImage imageNamed:@"server_select"]
                                title:@"应用"];
     }
     
     
-    TXChatListController *webVc1 = [[TXChatListController alloc] init];
-    [self addChildViewController:webVc1
-                           image:[[UIImage imageNamed:@"chat_no_select"] scaleToSize:CGSizeMake(19, 19)]
-                   selectedImage:[[UIImage imageNamed:@"chat_select"] scaleToSize:CGSizeMake(19, 19)]
-                           title:@"聊天"];
+    
    
     
     if ([NSString stringWithFormat:@"%ld",[USER_SINGLE.default_commerce_id integerValue]].length > 0) {
@@ -124,18 +121,22 @@
             TXWebViewController *webVc2 = [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"TXWebViewController"];
             webVc2.intype = shop_cycle;
             [self addChildViewController:webVc2
-                                   image:[[UIImage imageNamed:@"cycle_no_select"] scaleToSize:CGSizeMake(18, 18)]
-                           selectedImage:[[UIImage imageNamed:@"cycle_select"] scaleToSize:CGSizeMake(18, 18)]
+                                   image:[UIImage imageNamed:@"cycle_no_select"]
+                           selectedImage:[UIImage imageNamed:@"cycle_select"]
                                    title:@"商圈"];
         }
     }
-    
+    ConversationController *webVc1 = [[ConversationController alloc] init];
+    [self addChildViewController:webVc1
+                           image:[UIImage imageNamed:@"chat_no_select"]
+                   selectedImage:[UIImage imageNamed:@"chat_select"]
+                           title:@"聊天"];
     
     //我
     NewMineMessageTableViewController *mineVC =  [[UIStoryboard storyboardWithName:@"HomePage" bundle:nil] instantiateViewControllerWithIdentifier:@"NewMineMessageTableViewController"];
     [self addChildViewController:mineVC
-                           image:[[UIImage imageNamed:@"me_no_select"] scaleToSize:CGSizeMake(18, 21)]
-                   selectedImage:[[UIImage imageNamed:@"me_select"] scaleToSize:CGSizeMake(18, 21)]
+                           image:[UIImage imageNamed:@"me_no_select"] 
+                   selectedImage:[UIImage imageNamed:@"me_select"]
                            title:@"我的"];
     
     

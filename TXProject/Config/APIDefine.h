@@ -81,8 +81,8 @@
 
 #define SH_SCHOOL_LIST @"academy/list_academy"
 
-#define SH_BAODIAN_ALL @"pioneer_park/search_revered"
-#define SH_ZONGHE_ALL @"service/search_service"
+#define SH_BAODIAN_ALL @"pioneer_park/search_revered_new"
+#define SH_ZONGHE_ALL @"service/search_service_new"
 
 #define SH_WEB_DETAIL @"profession/detail_msg_focus"
 
