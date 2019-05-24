@@ -126,10 +126,17 @@
         for (int i = 0 ; i < self.checkKeyValue.count ; i++) {
             NSString *key = self.checkKeyValue[i];
             if ([self.modelDic.allKeys containsObject:key]) {
-                NSString *valueString = self.modelDic[key];
-                if (valueString.length <= 0 || [valueString isKindOfClass:[NSNull class]]) {
+                id valueString = self.modelDic[key];
+                if ( [valueString isKindOfClass:[NSNull class]]) {
                     [AlertView showYMAlertView:self.view andtitle: self.checkAlertArray[i]];
                     return ;
+                }
+                if ([valueString isKindOfClass:[NSString class]]) {
+                    NSString *newValue  = valueString;
+                    if (newValue.length <= 0) {
+                        [AlertView showYMAlertView:self.view andtitle: self.checkAlertArray[i]];
+                        return ;
+                    }
                 }
             }else{
                 [AlertView showYMAlertView:self.view andtitle: self.checkAlertArray[i]];
@@ -215,10 +222,15 @@
             if (indexP == nil) {
                 return ;
             }
-            NSDictionary *dic = self.titleArray[indexP.section];
-            NSDictionary *cellDataDic = dic.allValues.firstObject;
-           NSString *key = cellDataDic[cell.title.text];
-            [self.modelDic setObject:cell.cellTF.text forKey:key];
+            NSArray *titleArr = self.cellTitleArray[indexP.section];
+            
+            if ([cell.title.text isEqualToString:titleArr[indexP.row]]) {
+                NSDictionary *dic = self.titleArray[indexP.section];
+                NSDictionary *cellDataDic = dic.allValues.firstObject;
+                NSString *key = cellDataDic[cell.title.text];
+                [self.modelDic setObject:cell.cellTF.text forKey:key];
+            }
+           
         }];
         if (indexPath.section == self.cellTitleArray.count - 1) {
             cell.cellTF.userInteractionEnabled = NO;
@@ -260,6 +272,10 @@
     }];
 }
 -(void)uploadCommerceLogo{
+    if (self.commerceImage == nil) {
+        [AlertView showYMAlertView:self.view andtitle:@"请选择社团头像"];
+        return;
+    }
     NSString *url = @"secretary/upload_commerce_logo";
     [HTTPREQUEST_SINGLE uploadImageArrayWithUrlStr:url parameters:@{@"commerce_id":self.commerceId} withHub:NO constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSData * imageData = UIImageJPEGRepresentation(self.commerceImage, 0.5);
